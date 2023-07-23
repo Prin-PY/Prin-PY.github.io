@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>0.1_Android内存管理 |  半个出家人</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/circle_image.png" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="半个出家人" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Unity3D-0-1-Android内存管理"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  0.1_Android内存管理
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/20/Unity3D-0-1-Android%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="article-date">
+  <time datetime="2023-07-20T15:00:27.046Z" itemprop="datePublished">2023-07-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">6.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">23 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h2><p>Android 运行时 ( <strong>ART</strong> ) 和 <strong>Dalvik 虚拟机</strong> 使用 <strong>分页</strong> 和 <strong>内存映射</strong> 来管理内存。这意味着应用修改的任何内存，无论修改的方式是分配新对象还是轻触内存映射的页面，都会一直驻留在 RAM 中，并且无法换出。 <strong>要从应用中释放内存，只能释放应用保留的对象引用，使内存可供垃圾回收器回收。</strong> 这种情况有 <strong>一个例外</strong> ：对于任何未经修改的内存映射文件（如代码），如果系统想要在其他位置使用其内存，可将其从 RAM 中换出。</p>
+<h3 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h3><p>Ref: <a href="https://blog.csdn.net/greedylin/article/details/103711555" target="_blank" rel="noopener">https://blog.csdn.net/greedylin/article/details/103711555</a><br>Android的内存大，但是管理不太好<br>基本单位: Page</p>
+<ol>
+<li><p>默认4K一个page（与linux相同），但并不意味是4K对齐的</p>
+</li>
+<li><p>回收和分配以page为单位</p>
+</li>
+<li><p>分为用户态和内核态，常见的一个问题是，用户态中的一个指针越界到内核态，该程序就会挂掉</p>
+</li>
+</ol>
+<h3 id="LMK"><a href="#LMK" class="headerlink" title="LMK"></a>LMK</h3><p>内存管理工具-low memory killer（AKA lmk）<br>一些现象都和它有关，例如闪退 服务消失 手机重启等<br>当内存不足时，killer会从下往上杀应用，当杀到前台（Foreground）时，你的应用就会闪退，如果继续使用内存，会一致杀到System层，这时设备会重启</p>
+<h3 id="GC"><a href="#GC" class="headerlink" title="GC"></a>GC</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>ART 或 Dalvik 虚拟机之类的 <strong>受管内存环境</strong> 会 <strong>跟踪每次内存分配</strong> 。一旦确定程序不再使用某块内存，它就会将该内存重新释放到堆中，无需程序员进行任何干预。这种 <strong>回收受管内存环境中的未使用内存的机制</strong> 称为“ <strong>垃圾回收”</strong> 。垃圾回收有两个目标： <strong>在程序中查找将来无法访问的数据对象</strong> ，并 <strong>回收这些对象使用的资源</strong> 。</p>
+<h4 id="Android做法"><a href="#Android做法" class="headerlink" title="Android做法"></a>Android做法</h4><p>Android 的内存堆是分代的，这意味着它会根据分配对象的 <strong>预期寿命和大小</strong> 跟踪不同的 <strong>分配存储分区</strong> 。例如，最近分配的对象属于“ <strong>新生代</strong> ”。当某个对象保持活动状态达足够长的时间时，可将其提升为 <strong>较老代</strong> ，然后是 <strong>永久代</strong> 。<br>堆的每一代对相应对象可占用的内存量都有其自身的专用上限。 <strong>每当一代开始填满时，系统便会执行垃圾回收事件以释放内存。</strong></p>
+<p>垃圾回收的 <strong>持续时间</strong> 取决于它 <strong>回收的是哪一代</strong> 对象以及 <strong>每一代有多少个活动对象</strong> 。</p>
+<p>尽管垃圾回收速度非常快，但仍会影响应用的性能。系统有一套专门确定何时执行垃圾回收的标准。当条件满足时，系统会停止执行进程并开始垃圾回收。如果 <em>在动画或音乐播放等密集型处理循环过程中发生垃圾回收，则可能会增加处理时间</em> ，进而可能会导致应用中的代码执行超出建议的 16ms 阈值， <em>无法实现高效、流畅的帧渲染</em> 。</p>
+<p>此外，您的代码流执行的各种工作可能迫使垃圾回收事件发生得更频繁或导致其持续时间超过正常范围。 例如， <em>如果您在 Alpha 混合动画的每一帧期间，在 for 循环的最内层分配多个对象，则可能会使内存堆受到大量对象的影响</em> 。在这种情况下，垃圾回收器会执行多个垃圾回收事件，并可能降低应用的性能。</p>
+<h3 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h3><p>为了在 RAM 中容纳所需的一切，Android 会尝试跨进程共享 RAM 页面。<br>方式：</p>
+<ul>
+<li><p>每个应用进程都从一个 <strong>名为 Zygote 的现有进程分叉</strong> 。系统启动并加载通用框架代码和资源（如 Activity 主题背景）时，Zygote 进程随之启动。为启动新的应用进程，系统会分叉 Zygote 进程，然后在新进程中加载并运行应用代码。这种方法使为框架代码和资源分配的大多数 RAM 页面可在所有应用进程之间共享。</p>
+</li>
+<li><p>大多数 <strong>静态数据会内存映射到一个进程中</strong> 。这种方法使得数据不仅可以在进程之间共享，还可以在需要时换出。静态数据示例包括：Dalvik 代码（通过将其放入预先链接的 .odex 文件中进行直接内存映射）、应用资源（通过将资源表格设计为可内存映射的结构以及通过对齐 APK 的 zip 条目）和传统项目元素（如 .so 文件中的原生代码）。</p>
+</li>
+<li><p>在很多地方，Android 使用 <strong>明确分配的共享内存区域（通过 ashmem 或 gralloc）</strong> 在进程间共享同一 <strong>动态 RAM</strong> 。例如，窗口 surface 在应用和屏幕合成器之间使用共享内存，而光标缓冲区则在内容提供程序和客户端之间使用共享内存。</p>
+</li>
+</ul>
+<h3 id="分配与回收应用内存"><a href="#分配与回收应用内存" class="headerlink" title="分配与回收应用内存"></a>分配与回收应用内存</h3><p><strong>Dalvik 堆</strong> 局限于 <strong>每个应用进程的单个虚拟内存范围</strong> 。这定义了 <strong>逻辑堆大小</strong> ，该大小可以根据需要增长，但不能超过系统为每个应用定义的上限。</p>
+<p>堆的逻辑大小与 <strong>堆使用的物理内存量</strong> 不同。在检查应用堆时，Android 会 <strong>计算</strong> 按比例分摊的内存大小 <strong>(PSS) 值</strong> ，该值同时考虑与其他进程共享的脏页和干净页，但其数量与共享该 RAM 的应用数量成正比。此 (PSS) 总量是系统认为的 <strong>物理内存占用</strong> 量。有关 PSS 的详情，请参阅调查 RAM 使用量指南: <a href="https://developer.android.com/studio/profile/memory-profiler" target="_blank" rel="noopener">https://developer.android.com/studio/profile/memory-profiler</a>。</p>
+<p>Dalvik 堆不压缩堆的逻辑大小，这意味着 Android 不会对堆进行碎片整理来缩减空间。只有当堆末尾存在未使用的空间时，Android 才能缩减逻辑堆大小。但是，系统仍然可以减少堆使用的物理内存。垃圾回收之后，Dalvik 遍历堆并查找未使用的页面，然后使用 madvise 将这些页面返回给内核。因此，大数据块的配对分配和解除分配应该使所有（或几乎所有）使用的物理内存被回收。但是，从较小分配量中回收内存的效率要低得多，因为用于较小分配量的页面可能仍在与其他尚未释放的数据块共享。</p>
+<h4 id="PSS"><a href="#PSS" class="headerlink" title="PSS"></a>PSS</h4><p>PSS(Proportional Set Size)：按比例分摊的内存大小</p>
+<blockquote>
+<p>Proportional 比例的，成比例的<br> Proportional Set Size: 按照比例设置的大小，按比例分摊的内存大小，即 <strong>实际使用的物理内存</strong></p>
+</blockquote>
+<h3 id="限制应用内存"><a href="#限制应用内存" class="headerlink" title="限制应用内存"></a>限制应用内存</h3><p>为了维持多任务环境的正常运行，Android 会为每个应用的 <strong>堆大小</strong> 设置硬性 <strong>上限</strong> 。如果您的应用在达到堆容量上限后尝试分配更多内存，则可能会收到 <strong>OutOfMemoryError</strong> 。<br>在某些情况下，例如，为了确定在缓存中保存多少数据比较安全，您可能需要查询系统以确定 <strong>当前设备上确切可用的堆空间大小</strong> 。您可以通过调用 <strong>getMemoryClass()</strong> 向系统查询此数值。此方法返回一个整数，表示 <strong>应用堆的可用兆字节数</strong> 。</p>
+<h3 id="切换应用"><a href="#切换应用" class="headerlink" title="切换应用"></a>切换应用</h3><p>当用户在应用之间切换时，Android 会在最近最少使用 (LRU) 缓存中保留 <strong>非前台应用</strong> ，即用户看不到或不在运行前台服务（如 <em>音乐播放</em> ）的应用。例如，当用户首次启动某个应用时，系统会为其创建一个进程；但是当用户离开此应用时，该进程不会退出。系统会将该进程保留在缓存中。如果用户稍后返回该应用，则系统会重复使用该进程，从而加快应用切换速度。</p>
+<p>如果您的应用具有缓存进程且保留了目前不需要的内存，那么即使用户不在使用您的应用，它也会影响系统的整体性能。当系统 <strong>内存不足时</strong> ，它会从最近最少使用的进程开始， <strong>终止 LRU 缓存中的进程</strong> 。系统还会考虑终止占用最多内存的进程以释放 RAM。</p>
+<h2 id="进程间内存分配"><a href="#进程间内存分配" class="headerlink" title="进程间内存分配"></a>进程间内存分配</h2><p>Android 平台在运行时不会浪费可用的内存。它会一直尝试利用所有可用内存。</p>
+<h3 id="内存类型"><a href="#内存类型" class="headerlink" title="内存类型"></a>内存类型</h3><p>Android 设备包含三种不同类型的内存：RAM、zRAM 和存储器</p>
+<p><img src="0.1_Android内存管理/1592449330748.png" alt="Alt text"></p>
+<p>RAM 是最快的内存类型，但其大小通常有限。高端设备通常具有最大的 RAM 容量。</p>
+<p>zRAM 是用于交换空间的 RAM 分区。所有数据在放入 zRAM 时都会进行压缩，然后在从 zRAM 向外复制时进行解压缩。这部分 RAM 会随着页面进出 zRAM 而增大或缩小。设备制造商可以设置 zRAM 大小上限。</p>
+<p>存储器中包含所有持久性数据（例如文件系统等），以及为所有应用、库和平台添加的对象代码。存储器比另外两种内存的容量大得多。在 Android 上，存储器不像在其他 Linux 实现上那样用于交换空间，因为频繁写入会导致这种内存出现损坏，并缩短存储媒介的使用寿命。</p>
+<h3 id="内存页面"><a href="#内存页面" class="headerlink" title="内存页面"></a>内存页面</h3><p>RAM 分为多个“页面”。通常，每个页面为 4KB 的内存。</p>
+<p>系统会将页面视为“可用”或“已使用”。</p>
+<h4 id="可用页面"><a href="#可用页面" class="headerlink" title="可用页面"></a>可用页面</h4><h4 id="已使用页面"><a href="#已使用页面" class="headerlink" title="已使用页面"></a>已使用页面</h4><h5 id="缓存页"><a href="#缓存页" class="headerlink" title="缓存页"></a>缓存页</h5><p>有存储器中的文件（例如代码或内存映射文件）支持的内存。缓存内存有两种类型：</p>
+<ol>
+<li><p>私有页：由一个进程拥有且未共享</p>
+<ul>
+<li><p>干净页：存储器中未经修改的文件副本，可由 kswapd 删除以增加可用内存</p>
+</li>
+<li><p>脏页：存储器中经过修改的文件副本；可由 kswapd 移动到 zRAM 或在 zRAM 中进行压缩以增加可用内存</p>
+</li>
+</ul>
+</li>
+<li><p>共享页：由多个进程使用</p>
+<ul>
+<li><p>干净页：存储器中未经修改的文件副本，可由 kswapd 删除以增加可用内存</p>
+</li>
+<li><p>脏页：存储器中经过修改的文件副本；允许通过 kswapd 或者通过明确使用 msync() 或 munmap() 将更改写回存储器中的文件，以增加可用空间</p>
+</li>
+</ul>
+</li>
+</ol>
+<h5 id="匿名页："><a href="#匿名页：" class="headerlink" title="匿名页："></a>匿名页：</h5><p>没有存储器中的文件支持的内存（例如，由设置了 MAP_ANONYMOUS 标记的 mmap() 进行分配）<br>脏页：可由 kswapd 移动到 zRAM/在 zRAM 中进行压缩以增加可用内存</p>
+<blockquote>
+<p>注意：干净页包含存在于存储器中的文件（或文件一部分）的精确副本。如果干净页不再包含文件的精确副本（例如，因应用操作所致），则会变成脏页。干净页可以删除，因为始终可以使用存储器中的数据重新生成它们；脏页则不能删除，否则数据将会丢失。<br> 随着系统积极管理 RAM，可用和已使用页面的比例会不断变化。</p>
+</blockquote>
+<h3 id="内存不足管理"><a href="#内存不足管理" class="headerlink" title="内存不足管理"></a>内存不足管理</h3><p>Android 有两种处理内存不足情况的主要机制： <strong>内核交换守护进程</strong> 和 <strong>低内存终止守护进程</strong> 。</p>
+<h4 id="内核交换守护进程"><a href="#内核交换守护进程" class="headerlink" title="内核交换守护进程"></a>内核交换守护进程</h4><p>内核交换守护进程 (kernel swap daemon, kswapd) 是 Linux 内核的一部分，用于将已使用内存转换为可用内存。当设备上的可用内存不足时，该守护进程将变为活动状态。Linux 内核设有可用内存上下限阈值。当可用内存降至下限阈值以下时，kswapd 开始回收内存。当可用内存达到上限阈值时，kswapd 停止回收内存。</p>
+<p>kswapd 可以删除干净页来回收它们，因为这些页受到存储器的支持且未经修改。如果某个进程尝试处理已删除的干净页，则系统会将该页面从存储器复制到 RAM。此操作称为“请求分页”。</p>
+<p>kswapd 可以将缓存的私有脏页和匿名脏页移动到 zRAM 进行压缩。这样可以释放 RAM 中的可用内存（可用页面）。如果某个进程尝试处理 zRAM 中的脏页，该页将被解压缩并移回到 RAM。如果与压缩页面关联的进程被终止，则该页面将从 zRAM 中删除。</p>
+<p>如果可用内存量低于特定阈值，系统会开始终止进程。</p>
+<h4 id="低内存终止守护进程"><a href="#低内存终止守护进程" class="headerlink" title="低内存终止守护进程"></a>低内存终止守护进程</h4><p>很多时候，kswapd 不能为系统释放足够的内存。在这种情况下，系统会使用 onTrimMemory() 通知应用内存不足，应该减少其分配量。如果这还不够，内核会开始终止进程以释放内存。它会使用低内存终止守护进程 ( low-memory killer, LMK) 来执行此操作。</p>
+<p>LMK 使用一个名为 oom_adj_score 的“内存不足”分值来确定正在运行的进程的优先级，以此决定要终止的进程。最高得分的进程最先被终止。后台应用最先被终止，系统进程最后被终止。下表列出了从高到低的 LMK 评分类别。评分最高的类别，即第一行中的项目将最先被终止：</p>
+<p><img src="0.1_Android内存管理/1592451159557.png" alt="Alt text"></p>
+<ul>
+<li><p>后台应用：之前运行过且当前不处于活动状态的应用。LMK 将首先从具有最高 oom_adj_score 的应用开始终止后台应用。</p>
+</li>
+<li><p>上一个应用：最近用过的后台应用。上一个应用比后台应用具有更高的优先级（得分更低），因为相比某个后台应用，用户更有可能切换到上一个应用。</p>
+</li>
+<li><p>主屏幕应用：这是启动器应用。终止该应用会使壁纸消失。</p>
+</li>
+<li><p>服务：服务由应用启动，可能包括同步或上传到云端。</p>
+</li>
+<li><p>可觉察的应用：用户可通过某种方式察觉到的非前台应用，例如运行一个显示小界面的搜索进程或听音乐。</p>
+</li>
+<li><p>前台应用：当前正在使用的应用。终止前台应用看起来就像是应用崩溃了，可能会向用户提示设备出了问题。</p>
+</li>
+<li><p>持久性（服务）：这些是设备的核心服务，例如电话和 WLAN。</p>
+</li>
+<li><p>系统：系统进程。这些进程被终止后，手机可能看起来即将重新启动。</p>
+</li>
+<li><p>原生：系统使用的极低级别的进程（例如，kswapd）。</p>
+</li>
+</ul>
+<h3 id="计算内存占用量"><a href="#计算内存占用量" class="headerlink" title="计算内存占用量"></a>计算内存占用量</h3><blockquote>
+<p>在确定应用使用的内存量时，系统必须考虑共享的页面。访问相同服务或库的应用将共享内存页面。<br> 如需确定应用的内存占用量，可以使用以下任一指标：</p>
+</blockquote>
+<ul>
+<li><p>常驻内存大小 (Resident Set Size, RSS)：应用使用的共享和非共享页面的数量</p>
+</li>
+<li><p>按比例分摊的内存大小 (Proportional Set Size, PSS)：应用使用的非共享页面的数量加上共享页面的均匀分摊数量（例如，如果三个进程共享 3MB，则每个进程的 PSS 为 1MB）</p>
+</li>
+<li><p>独占内存大小 (Unique Set Size, USS)：应用使用的非共享页面数量（不包括共享页面）</p>
+</li>
+</ul>
+<p>如果操作系统想要知道所有进程使用了多少内存，那么 <strong>PSS</strong> 非常有用，因为页面只会统计一次。计算 PSS 需要花很长时间，因为系统需要确定共享的页面以及共享页面的进程数量。RSS 不区分共享和非共享页面（因此计算起来更快），更适合跟踪内存分配量的变化。</p>
+<h2 id="管理应用内存"><a href="#管理应用内存" class="headerlink" title="管理应用内存"></a>管理应用内存</h2><p>随机存取存储器 (RAM) 在任何软件开发环境中都是一项宝贵资源。虽然 Android 运行时 (ART) 和 Dalvik 虚拟机都执行例行的垃圾回收任务，但这并不意味着您可以忽略应用分配和释放内存的位置和时间。您仍然需要避免引入 <strong>内存泄漏</strong> 问题（ <strong>通常因在静态成员变量中保留对象引用而引起</strong> ），并在适当时间（如生命周期回调所定义）释放所有 Reference 对象。</p>
+<h3 id="监控可用内存和内存使用量"><a href="#监控可用内存和内存使用量" class="headerlink" title="监控可用内存和内存使用量"></a>监控可用内存和内存使用量</h3><p>您需要 <strong>先找到应用中的内存使用问题，然后才能修复问题</strong> 。Android Studio 中的内存分析器可以通过以下方式帮助您查找和诊断内存问题：</p>
+<ul>
+<li><p>了解您的应用在一段时间内如何分配内存。内存分析器可以显示实时图表，说明应用的内存使用量、分配的 Java 对象数量以及垃圾回收事件发生的时间。</p>
+</li>
+<li><p>发起垃圾回收事件，并在应用运行时拍摄 Java 堆的快照。</p>
+</li>
+<li><p>记录应用的内存分配情况，然后检查所有分配的对象、查看每个分配的堆栈轨迹，并在 Android Studio 编辑器中跳转到相应代码。</p>
+</li>
+</ul>
+<h4 id="释放内存以响应事件"><a href="#释放内存以响应事件" class="headerlink" title="释放内存以响应事件"></a>释放内存以响应事件</h4><p>如 Android 内存管理概览中所述，Android 可以通过多种方式从应用中回收内存，或在必要时完全终止应用，从而释放内存以执行关键任务。为了进一步帮助平衡系统内存并避免系统需要终止您的应用进程，您可以在 Activity 类中实现 ComponentCallbacks2 接口。借助所提供的 onTrimMemory() 回调方法，您的应用可以在处于前台或后台时监听与内存相关的事件，然后释放对象以响应指示系统需要回收内存的应用生命周期事件或系统事件。</p>
+<h4 id="查看您应该使用多少内存"><a href="#查看您应该使用多少内存" class="headerlink" title="查看您应该使用多少内存"></a>查看您应该使用多少内存</h4><p>为了允许多个进程同时运行，Android 针对为每个应用分配的堆大小设置了硬性限制。设备的确切堆大小限制因设备总体可用的 RAM 多少而异。如果您的应用已达到堆容量上限并尝试分配更多内存，系统就会抛出 OutOfMemoryError。</p>
+<p>为了避免用尽内存，您可以查询系统以确定当前设备上可用的堆空间。您可以通过调用 getMemoryInfo() 向系统查询此数值。它将返回一个 ActivityManager.MemoryInfo 对象，其中会提供与设备当前的内存状态有关的信息，包括可用内存、总内存和内存阈值（如果达到此内存级别，系统就会开始终止进程）。ActivityManager.MemoryInfo 对象还会提供一个简单的布尔值lowMemory，您可以根据此值确定设备是否内存不足。</p>
+<p>以下代码段示例演示了如何在应用中使用 getMemoryInfo() 方法。</p>
+<h3 id="使用内存效率更高的代码结构"><a href="#使用内存效率更高的代码结构" class="headerlink" title="使用内存效率更高的代码结构"></a>使用内存效率更高的代码结构</h3><p>某些 Android 功能、Java 类和代码结构所使用的内存往往多于其他功能、类和结构。您可以在代码中选择效率更高的替代方案，以尽可能降低应用的内存使用量。</p>
+<h4 id="谨慎使用服务"><a href="#谨慎使用服务" class="headerlink" title="谨慎使用服务"></a>谨慎使用服务</h4><p>在不需要某项服务时让其保持运行状态，是 Android 应用可能犯下的最严重的内存管理错误之一。如果您的应用需要某项服务在后台执行工作，请不要让其保持运行状态，除非其需要运行作业。请注意在服务完成任务后使其停止运行。否则，您可能会在无意中导致内存泄漏。</p>
+<p>在您启动某项服务后，系统更倾向于让此服务的进程始终保持运行状态。这种行为会导致服务进程代价十分高昂，因为一旦服务使用了某部分 RAM，那么这部分 RAM 就不再可供其他进程使用。这会减少系统可以在 LRU 缓存中保留的缓存进程数量，从而降低应用切换效率。当内存紧张，并且系统无法维护足够的进程以托管当前运行的所有服务时，这甚至可能导致系统出现颠簸。</p>
+<p>您通常应该避免使用持久性服务，因为它们会对可用内存提出持续性的要求。我们建议您采用 JobSchedulerJobScheduler 等替代实现方式。要详细了解如何使用 JobScheduler 调度后台进程，请参阅后台优化。</p>
+<p>如果您必须使用某项服务，则限制此服务的生命周期的最佳方式是使用 IntentService，它会在处理完启动它的 intent 后立即自行结束。有关详情，请参阅在后台服务中运行。</p>
+<h4 id="使用经过优化的数据容器"><a href="#使用经过优化的数据容器" class="headerlink" title="使用经过优化的数据容器"></a>使用经过优化的数据容器</h4><p>编程语言所提供的部分类并未针对移动设备做出优化。例如，常规 HashMap 实现的内存效率可能十分低下，因为每个映射都需要分别对应一个单独的条目对象。</p>
+<p>Android 框架包含几个经过优化的数据容器，包括 SparseArray、SparseBooleanArray 和 LongSparseArray。 例如，SparseArray 类的效率更高，因为它们可以避免系统需要对键（有时还对值）进行自动装箱（这会为每个条目分别再创建 1-2 个对象）。</p>
+<p>如果需要，您可以随时切换到原始数组以获得非常精简的数据结构。</p>
+<h4 id="谨慎对待代码抽象"><a href="#谨慎对待代码抽象" class="headerlink" title="谨慎对待代码抽象"></a>谨慎对待代码抽象</h4><p>开发者往往会将抽象简单地当做一种良好的编程做法，因为抽象可以提高代码灵活性和维护性。不过，抽象的代价很高：通常它们需要更多的代码才能执行，需要更多的时间和更多的 RAM 才能将代码映射到内存中。因此，如果抽象没有带来显著的好处，您就应该避免使用抽象。</p>
+<h4 id="针对序列化数据使用精简版-Protobuf"><a href="#针对序列化数据使用精简版-Protobuf" class="headerlink" title="针对序列化数据使用精简版 Protobuf"></a>针对序列化数据使用精简版 Protobuf</h4><p>协议缓冲区是 Google 设计的一种无关乎语言和平台，并且可扩展的机制，用于对结构化数据进行序列化。该机制与 XML 类似，但更小、更快也更简单。如果您决定针对数据使用 Protobuf，则应始终在客户端代码中使用精简版 Protobuf。常规 Protobuf 会生成极其冗长的代码，这会导致应用出现多种问题，例如 RAM 使用量增多、APK 大小显著增加以及执行速度变慢。</p>
+<p>有关详情，请参阅 Protobuf 自述文件中的“精简版”部分。</p>
+<h4 id="避免内存抖动"><a href="#避免内存抖动" class="headerlink" title="避免内存抖动"></a>避免内存抖动</h4><p>如前所述，垃圾回收事件通常不会影响应用的性能。不过，如果在短时间内发生许多垃圾回收事件，就可能会快速耗尽帧时间。系统花在垃圾回收上的时间越多，能够花在呈现或流式传输音频等其他任务上的时间就越少。</p>
+<p>通常，“内存抖动”可能会导致出现大量的垃圾回收事件。实际上，内存抖动可以说明在给定时间内出现的已分配临时对象的数量。</p>
+<p>例如，您可以在 for 循环中分配多个临时对象。或者，您也可以在视图的 onDraw() 函数中创建新的 Paint 或 Bitmap 对象。在这两种情况下，应用都会快速创建大量对象。这些操作可以快速消耗新生代 (young generation) 区域中的所有可用内存，从而迫使垃圾回收事件发生。</p>
+<p>当然，您必须先在代码中找到内存抖动较高的位置，然后才能进行修复。为此，您应该使用 Android Studio 中的内存分析器。</p>
+<p>确定代码中的问题区域后，请尝试减少对性能至关重要的区域中的分配数量。您可以考虑将某些代码逻辑从内部循环中移出，或将其移到基于 Factory 的分配结构中。</p>
+<h3 id="移除会占用大量内存的资源和库"><a href="#移除会占用大量内存的资源和库" class="headerlink" title="移除会占用大量内存的资源和库"></a>移除会占用大量内存的资源和库</h3><p>代码中的某些资源和库可能会在您不知情的情况下吞噬内存。APK 的总体大小（包括第三方库或嵌入式资源）可能会影响应用的内存消耗量。您可以通过从代码中移除任何冗余、不必要或臃肿的组件、资源或库，降低应用的内存消耗量。</p>
+<h4 id="缩减总体-APK-大小"><a href="#缩减总体-APK-大小" class="headerlink" title="缩减总体 APK 大小"></a>缩减总体 APK 大小</h4><p>您可以通过缩减应用的总体大小来显著降低应用的内存使用量。位图大小、资源、动画帧数和第三方库都会影响 APK 的大小。Android Studio 和 Android SDK 提供了可帮助您缩减资源和外部依赖项大小的多种工具。这些工具支持现代代码收缩方法，例如 R8 编译。（Android Studio 3.3 及更低版本使用 ProGuard，而不是 R8 编译。）</p>
+<p>要详细了解如何缩减 APK 的总体大小，请参阅有关如何缩减应用大小的指南。</p>
+<h4 id="使用-Dagger-2-实现依赖注入"><a href="#使用-Dagger-2-实现依赖注入" class="headerlink" title="使用 Dagger 2 实现依赖注入"></a>使用 Dagger 2 实现依赖注入</h4><p>依赖注入框架可以简化您编写的代码，并提供一个可供您进行测试及其他配置更改的自适应环境。</p>
+<p>如果您打算在应用中使用依赖注入框架，请考虑使用 Dagger 2。Dagger 不使用反射来扫描您应用的代码。Dagger 的静态编译时实现意味着它可以在 Android 应用中使用，而不会带来不必要的运行时代价或内存消耗量。</p>
+<p>其他使用反射的依赖注入框架倾向于通过扫描代码中的注释来初始化进程。此过程可能需要更多的 CPU 周期和 RAM，并可能在应用启动时导致出现明显的延迟。</p>
+<h4 id="谨慎使用外部库"><a href="#谨慎使用外部库" class="headerlink" title="谨慎使用外部库"></a>谨慎使用外部库</h4><p>外部库代码通常不是针对移动环境编写的，在移动客户端上运行时可能效率低下。如果您决定使用外部库，则可能需要针对移动设备优化该库。在决定是否使用该库之前，请提前规划，并在代码大小和 RAM 消耗量方面对库进行分析。</p>
+<p>即使是一些针对移动设备进行了优化的库，也可能因实现方式不同而导致问题。例如，一个库可能使用的是精简版 Protobuf，而另一个库使用的是 Micro Protobuf，导致您的应用出现两种不同的 Protobuf 实现。日志记录、分析、图像加载框架和缓存以及许多您意料之外的其他功能的不同实现都可能导致这种情况。</p>
+<p>虽然 ProGuard 可以使用适当的标记移除 API 和资源，但无法移除库的大型内部依赖项。您所需要的这些库中的功能可能需要较低级别的依赖项。如果存在以下情况，这就特别容易导致出现问题：您使用某个库中的 Activity 子类（往往会有大量的依赖项）、库使用反射（这很常见，意味着您需要花费大量的时间手动调整 ProGuard 以使其运行）等。</p>
+<p>此外，请避免仅针对数十个功能中的一两个功能使用共享库。您一定不希望产生大量您甚至根本用不到的代码和开销。在考虑是否使用某个库时，请查找与您的需求十分契合的实现。否则，您可以决定自己去创建实现。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.prince-y-p.com/2023/07/20/Unity3D-0-1-Android%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/20/Unity3D-0-1-Unity-Profiler/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            0.1_Unity  Profiler
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/20/Unity3D-0-0-Unity%E4%B8%8EMono%E5%92%8C-NET%E7%9A%84%E5%85%B3%E7%B3%BB/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">0.0 Unity与Mono和.NET的关系</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> Prin
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/circle_image.png" alt="半个出家人"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/Unreal">虚幻引擎</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

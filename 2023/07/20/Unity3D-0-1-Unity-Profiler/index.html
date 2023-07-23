@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>0.1_Unity  Profiler |  半个出家人</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/circle_image.png" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="半个出家人" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Unity3D-0-1-Unity-Profiler"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  0.1_Unity  Profiler
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/20/Unity3D-0-1-Unity-Profiler/" class="article-date">
+  <time datetime="2023-07-20T15:00:27.063Z" itemprop="datePublished">2023-07-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">10 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="0-1-Unity-Profiler"><a href="#0-1-Unity-Profiler" class="headerlink" title="0.1_Unity Profiler"></a>0.1_Unity Profiler</h1><h1 id="0-1-Unity-Profiler-1"><a href="#0-1-Unity-Profiler-1" class="headerlink" title="0.1_Unity Profiler"></a>0.1_Unity Profiler</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Profiler 中看到的内存是通过 unity 自身引擎看到的内存分配,凡是 <strong>引擎创建和销毁的内存</strong> ,引擎有记录,可以给出准确的引用内存占用信息。第三方库的内存分配无法进行统计,以及一些其他的内存分配是无法进行统计的。</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><h4 id="真实环境内存"><a href="#真实环境内存" class="headerlink" title="真实环境内存"></a>真实环境内存</h4><p>在真实环境上面,(例如移动设备上面,Xcode的 instrument,Android 的 USS)内存都比 profiler 上要多<br>因为这些内存包括2部分</p>
+<ul>
+<li><p>真实的 used 的物理内存</p>
+</li>
+<li><p>缓存的(cached)的物理内存,这是不同平台决定的.Android 和 iOS 系统在资源不使用的时候均不会立即将其进行回收,而是将其放在缓存的物理内存中,以便下次再使用时,可以快速的加载.</p>
+</li>
+</ul>
+<p>unity 的 profiler 只记录目前真实使用的物理内存,即上述所说的 A 部分内存.</p>
+<p>当系统发现 APP 的内存不够用时,才会在底层调用一个 memory killer 线程来轮询缓存物理内存,为 APP 清理内存.</p>
+<h4 id="PersistentManager-Remapper"><a href="#PersistentManager-Remapper" class="headerlink" title="PersistentManager.Remapper"></a>PersistentManager.Remapper</h4><p>主要提供文件的持久化存储,包括各种序列化的 asset,项目的 setting 文件,维护文件系统中的文件与内存中数据的对应关系.如果项目中大量适用 AssetBundle ,在对 AsserBundle 进行 Unload 之前都会需要占用 Remapper 的内存的,而 Remapper 本身的实现适用内存池,其数值只会增大,那么为了使 Remapper 占用的内存保持稳定,则在加载一定数量的 AssetBundle 之后需要进行 Unload 操作,而不要一次性把所有的 AssetBundle 进行 Unload.(这样的操作对维持整个 mono heap 的大小也是重要的,mono heap 本身也是只增大不减小的)</p>
+<h2 id="分析结果"><a href="#分析结果" class="headerlink" title="分析结果"></a>分析结果</h2><p>Unity 在本机联合代码中分配的内存数量<br>Mono 托管代码所使用的堆大小和堆大小。这个内存是垃圾收集的<br>GfxDriver 驱动程序在纹理上使用的估计内存数量，呈现目标、着色器和网格数据。<br>FMOD 音频驱动程序的内存使用情况<br>Profiler 用于分析器数据的内存</p>
+<p>内存统计信息显示在一些最常见的asset/object类型中。这些统计数据包括计数和使用的内存：<br>Textures<br>Meshes<br>Materials<br>Animations<br>Audio<br>Object Count</p>
+<p>游戏对象在内存中常见的原因包括:<br>Assets:从用户或本机代码引用的资产<br>Built-in Resources:统一编辑器资源或统一缺省资源<br>Not Saved:标记为DontSave的GameObjects<br>Scene Memory: GameObject和附加组件<br>Other: 在上面的类别中没有标记的配子</p>
+<h2 id="Profiler-UI显示数据"><a href="#Profiler-UI显示数据" class="headerlink" title="Profiler UI显示数据"></a>Profiler UI显示数据</h2><p>Uesd Total :<br>当前帧的Unity内存，Mono内存，GfxDriver内存，Profiler内存以及额外内存的总和。<br>Used total = Unity + Mono + GfxDriver + Profiler + additionalUsedMemory.</p>
+<blockquote>
+<p>additionalUsedMemory在profiler 中没有显示,因为在大多数平台下都为 0(PC/Android/iOS 都为 0),一般情况下 Used Total 的值就是除 FMOD 之外各项的总和了.Reserved Total 同样适用的.</p>
+</blockquote>
+<p>Reserved Total：<br>系统在当前帧申请的总体物理内存</p>
+<p>Total System Memory Usage：<br>当前帧的虚拟内存使用量</p>
+<p>GameObjects in Scene：<br>当前帧场景中的GameObject数量</p>
+<p>Total Objects in Scene：<br>当前帧场景中的Object数量（除GameObject外，还有各种Component）</p>
+<p>Total Object Count：<br>所有Object数量</p>
+<h2 id="API-UnityEngine-Profiling-Profiler"><a href="#API-UnityEngine-Profiling-Profiler" class="headerlink" title="API UnityEngine.Profiling.Profiler"></a>API UnityEngine.Profiling.Profiler</h2><h3 id="使用要求"><a href="#使用要求" class="headerlink" title="使用要求"></a>使用要求</h3><h4 id="in-your-built-app"><a href="#in-your-built-app" class="headerlink" title="in your built app"></a>in your built app</h4><p>most of the Profiler API functionality is only available when “Development Build” is enabled. This means you must enable “Developer Build” if you want to use profiler API methods in your built app.</p>
+<p>Disabling “Development Build” makes your app run faster, but prevents you from using most of the Profiler API methods.</p>
+<p>The exception to this are the Profiler API methods relating to memory usage. Because Unity manages most of its system memory at run-time, it can provide that information with no performance penalty, therefore those methods are available even if “Development Build” is not enabled. </p>
+<h3 id="Static-Properties"><a href="#Static-Properties" class="headerlink" title="Static Properties"></a>Static Properties</h3><h4 id="usedHeapSizeLong"><a href="#usedHeapSizeLong" class="headerlink" title="usedHeapSizeLong"></a>usedHeapSizeLong</h4><p>Returns the number of bytes that Unity has allocated. This does not include bytes allocated by external libraries or drivers.</p>
+<h3 id="Static-Methods"><a href="#Static-Methods" class="headerlink" title="Static Methods"></a>Static Methods</h3><h4 id="GetAllocatedMemoryForGraphicsDriver"><a href="#GetAllocatedMemoryForGraphicsDriver" class="headerlink" title="GetAllocatedMemoryForGraphicsDriver"></a>GetAllocatedMemoryForGraphicsDriver</h4><p>Returns the amount of <strong>allocated memory for the graphics driver</strong> , in bytes.<br>Only available in development players and editor.</p>
+<h4 id="GetMonoHeapSizeLong-Reserved-Mono"><a href="#GetMonoHeapSizeLong-Reserved-Mono" class="headerlink" title="GetMonoHeapSizeLong (Reserved Mono)"></a>GetMonoHeapSizeLong (Reserved Mono)</h4><p>Returns the size of the <strong>reserved space for managed-memory</strong>.</p>
+<h4 id="GetMonoUsedSizeLong-Used-Mono"><a href="#GetMonoUsedSizeLong-Used-Mono" class="headerlink" title="GetMonoUsedSizeLong (Used Mono)"></a>GetMonoUsedSizeLong (Used Mono)</h4><p>The <strong>allocated managed-memory</strong> for live objects and non-collected objects.</p>
+<h4 id="GetRuntimeMemorySizeLong-native-memory-by-Unity-Obj"><a href="#GetRuntimeMemorySizeLong-native-memory-by-Unity-Obj" class="headerlink" title="GetRuntimeMemorySizeLong (native-memory by Unity Obj)"></a>GetRuntimeMemorySizeLong (native-memory by Unity Obj)</h4><p>Gathers the <strong>native-memory used by a Unity object</strong>.</p>
+<h4 id="GetTempAllocatorSize"><a href="#GetTempAllocatorSize" class="headerlink" title="GetTempAllocatorSize"></a>GetTempAllocatorSize</h4><p>Returns the size of the temp allocator.</p>
+<h4 id="GetTotalAllocatedMemoryLong"><a href="#GetTotalAllocatedMemoryLong" class="headerlink" title="GetTotalAllocatedMemoryLong"></a>GetTotalAllocatedMemoryLong</h4><p>The total memory allocated by the internal allocators in Unity. </p>
+<blockquote>
+<p>Unity <strong>reserves large pools of memory</strong> from the system. This function returns <strong>the amount of used memory in those pools</strong>.</p>
+</blockquote>
+<h4 id="GetTotalReservedMemoryLong"><a href="#GetTotalReservedMemoryLong" class="headerlink" title="GetTotalReservedMemoryLong"></a>GetTotalReservedMemoryLong</h4><p>The total memory Unity has reserved.</p>
+<h4 id="GetTotalUnusedReservedMemoryLong"><a href="#GetTotalUnusedReservedMemoryLong" class="headerlink" title="GetTotalUnusedReservedMemoryLong"></a>GetTotalUnusedReservedMemoryLong</h4><p>Unity allocates memory in pools for usage when unity needs to allocate memory. This function returns the amount of unused memory in these pools.</p>
+<h3 id="API和UI界面数据对应关系Table"><a href="#API和UI界面数据对应关系Table" class="headerlink" title="API和UI界面数据对应关系Table"></a>API和UI界面数据对应关系Table</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Profiler UI界面</th>
+<th>API  </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reserved Unity</td>
+<td>GetTotalReservedMemoryLong  </td>
+</tr>
+<tr>
+<td>Used Unity</td>
+<td>GetTotalAllocatedMemoryLong  </td>
+</tr>
+<tr>
+<td>Reserved Mono</td>
+<td>GetMonoHeapSizeLong  </td>
+</tr>
+<tr>
+<td>Used Mono</td>
+<td>GetMonoUsedSizeLong  </td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="优化项目（对于选定帧）"><a href="#优化项目（对于选定帧）" class="headerlink" title="优化项目（对于选定帧）"></a>优化项目（对于选定帧）</h2><h3 id="显示的项"><a href="#显示的项" class="headerlink" title="显示的项"></a>显示的项</h3><p>选中后，unity会自动获取这一帧的内存占用数据项，主要分为：Other、Assets、BuiltinResources、Scene Memory、NotSaved这五大部分</p>
+<h4 id="Other"><a href="#Other" class="headerlink" title="Other"></a>Other</h4><h5 id="System-ExecutableAndDlls"><a href="#System-ExecutableAndDlls" class="headerlink" title="System.ExecutableAndDlls"></a>System.ExecutableAndDlls</h5><p>统可执行程序和DLL，是只读的内存，用来执行所有的脚本和DLL引用。不同平台和不同硬件得到的值会不一样，可以通过修改Player Setting的Stripping Level来调节大小。<br>Ricky：我试着修改了一下Stripping Level似乎没什么改变，感觉虽占用内存大但不会影响游戏运行。我们暂时忽略它吧(- -)!</p>
+<h5 id="GfxDeviceClient"><a href="#GfxDeviceClient" class="headerlink" title="GfxDeviceClient"></a>GfxDeviceClient</h5><p>GFX（图形加速\图形加速器\显卡 (GraphicsForce Express)）客户端设备。<br>Ricky：虽占用较大内存，但这也是必备项，没办法优化。继续忽略吧(- -)!!</p>
+<h5 id="ManagedHeap-UsedSize"><a href="#ManagedHeap-UsedSize" class="headerlink" title="ManagedHeap.UsedSize"></a>ManagedHeap.UsedSize</h5><p>托管堆使用大小。<br>Ricky：重点监控对象，不要让它超过20MB，否则可能会有性能问题！</p>
+<h5 id="ShaderLab"><a href="#ShaderLab" class="headerlink" title="ShaderLab"></a>ShaderLab</h5><p>Unity自带的着色器语言工具相关资源。<br>Ricky：这个东西大家都比较熟悉了，忽略它吧。</p>
+<h5 id="SerializedFile"><a href="#SerializedFile" class="headerlink" title="SerializedFile"></a>SerializedFile</h5><p>序列化文件，把显示中的Prefab、Atlas和metadata等资源加载进内存。<br>Ricky：重点监控对象，这里就是你要监控的哪些预设在序列化中在内存中占用大小，根据需求进行优化。</p>
+<h5 id="PersistentManager-Remapper-1"><a href="#PersistentManager-Remapper-1" class="headerlink" title="PersistentManager.Remapper"></a>PersistentManager.Remapper</h5><p>持久化数据重映射管理相关<br>Ricky：与持久化数据相关，比如AssetBundle之类的。注意监控相关的文件。</p>
+<h5 id="ManagedHeap-ReservedUnusedSize"><a href="#ManagedHeap-ReservedUnusedSize" class="headerlink" title="ManagedHeap.ReservedUnusedSize"></a>ManagedHeap.ReservedUnusedSize</h5><p>托管堆预留不使用内存大小，只由Mono使用。<br>Ricky：无法优化。</p>
+<h4 id="Assets"><a href="#Assets" class="headerlink" title="Assets"></a>Assets</h4><h5 id="Texture2D"><a href="#Texture2D" class="headerlink" title="Texture2D"></a>Texture2D</h5><p>2D贴图及纹理。<br>Ricky：重点优化对象，有以下几点可以优化：</p>
+<ol>
+<li><p>许多贴图采用的Format格式是ARGB 32 bit所以保真度很高但占用的内存也很大。在不失真的前提下，适当压缩贴图，使用ARGB 16 bit就会减少一倍，如果继续Android采用RGBA Compressed ETC2 8 bits（iOS采用RGBA Compressed PVRTC 4 bits），又可以再减少一倍。把不需要透贴但有alpha通道的贴图，全都转换格式Android：RGB Compressed ETC 4 bits，iOS：RGB Compressed PVRTC 4 bits。</p>
+</li>
+<li><p>当加载一个新的Prefab或贴图，不及时回收，它就会永驻在内存中，就算切换场景也不会销毁。应该确定物体不再使用或长时间不使用就先 <strong>把物体制空(null)，然后调用Resources.UnloadUnusedAssets()</strong> ，才能真正释放内存。</p>
+</li>
+<li><p>有大量空白的图集贴图，可以用TexturePacker等工具进行优化或考虑合并到其他图集中。</p>
+</li>
+</ol>
+<h5 id="AudioManager"><a href="#AudioManager" class="headerlink" title="AudioManager"></a>AudioManager</h5><p>音频管理器<br>Ricky：随着音频文件的增多而增大。</p>
+<h5 id="AudioClip"><a href="#AudioClip" class="headerlink" title="AudioClip"></a>AudioClip</h5><p>音效及声音文件<br>Ricky：重点优化对象，播放时长较长的音乐文件需要进行压缩成.mp3或.ogg格式，时长较短的音效文件可以使用.wav 或.aiff格式。</p>
+<h5 id="Cubemap"><a href="#Cubemap" class="headerlink" title="Cubemap"></a>Cubemap</h5><p>立方图纹理<br>Ricky：这个一般在天空盒中比较常见，我也不知道如何优化这个。。。</p>
+<h5 id="Mesh"><a href="#Mesh" class="headerlink" title="Mesh"></a>Mesh</h5><p>模型网格<br>Ricky：主要检查是否有重复的资源，还有尽量减少点面数。</p>
+<h4 id="Scene-Memory"><a href="#Scene-Memory" class="headerlink" title="Scene Memory"></a>Scene Memory</h4><h5 id="Mesh-1"><a href="#Mesh-1" class="headerlink" title="Mesh"></a>Mesh</h5><p>场景中使用的网格模型<br>Ricky：注意网格模型的点面数，能合并的mesh尽量合并。</p>
+<h5 id="Builtin-Resources"><a href="#Builtin-Resources" class="headerlink" title="Builtin Resources"></a>Builtin Resources</h5><p>Ricky：这些都是Unity的一些内部资源，对于项目内存没有什么分析价值，所以我就暂时不对其进行分析了。</p>
+<h3 id="Profiler内存重点关注优化项目"><a href="#Profiler内存重点关注优化项目" class="headerlink" title="Profiler内存重点关注优化项目"></a>Profiler内存重点关注优化项目</h3><ol>
+<li><p>ManagedHeap.UsedSize: 移动游戏建议不要超过20MB.</p>
+</li>
+<li><p>SerializedFile: 通过异步加载(LoadFromCache、WWW等)的时候留下的序列化文件,可监视是否被卸载.</p>
+</li>
+<li><p>WebStream: 通过异步WWW下载的资源文件在内存中的解压版本，比SerializedFile大几倍或几十倍，</p>
+</li>
+<li><p>Texture2D: 重点检查是否有重复资源和超大Memory是否需要压缩等.</p>
+</li>
+<li><p>AnimationClip: 重点检查是否有重复资源.</p>
+</li>
+<li><p>Mesh： 重点检查是否有重复资源.</p>
+</li>
+</ol>
+<h3 id="项目中可能遇到的问题"><a href="#项目中可能遇到的问题" class="headerlink" title="项目中可能遇到的问题"></a>项目中可能遇到的问题</h3><h4 id="1-Device-Present"><a href="#1-Device-Present" class="headerlink" title="1.Device.Present:"></a>1.Device.Present:</h4><p>1）GPU的presentdevice确实非常耗时，一般出现在使用了非常复杂的shader.<br>2）GPU运行的非常快，而由于Vsync的原因，使得它需要等待较长的时间.<br>3）同样是Vsync的原因，但其他线程非常耗时，所以导致该等待时间很长，比如：过量AssetBundle加载时容易出现该问题.<br>4）Shader.CreateGPUProgram:Shader在runtime阶段（非预加载）会出现卡顿(华为K3V2芯片).<br>5）StackTraceUtility.PostprocessStacktrace()和StackTraceUtility.ExtractStackTrace(): 一般是由Debug.Log或类似API造成，游戏发布后需将Debug API进行屏蔽。</p>
+<h4 id="2-Overhead"><a href="#2-Overhead" class="headerlink" title="2.Overhead:"></a>2.Overhead:</h4><p>1）一般情况为Vsync所致.<br>2）通常出现在Android设备上.</p>
+<h4 id="3-GC-Collect"><a href="#3-GC-Collect" class="headerlink" title="3.GC.Collect:"></a>3.GC.Collect:</h4><p>原因：<br>1）代码分配内存过量(恶性的)<br>2）一定时间间隔由系统调用(良性的).<br>占用时间：<br>1）与现有Garbage size相关<br>2）与剩余内存使用颗粒相关（比如场景物件过多，利用率低的情况下，GC释放后需要做内存重排)</p>
+<h4 id="4-GarbageCollectAssetsProfile"><a href="#4-GarbageCollectAssetsProfile" class="headerlink" title="4.GarbageCollectAssetsProfile:"></a>4.GarbageCollectAssetsProfile:</h4><p>1）引擎在执行UnloadUnusedAssets操作（该操作是比较耗时的,建议在切场景的时候进行）。<br>2）尽可能地避免使用Unity内建GUI，避免GUI.Repaint过渡GCAllow.<br>3）if(other.tag == a.tag)改为other.CompareTag(a.tag).因为other.tag为产生180B的GC Allow.<br>4）少用foreach，因为每次foreach为产生一个enumerator(约16B的内存分配)，尽量改为for.<br>5）Lambda表达式，使用不当会产生内存泄漏.</p>
+<h4 id="5-尽量少用LINQ："><a href="#5-尽量少用LINQ：" class="headerlink" title="5.尽量少用LINQ："></a>5.尽量少用LINQ：</h4><p>1）部分功能无法在某些平台使用.<br>2）会分配大量GC Allow.</p>
+<h4 id="6-控制StartCoroutine的次数："><a href="#6-控制StartCoroutine的次数：" class="headerlink" title="6.控制StartCoroutine的次数："></a>6.控制StartCoroutine的次数：</h4><p>1）开启一个Coroutine(协程)，至少分配37B的内存.<br>2）Coroutine类的实例 -&gt; 21B.<br>3）Enumerator -&gt; 16B.</p>
+<h4 id="7-使用StringBuilder替代字符串直接连接"><a href="#7-使用StringBuilder替代字符串直接连接" class="headerlink" title="7.使用StringBuilder替代字符串直接连接."></a>7.使用StringBuilder替代字符串直接连接.</h4><h4 id="8-缓存组件"><a href="#8-缓存组件" class="headerlink" title="8.缓存组件:"></a>8.缓存组件:</h4><p>1）每次GetComponent均会分配一定的GC Allow.<br>2）每次Object.name都会分配39B的堆内存.</p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.cnblogs.com/yanghui0702/p/yanghui20181026.html" target="_blank" rel="noopener">https://www.cnblogs.com/yanghui0702/p/yanghui20181026.html</a><br><a href="https://zhuanlan.zhihu.com/p/139235851" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/139235851</a><br><a href="https://www.jianshu.com/p/3c5540637525" target="_blank" rel="noopener">https://www.jianshu.com/p/3c5540637525</a></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.prince-y-p.com/2023/07/20/Unity3D-0-1-Unity-Profiler/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/20/Unity3D-0-2-IL2CPP/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            0.2_IL2CPP
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/20/Unity3D-0-1-Android%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">0.1_Android内存管理</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> Prin
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/circle_image.png" alt="半个出家人"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/Unreal">虚幻引擎</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

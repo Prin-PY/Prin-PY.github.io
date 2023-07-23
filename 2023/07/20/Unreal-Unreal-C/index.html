@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Unreal C++ |  半个出家人</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/circle_image.png" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="半个出家人" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Unreal-Unreal-C"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Unreal C++
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/20/Unreal-Unreal-C/" class="article-date">
+  <time datetime="2023-07-20T15:00:29.308Z" itemprop="datePublished">2023-07-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">10 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <ul>
+<li>概念 </li>
+<li>Compiling <ul>
+<li><ul>
+<li>我的Q&amp;A </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>Forward Declaration  </p>
+<p><img src="assets/Unreal%20C++/Image.png" alt=""></p>
+<h2 id="Compiling"><a href="#Compiling" class="headerlink" title="Compiling"></a>Compiling</h2><h3 id=""><a href="#" class="headerlink" title=" "></a> </h3><p><a href="https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/DevelopmentSetup/CompilingProjects/" target="_blank" rel="noopener">https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/DevelopmentSetup/CompilingProjects/</a></p>
+<h2 id="我的Q-amp-A"><a href="#我的Q-amp-A" class="headerlink" title="我的Q&amp;A"></a>我的Q&amp;A</h2><h3 id="Class-Naming-Prefix"><a href="#Class-Naming-Prefix" class="headerlink" title="Class Naming Prefix"></a>Class Naming Prefix</h3><p>Actor - A</p>
+<p>Object - U<br>Enums - E<br>Interface - I<br>Template - T<br>SWidget - S<br>F - else</p>
+<h2 id="关于宏定义"><a href="#关于宏定义" class="headerlink" title="关于宏定义"></a>关于宏定义</h2><h3 id="C-宏定义"><a href="#C-宏定义" class="headerlink" title="C++宏定义"></a>C++宏定义</h3><p>编译过程  </p>
+<p><img src="assets/Unreal%20C++/Image_1.png" alt=""></p>
+<p><img src="assets/Unreal%20C++/Image_2.png" alt=""></p>
+<p><a href="https://blog.csdn.net/yanggangclcsdn/article/details/49704089" target="_blank" rel="noopener">https://blog.csdn.net/yanggangclcsdn/article/details/49704089</a></p>
+<p>每个#define行（即逻辑行）由三部分组成：</p>
+<p><code>csharp #define 宏名 替换文本</code> </p>
+<p>指令 - “#”表示这是一条预处理命令，“define”为宏命令<br>宏（macro） - 一般为缩略语，其名称（宏名）一般大写，而且不能有空格，遵循C变量命令规则<br>替换文本”-任意常数、表达式、字符串等</p>
+<p>包括 有参宏 和 无参宏 两种</p>
+<h4 id="可变宏"><a href="#可变宏" class="headerlink" title="可变宏"></a>可变宏</h4><p><code>csharp #define PR2(X, ...) printf(&quot;Message&quot;#X&quot;:&quot;__VA_ARGS__) //宏定义 double msg = 10; PR2(1, &quot;msg = %.2f\n&quot;, msg); //宏调用 //输出结果：Message1:msg = 10.00</code> </p>
+<h4 id="运算符：-，"><a href="#运算符：-，" class="headerlink" title="运算符：#，"></a>运算符：#，</h4><p><code>csharp #define SUM(a,b) printf(#a &quot; \+ &quot;#b&quot; = %d\n&quot;,((a) + (b))) //宏定义，运用 # 运算符 SUM(1 \+ 2, 3 \+ 4); //宏调用 //输出结果：1 + 2 + 3 + 4 = 10</code> <code>csharp #define NAME(n) num ## n //宏定义，使用 ## 运算符 int num0 = 10; printf(&quot;num0 = %d\n&quot;, NAME(0)); //宏调用</code> </p>
+<p>“##” 运算符也可以用在替换文本中，而它的作用是起到粘合的作用，即将两个语言符号组合成一个语言符号，所以又称为“ <strong>预处理器的粘合剂（Preprocessor Glue）</strong> ”。</p>
+<h4 id="宏定义-vs-typedef"><a href="#宏定义-vs-typedef" class="headerlink" title="宏定义 vs. typedef"></a>宏定义 vs. typedef</h4><p><code>csharp #define INT1 int * typedef int * INT2; INT1 a1, b1; INT2 a2, b2; b1 = &amp;m; //... main.c:185:8: Incompatible pointer to integer conversion assigning to &#39;int&#39; from &#39;int *&#39;; remove &amp; b2 = &amp;n; // OK</code> </p>
+<p>宏定义只是简单的字符串代换，在预处理阶段完成。而typede不是简单的字符串代换，而是可以用来做类型说明符的重命名的，类型的别名可以具有类型定义说明的功能，在编译阶段完成的。</p>
+<h4 id="宏定义-vs-函数"><a href="#宏定义-vs-函数" class="headerlink" title="宏定义 vs. 函数"></a>宏定义 vs. 函数</h4><p>所以在宏定义中：#define COUNT(M) M * M 中的形参不分配内存单元，所以不作类型定义。而函数 int count(int x)中形参是局部变量，会在栈区分配内存单元，所以要作类型定义，而且实参与形参之间是“值传递”。而宏只是符号代换，不存在值传递。</p>
+<p><code>csharp #define COUNT(M) M * M //定义有参宏 int x = 6; printf(&quot;COUNT = %d\n&quot;, COUNT(x + 1));// 输出结果： COUNT = 13 printf(&quot;COUNT = %d\n&quot;, COUNT(++x)); // 输出结果： COUNT = 56 //warning:... main.c:161:34: Multiple unsequenced modifications to &#39;x&#39;</code> </p>
+<p>COUNT(++x) 被替换为 ++x <em> ++x，即为 7 </em> 8 = 56，而不是想要 7 * 7 = 49<br>不要在有参宏用使用到“++”、“–”等</p>
+<h4 id="其他技巧与细节"><a href="#其他技巧与细节" class="headerlink" title="其他技巧与细节"></a>其他技巧与细节</h4><p>换行：在结尾加反斜杠，可使多行连接</p>
+<p>宏定义必须写在函数之外，其作用域是 #define 开始，到源程序结束。</p>
+<p>如果重复定义宏，则不同的编译器采用不同的重定义策略。</p>
+<h3 id="Unreal宏定义"><a href="#Unreal宏定义" class="headerlink" title="Unreal宏定义"></a>Unreal宏定义</h3><h4 id="UCALSS"><a href="#UCALSS" class="headerlink" title="UCALSS"></a>UCALSS</h4><p>The UCLASS macro gives the UObject a reference to a UCLASS that describes its Unreal-based type.<br>UE4有一个管理游戏对象的强大系统。UObject是这个系统中所有对象的基类。UCLASS宏用于标记这些UObject的派生类，目的是把它们告知UObject管理系统。UCLASS的宏参数可以更加具体地指定该类型的各种行为。</p>
+<p>每个 UCLASS 保留一个称作“类默认对象（Class Default Object）”的对象，简称 CDO。</p>
+<p>The UCLASS() macro is used to indicate that a C++ class will be part of Unreal’s <strong>Reflection system</strong>. This is necessary for the C++ class to be recognized by the Unreal Engine editor.<br>Another advantage of using UCLASS() is that you can use <strong>Unreal Engine’s memory management system</strong> in the C++ class.</p>
+<blockquote>
+<p>UCLASS宏只能修饰UObject的子类。</p>
+</blockquote>
+<p>类型说明符（Class Specifiers）  </p>
+<p><img src="assets/Unreal%20C++/Image_3.png" alt=""></p>
+<p>元数据说明符（Metadata Specifiers）  </p>
+<p><img src="assets/Unreal%20C++/Image_4.png" alt=""></p>
+<h4 id="MYPROJECT-API"><a href="#MYPROJECT-API" class="headerlink" title="MYPROJECT_API"></a>MYPROJECT_API</h4><p>Specifying MYPROJECT_API is necessary if MyProject wishes to expose the UMyObject class to other modules.</p>
+<h4 id="Unreal宏编译"><a href="#Unreal宏编译" class="headerlink" title="Unreal宏编译"></a>Unreal宏编译</h4><p>The compilation of an Unreal C++ project happens in two phases.</p>
+<ol>
+<li>In the first phase, UnrealHeaderTool (UHT) reads the C++ headers files looking for Unreal macros and generates the necessary code that will replace the macros.</li>
+<li>In the second phase, the C++ compiler compiles the resulting code.</li>
+</ol>
+<p><code>csharp #pragma once #include &quot;CoreMinimal.h&quot; #include &quot;GameFramework/Actor.h&quot; #include &quot;TutoProjectCollectable.generated.h&quot; UCLASS() class TUTOPROJECT_API ATutoProjectCollectable : public AActor { GENERATED_BODY()</code> </p>
+<p>For this class, UnrealHeaderTool will generate code that will be placed in the TutoProjectCollectable.generated.h file and code that will replace the GENERATED_BODY() macro.</p>
+<h4 id="宏定义的方式"><a href="#宏定义的方式" class="headerlink" title="宏定义的方式"></a>宏定义的方式</h4><p>C++代码中定义</p>
+<p>Build.cs文件和Target.cs文件中</p>
+<p><code>csharp PublicDefinitions.Add(&quot;WITH_DIRECTXMATH=1&quot;);</code> </p>
+<p>在UBT代码的文件夹（<code>\Engine\Source\Programs\UnrealBuildTool</code>）中搜索Definitions.Add就可以看到编译时添加的宏定义。</p>
+<h4 id="常用宏配置与Unreal-Editor中的效果"><a href="#常用宏配置与Unreal-Editor中的效果" class="headerlink" title="常用宏配置与Unreal Editor中的效果"></a>常用宏配置与Unreal Editor中的效果</h4><p><a href="https://blog.csdn.net/qq_29523119/article/details/85255854" target="_blank" rel="noopener">https://blog.csdn.net/qq_29523119/article/details/85255854</a></p>
+<h2 id="Objects-amp-GC"><a href="#Objects-amp-GC" class="headerlink" title="Objects &amp; GC"></a>Objects &amp; GC</h2><p><a href="https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Objects/" target="_blank" rel="noopener">https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Objects/</a></p>
+<p>内存分配与容器：<a href="https://www.cnblogs.com/kekec/p/12012537.html" target="_blank" rel="noopener">https://www.cnblogs.com/kekec/p/12012537.html</a></p>
+<h3 id="Update"><a href="#Update" class="headerlink" title="Update"></a>Update</h3><h3 id="Destroy"><a href="#Destroy" class="headerlink" title="Destroy"></a>Destroy</h3><h2 id="Memory-Management-amp-GC"><a href="#Memory-Management-amp-GC" class="headerlink" title="Memory Management &amp; GC"></a>Memory Management &amp; GC</h2><p><strong>UE4 uses the reflection system to implement a garbage collection system.</strong></p>
+<p>Your classes need to derive from <strong>UObject</strong> in order to be enabled for garbage collection.</p>
+<p>An object will <strong>not be garbage collected</strong> as long as <strong>there is a path of references from an object in the root set to the object</strong> in question.</p>
+<p>If no such path to the root set exists for an object, it is called <strong>unreachable</strong> and will be <strong>collected (deleted)</strong> the next time the garbage collector runs.</p>
+<p>The engine runs the garbage collector at certain <strong>intervals</strong>.</p>
+<blockquote>
+<p>UStructs cannot be garbage collected.</p>
+</blockquote>
+<h3 id="Root-Set"><a href="#Root-Set" class="headerlink" title="Root Set"></a>Root Set</h3><p>UObject pointer stored<br>in a UPROPERTY<br>in a UE4 container</p>
+<p>Actors:<br>GC druing a level’s shutdown<br>Once spawned, you must manually call Destroy on them to remove them from the Level without ending the Level.</p>
+<p>This is important since, as mentioned before, <strong>actors that have had Destroy called on them are not removed until the garbage collector runs again</strong>. You can check the <strong>IsPendingKill</strong> method to see if a UObject is awaiting its deletion.</p>
+<p>RootSet操作与判断</p>
+<p><code>csharp /** * Add an object to the root set. This prevents the object and all * its descendants from being deleted during garbage collection. */ FORCEINLINE void AddToRoot() { GUObjectArray.IndexToObject(InternalIndex)-&gt;SetRootSet(); } /** Remove an object from the root set. */ FORCEINLINE void RemoveFromRoot() { GUObjectArray.IndexToObject(InternalIndex)-&gt;ClearRootSet(); } /** * Returns true if this object is explicitly rooted * * @return true if the object was explicitly added as part of the root set. */ FORCEINLINE bool IsRooted() const { return GUObjectArray.IndexToObject(InternalIndex)-&gt;IsRootSet(); }</code> </p>
+<h3 id="Non-UObject-References"><a href="#Non-UObject-References" class="headerlink" title="Non-UObject References"></a>Non-UObject References</h3><p>Normal C++ objects (not derived from UObject) can also have the ability to add a reference to an object and prevent garbage collection —- derive from <strong>FGCObject</strong> and override its <strong>AddReferencedObjects</strong> method</p>
+<h3 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h3><h2 id="常用类型"><a href="#常用类型" class="headerlink" title="常用类型"></a>常用类型</h2><h3 id="Numeric-Types"><a href="#Numeric-Types" class="headerlink" title="Numeric Types"></a>Numeric Types</h3><p>int8/uint8: 8-bit signed/unsigned integer</p>
+<p>int16/uint16: 16-bit signed/unsigned integer</p>
+<p>int32/uint32: 32-bit signed/unsigned integer</p>
+<p>int64/uint64: 64-bit signed/unsigned integer</p>
+<p>float (32-bit) and double (64-bit) types</p>
+<h3 id="Strings"><a href="#Strings" class="headerlink" title="Strings"></a>Strings</h3><h4 id="FString"><a href="#FString" class="headerlink" title="FString"></a>FString</h4><p>FString is a mutable string, analogous to std::string.</p>
+<p><code>csharp FString MyStr = TEXT(&quot;Hello, Unreal 4!&quot;).</code> </p>
+<h4 id="FText"><a href="#FText" class="headerlink" title="FText"></a>FText</h4><p>localized text ???</p>
+<p><code>csharp FText MyText = NSLOCTEXT(&quot;Game UI&quot;, &quot;Health Warning Message&quot;, &quot;Low Health!&quot;)</code> <code>csharp // In GameUI.cpp #define LOCTEXT_NAMESPACE &quot;Game UI&quot; //... FText MyText = LOCTEXT(&quot;Health Warning Message&quot;, &quot;Low Health!&quot;) //... #undef LOCTEXT_NAMESPACE // End of file</code> </p>
+<h4 id="FName"><a href="#FName" class="headerlink" title="FName"></a>FName</h4><p>Rather than storing the complete string many times across every object that references it, FName uses a smaller storage footprint index that maps to a given string.</p>
+<ul>
+<li>save memory when that string is used across many objects</li>
+<li>save CPU time when comparing them- UE4 can simply check their index values to see if they match</li>
+</ul>
+<h4 id="TCHAR"><a href="#TCHAR" class="headerlink" title="TCHAR"></a>TCHAR</h4><p>The TCHAR type is used as a way of storing characters independent of the character set being used</p>
+<p><a href="https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/CharacterEncoding/" target="_blank" rel="noopener">https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/CharacterEncoding/</a></p>
+<h3 id="Containers"><a href="#Containers" class="headerlink" title="Containers"></a>Containers</h3><p>相关资料：v</p>
+<p><code>csharp void RemoveDeadEnemies(TSet&lt;AEnemy*&gt;&amp; EnemySet){ // Start at the beginning of the set, and iterate to the end of the set for (auto EnemyIterator = EnemySet.CreateIterator(); EnemyIterator; ++EnemyIterator) { // The * operator gets the current element AEnemy* Enemy = *EnemyIterator; if (Enemy.Health == 0) { // &#39;RemoveCurrent&#39; is supported by TSets and TMaps EnemyIterator.RemoveCurrent(); } } }</code> </p>
+<h4 id="TArray-std-vector"><a href="#TArray-std-vector" class="headerlink" title="TArray - std::vector"></a>TArray - std::vector</h4><p>like std::vector, offers a lot more functionality</p>
+<p><code>csharp TArray&lt;AActor*&gt; ActorArray = GetActorArrayFromSomewhere(); // Tells how many elements (AActors) are currently stored in ActorArray. int32 ArraySize = ActorArray.Num(); // TArrays are 0-based (the first element will be at index 0) int32 Index = 0;// Attempts to retrieve an element at the given indexAActor* FirstActor = ActorArray[Index]; // Adds a new element to the end of the arrayAActor* NewActor = GetNewActor();ActorArray.Add(NewActor); // Adds an element to the end of the array only if it is not already in the arrayActorArray.AddUnique(NewActor); // Won&#39;t change the array because NewActor was already added // Removes all instances of &#39;NewActor&#39; from the arrayActorArray.Remove(NewActor); // Removes the element at the specified index// Elements above the index will be shifted down by one to fill the empty spaceActorArray.RemoveAt(Index); // More efficient version of &#39;RemoveAt&#39;, but does not maintain order of the elementsActorArray.RemoveAtSwap(Index); // Removes all elements in the arrayActorArray.Empty();</code> </p>
+<h4 id="TMap-std-map"><a href="#TMap-std-map" class="headerlink" title="TMap - std::map"></a>TMap - std::map</h4><p>has quick methods for finding, adding, and removing elements based on their key</p>
+<h4 id="TSet-std-set"><a href="#TSet-std-set" class="headerlink" title="TSet - std::set"></a>TSet - std::set</h4><p>AddUnique, Contains - <strong>faster</strong></p>
+<h4 id="Cumtom-TSet-TMap"><a href="#Cumtom-TSet-TMap" class="headerlink" title="Cumtom TSet/TMap"></a>Cumtom TSet/TMap</h4><p>you will need to provide a <strong>hash function</strong> that takes a const pointer or reference to your type and returns a uint32<br>This return value is known as the object’s <strong>hash code</strong> , and should uniquely identify the object.</p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://blog.csdn.net/yanggangclcsdn/article/details/49704089" target="_blank" rel="noopener">https://blog.csdn.net/yanggangclcsdn/article/details/49704089</a><br><a href="https://romeroblueprints.blogspot.com/2020/10/the-uclass-macro.html" target="_blank" rel="noopener">https://romeroblueprints.blogspot.com/2020/10/the-uclass-macro.html</a><br><a href="https://www.geek-share.com/detail/2802042559.html" target="_blank" rel="noopener">https://www.geek-share.com/detail/2802042559.html</a><br><a href="https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/IntroductionToCPP/" target="_blank" rel="noopener">https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/IntroductionToCPP/</a></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.prince-y-p.com/2023/07/20/Unreal-Unreal-C/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unreal/" rel="tag">Unreal</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/20/Unreal-Unreal-c-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Unreal c++常见问题
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/20/Unreal-Unreal-%E8%93%9D%E5%9B%BEBlueprint/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Unreal - 蓝图Blueprint</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> Prin
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/circle_image.png" alt="半个出家人"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/Unreal">虚幻引擎</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

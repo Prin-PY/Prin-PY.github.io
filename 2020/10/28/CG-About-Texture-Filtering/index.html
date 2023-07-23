@@ -1,278 +1,115 @@
 <!DOCTYPE html>
+
+
 <html lang="en">
+  
 
-<!-- Head tag -->
-<head>
-    <meta name="baidu-site-verification" content="code-Nkxh3BxdNE" />
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <meta name="description" content="">
-    <meta name="keyword"  content="Prin, hexo-theme-snail">
-    <link rel="shortcut icon" href="/img/ironman-draw.png">
-    <!-- Place this tag in your head or just before your close body tag. -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
-    <title>
+    <head>
+      <meta charset="utf-8" />
         
-          【渲染】纹理滤波(Texture Filtering)相关知识整理 - undefined
-        
-    </title>
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>【渲染】纹理滤波(Texture Filtering)相关知识整理 |  半个出家人</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/circle_image.png" />
+       
+<link rel="stylesheet" href="/dist/main.css">
 
-    <link rel="canonical" href="https://www.prince-y-p.com/2020/10/28/CG-About-Texture-Filtering/">
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
 
-    <!-- Bootstrap Core CSS -->
-    
-<link rel="stylesheet" href="/css/bootstrap.min.css">
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
 
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
 
-    <!-- Custom CSS -->
-    
-        
-<link rel="stylesheet" href="/css/dusign-light.css">
-
-        
-<link rel="stylesheet" href="/css/dusign-common-light.css">
-
-        
-<link rel="stylesheet" href="/css/font-awesome.css">
-
-        
-<link rel="stylesheet" href="/css/toc.css">
-
-        <!-- background effects end -->
-    
-
-    <!-- Pygments Highlight CSS -->
-    
-<link rel="stylesheet" href="/css/highlight.css">
-
-
-    
-<link rel="stylesheet" href="/css/widget.css">
-
-
-    
-<link rel="stylesheet" href="/css/rocket.css">
-
-
-    
-<link rel="stylesheet" href="/css/signature.css">
-
-
-    
-<link rel="stylesheet" href="/css/fonts.googleapis.css">
-
-
-    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
-
-    <!-- photography -->
-    
-<link rel="stylesheet" href="/css/photography.css">
-
-
-    <!-- ga & ba script hoook -->
-    <script></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
-
-
-<!-- hack iOS CSS :active style -->
-<body ontouchstart="">
-
-    <!-- background effects start -->
-    
-    <!-- background effects end -->
-
-	<!-- Modified by Yu-Hsuan Yen -->
-<!-- Post Header -->
-<style type="text/css">
-    header.intro-header{
-        
-            
-                background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('')
-                /*post*/
-            
-        
-    }
-    
-    #signature{
-        background-image: url('/img/signature/Prin-white.png');
-    }
-    
-</style>
-
-<header class="intro-header" >
-    <!-- Signature -->
-    <div id="signature">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                
-                    <div class="post-heading">
-                        <div class="tags">
-                            
-                              <a class="tag" href="/tags/#Rendering" title="Rendering">Rendering</a>
-                            
-                              <a class="tag" href="/tags/#Texture" title="Texture">Texture</a>
-                            
-                              <a class="tag" href="/tags/#CG" title="CG">CG</a>
-                            
-                        </div>
-                        <h1>【渲染】纹理滤波(Texture Filtering)相关知识整理</h1>
-                        <h2 class="subheading"></h2>
-                        <span class="meta">
-                            Posted by Prin on
-                            2020-10-28
-                        </span>
-
-                        
-                            <div class="blank_box"></div>
-                            <span class="meta">
-                                Words <span class="post-count">5.3k</span> and
-                                Reading Time <span class="post-count">20</span> Minutes
-                            </span>
-                            <div class="blank_box"></div>
-                            <!-- 不蒜子统计 start -->
-                            <span class="meta">
-                                Viewed <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span> Times
-                            </span>
-                            <!-- 不蒜子统计 end -->
-                        
-
-                    </div>
-                
-
-                </div>
-            </div>
-        </div>      
-    </div>
-
-    
-</header>
-
-	
-    <!-- Navigation -->
-<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header page-scroll">
-            <button type="button" class="navbar-toggle">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">Prin&#39;s World</a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <!-- Known Issue, found by Hux:
-            <nav>'s height woule be hold on by its content.
-            so, when navbar scale out, the <nav> will cover tags.
-            also mask any touch event of tags, unfortunately.
-        -->
-        <div id="huxblog_navbar">
-            <div class="navbar-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="/">Home</a>
-                    </li>
-
-                    
-
-                        
-                    
-
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/about/">About</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/archive/">Archives</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/categories/">Categories</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/tags/">Tags</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/photography/">Photography</a>
-                        </li>
-                        
-                    
-                    
-                    
-                </ul>
-            </div>
-        </div>
-        <!-- /.navbar-collapse -->
-    </div>
-    <!-- /.container -->
-</nav>
-<script>
-    // Drop Bootstarp low-performance Navbar
-    // Use customize navbar with high-quality material design animation
-    // in high-perf jank-free CSS3 implementation
-    var $body   = document.body;
-    var $toggle = document.querySelector('.navbar-toggle');
-    var $navbar = document.querySelector('#huxblog_navbar');
-    var $collapse = document.querySelector('.navbar-collapse');
-
-    $toggle.addEventListener('click', handleMagic)
-    function handleMagic(e){
-        if ($navbar.className.indexOf('in') > 0) {
-        // CLOSE
-            $navbar.className = " ";
-            // wait until animation end.
-            setTimeout(function(){
-                // prevent frequently toggle
-                if($navbar.className.indexOf('in') < 0) {
-                    $collapse.style.height = "0px"
-                }
-            },400)
-        }else{
-        // OPEN
-            $collapse.style.height = "auto"
-            $navbar.className += " in";
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
         }
-    }
-</script>
+      </style>
+    <link rel="alternate" href="/atom.xml" title="半个出家人" type="application/atom+xml">
+</head>
+  </html>
+</html>
 
 
-    <!-- Main Content -->
-    <!-- Post Content -->
-<article>
-    <div class="container">
-        <div class="row">
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-CG-About-Texture-Filtering"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  【渲染】纹理滤波(Texture Filtering)相关知识整理
+</h1>
+ 
 
-            <!-- Post Container -->
-            <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                post-container">
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/10/28/CG-About-Texture-Filtering/" class="article-date">
+  <time datetime="2020-10-28T06:29:00.000Z" itemprop="datePublished">2020-10-28</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CG-Rendering/">CG&Rendering</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">5.3k</span>
+        </span>
+    </span>
 
-                <h2 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h2><h3 id="纹理映射-与-纹理采样"><a href="#纹理映射-与-纹理采样" class="headerlink" title="纹理映射 与 纹理采样"></a>纹理映射 与 纹理采样</h3><p>纹理映射：使用uv坐标将纹理像素(texel)映射到屏幕像素(pixel)的过程。</p>
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">20 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h2><h3 id="纹理映射-与-纹理采样"><a href="#纹理映射-与-纹理采样" class="headerlink" title="纹理映射 与 纹理采样"></a>纹理映射 与 纹理采样</h3><p>纹理映射：使用uv坐标将纹理像素(texel)映射到屏幕像素(pixel)的过程。</p>
 <p>纹理采样（Texture Sample）：既然纹理是一张图片，那么自然就有分辨率的存在，纹理采样便是从纹理图片中采集一个像素颜色的操作。</p>
 <h3 id="插值-Interpolation-的概念"><a href="#插值-Interpolation-的概念" class="headerlink" title="插值(Interpolation)的概念"></a>插值(Interpolation)的概念</h3><p>在数学的数值分析领域中，内插或称插值（英语：interpolation）是一种通过已知的、离散的数据点，在范围内推求新数据点的过程或方法。求解科学和工程的问题时，通常有许多数据点借由采样、实验等方法获得，这些数据可能代表了有限个数值函数，其中自变量的值。而根据这些数据，我们往往希望得到一个连续的函数（也就是曲线）；或者更密集的离散方程与已知数据互相吻合，这个过程叫做拟合。</p>
 <p>常用的插值方法有：最近邻插值（Nearest-neighbor interpolation）、线性插值（线性插值）、多项式插值（Polynomial interpolation）、样条曲线插值（Spline interpolation）等。</p>
@@ -416,422 +253,481 @@
 <h4 id="upsampling（上采样）"><a href="#upsampling（上采样）" class="headerlink" title="upsampling（上采样）"></a>upsampling（上采样）</h4><p>放大图像（或称为上采样（upsampling）或图像插值（interpolating））的主要目的是放大原图像，从而可以显示在更高分辨率的显示设备上。</p>
 <p>上采样的原理：图像放大几乎都是采用内插值方法，即在原有图像像素的基础上在像素点之间采用合适的插值算法插入新的元素。插值算法还包括了传统插值，基于边缘图像的插值，还有基于区域的图像插值。</p>
 <h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.sohu.com/a/397647922_468740" target="_blank" rel="noopener">https://www.sohu.com/a/397647922_468740</a><br><a href="http://www.ruanyifeng.com/blog/2017/12/image-and-wave-filters.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2017/12/image-and-wave-filters.html</a><br><a href="https://zh.wikipedia.org/wiki/%E7%BA%BF%E6%80%A7%E6%8F%92%E5%80%BC" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/%E7%BA%BF%E6%80%A7%E6%8F%92%E5%80%BC</a><br><a href="https://en.wikipedia.org/wiki/Texture_filtering" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Texture_filtering</a><br><a href="https://en.wikipedia.org/wiki/Linear_interpolation" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Linear_interpolation</a><br><a href="http://warmcat.org/chai/blog/?p=1077" target="_blank" rel="noopener">http://warmcat.org/chai/blog/?p=1077</a><br><a href="http://warmcat.org/chai/blog/?p=1222" target="_blank" rel="noopener">http://warmcat.org/chai/blog/?p=1222</a></p>
-
-                
-                <hr>
-                <!-- Pager -->
-                <ul class="pager">
-                    
-                    <li class="previous">
-                        <a href="/2020/11/06/Basic-About-Texture/" data-toggle="tooltip" data-placement="top" title="【基础】纹理(Texture)知识知多少">&larr; Previous Post</a>
-                    </li>
-                    
-                    
-                    <li class="next">
-                        <a href="/2020/10/25/Basic-Mesh-in-Unity3D/" data-toggle="tooltip" data-placement="top" title="【基础】U3D中的Mesh">Next Post &rarr;</a>
-                    </li>
-                    
-                </ul>
-
-                <!-- tip start -->
-                
-
-                
-                <div class="comment_notes">
-                    <p>
-                        This is copyright.
-                    </p>
-                </div>
-                
-                <!-- tip end -->
-
-                <!-- Music start-->
-                
-                
-<link rel="stylesheet" href="/css/music-player/fonts/iconfont.css">
-
-
-<link rel="stylesheet" href="/css/music-player/css/reset.css">
-
-
-<link rel="stylesheet" href="/css/music-player/css/player.css">
-
-
-<div class="music-player">
-    <audio class="music-player__audio" ></audio>
-    <div class="music-player__main">
-        <div class="music-player__blur"></div>
-        <div class="music-player__disc">
-            <div class="music-player__image">
-                <img width="100%" src="" alt="">
-            </div>
-            <div class="music-player__pointer"><img width="100%" src="/img/cd_tou.png" alt=""></div>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
         </div>
-        <div class="music-player__controls">
-            <div class="music__info">
-                <h3 class="music__info--title">...</h3>
-                <p class="music__info--singer">...</p>
-            </div>
-            <div class="player-control">
-                <div class="player-control__content">
-                    <div class="player-control__btns">
-                        <div class="player-control__btn player-control__btn--prev"><i class="iconfont icon-prev"></i></div>
-                        <div class="player-control__btn player-control__btn--play"><i class="iconfont icon-play"></i></div>
-                        <div class="player-control__btn player-control__btn--next"><i class="iconfont icon-next"></i></div>
-                        <div class="player-control__btn player-control__btn--mode"><i class="iconfont icon-loop"></i></div>
-                    </div>
-                    <div class="player-control__volume">
-                        <div class="control__volume--icon player-control__btn"><i class="iconfont icon-volume"></i></div>
-                        <div class="control__volume--progress player_progress"></div>
-                    </div>
-                </div>
-                <div class="player-control__content">
-                    <div class="player__song--progress player_progress"></div>
-                    <div class="player__song--timeProgess nowTime">00:00</div>
-                    <div class="player__song--timeProgess totalTime">00:00</div>
-                </div>
-            </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
         </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.prince-y-p.com/2020/10/28/CG-About-Texture-Filtering/" alt="微信分享二维码">
     </div>
 </div>
 
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CG/" rel="tag">CG</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Rendering/" rel="tag">Rendering</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Texture/" rel="tag">Texture</a></li></ul>
 
-<script src="/js/music-player/utill.js"></script>
+    </footer>
+  </div>
 
-
-<script src="/js/music-player/jquery.min.js"></script>
-
-<!-- netease; qqkg -->
-<!--
-<script src="/js/music-player/player.js?library=config.music.library.js"></script>
--->
-<script src="../../../../js/music-player/player.js?library=netease&music="></script>
-                
-                <!-- Music end -->
-
-                <!-- Sharing -->
-                
-                <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
-                <!--  css & js -->
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
-                
-                <!-- Sharing -->
-
-                <!-- gitment start -->
-                
-                <!-- gitment end -->
-
-                <!-- 来必力City版安装代码 -->
-                
-                <!-- City版安装代码已完成 -->
-
-                <!-- disqus comment start -->
-                
-                <!-- disqus comment end -->
-            </div>
-            
-            <!-- Tabe of Content -->
-            <!-- Table of Contents -->
-
+   
+  <nav class="article-nav">
     
-      
-        <aside id="sidebar">
-          <div id="toc" class="toc-article">
-          <strong class="toc-title">Contents</strong>
+      <a href="/2020/11/06/Basic-About-Texture/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
           
-            
-              <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#相关概念"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">相关概念</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#纹理映射-与-纹理采样"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">纹理映射 与 纹理采样</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#插值-Interpolation-的概念"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">插值(Interpolation)的概念</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#线性插值-Linear-interpolation"><span class="toc-nav-number">1.2.1.</span> <span class="toc-nav-text">线性插值(Linear interpolation)</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#纹理滤波（Texture-Filtering）"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">纹理滤波（Texture Filtering）</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#为什么需要纹理滤波"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">为什么需要纹理滤波</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#为什么称为滤波-Filter"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">为什么称为滤波(Filter)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#图像是波"><span class="toc-nav-number">2.2.1.</span> <span class="toc-nav-text">图像是波</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#频率（frequency）"><span class="toc-nav-number">2.2.2.</span> <span class="toc-nav-text">频率（frequency）</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#滤波器（filter）及在图像中的应用"><span class="toc-nav-number">2.2.3.</span> <span class="toc-nav-text">滤波器（filter）及在图像中的应用</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Mipmapping"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">Mipmapping</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#使用原因"><span class="toc-nav-number">2.3.1.</span> <span class="toc-nav-text">使用原因</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#实现方法"><span class="toc-nav-number">2.3.2.</span> <span class="toc-nav-text">实现方法</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#如何选择Mipmap-Level"><span class="toc-nav-number">2.3.3.</span> <span class="toc-nav-text">如何选择Mipmap Level</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#优势"><span class="toc-nav-number">2.3.4.</span> <span class="toc-nav-text">优势</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#缺点"><span class="toc-nav-number">2.3.5.</span> <span class="toc-nav-text">缺点</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#常用滤波方法（插值算法）"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">常用滤波方法（插值算法）</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#最近邻插值采样-Nearest-neighbor-interpolation"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">最近邻插值采样(Nearest-neighbor interpolation)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#优势-1"><span class="toc-nav-number">3.1.1.</span> <span class="toc-nav-text">优势</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#不足"><span class="toc-nav-number">3.1.2.</span> <span class="toc-nav-text">不足</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#块状（blocky-）"><span class="toc-nav-number">3.1.2.1.</span> <span class="toc-nav-text">块状（blocky ）</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#高频走样（波纹和闪烁现象）"><span class="toc-nav-number">3.1.2.2.</span> <span class="toc-nav-text">高频走样（波纹和闪烁现象）</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#性能上"><span class="toc-nav-number">3.1.2.3.</span> <span class="toc-nav-text">性能上</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#示例"><span class="toc-nav-number">3.1.3.</span> <span class="toc-nav-text">示例</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#最近点插值-mipmap的方式"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">最近点插值+mipmap的方式</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#双线性插值-Bilinear-interpolation"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">双线性插值 (Bilinear interpolation)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#三线性插值-Trilinear-interpolation"><span class="toc-nav-number">3.4.</span> <span class="toc-nav-text">三线性插值 (Trilinear interpolation)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#不足-1"><span class="toc-nav-number">3.4.1.</span> <span class="toc-nav-text">不足</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#各向异性过滤-Anisotropic-filtering"><span class="toc-nav-number">3.5.</span> <span class="toc-nav-text">各向异性过滤(Anisotropic filtering)</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#OpenGL对Minification-Magnification-Filter的选择"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">OpenGL对Minification&#x2F;Magnification Filter的选择</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#拓展知识"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">拓展知识</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#纹理环绕（Texture-Wrap）"><span class="toc-nav-number">5.1.</span> <span class="toc-nav-text">纹理环绕（Texture Wrap）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#上-下采样"><span class="toc-nav-number">5.2.</span> <span class="toc-nav-text">上&#x2F;下采样</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#downsampled（下采样）"><span class="toc-nav-number">5.2.1.</span> <span class="toc-nav-text">downsampled（下采样）</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#upsampling（上采样）"><span class="toc-nav-number">5.2.2.</span> <span class="toc-nav-text">upsampling（上采样）</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Ref"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">Ref</span></a></li></ol>
-            
+            【基础】纹理(Texture)知识知多少
           
-          </div>
-        </aside>
-      
-    
-
-                
-            <!-- Sidebar Container -->
-            <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                sidebar-container">
-
-                <!-- Featured Tags -->
-                
-                <section>
-                    <!-- no hr -->
-                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
-                    <div class="tags">
-                       
-                          <a class="tag" href="/tags/#Rendering" title="Rendering">Rendering</a>
-                        
-                          <a class="tag" href="/tags/#Texture" title="Texture">Texture</a>
-                        
-                          <a class="tag" href="/tags/#CG" title="CG">CG</a>
-                        
-                    </div>
-                </section>
-                
-
-                <!-- Friends Blog -->
-                
-                <hr>
-                <h5>FRIENDS</h5>
-                <ul class="list-inline">
-
-                    
-                        <li><a href="https://blog.csdn.net/d_Nail" target="_blank">Dusign&#39;s Blog</a></li>
-                    
-                        <li><a href="#" target="_blank">Dusign&#39;s Web</a></li>
-                    
-                        <li><a href="https://github.com/dusign" target="_blank">Dusign&#39;s Github</a></li>
-                    
-                        <li><a href="#" target="_blank">Other</a></li>
-                    
-                </ul>
-                
-            </div>
         </div>
-    </div>
+      </a>
+    
+    
+      <a href="/2020/10/25/Basic-Mesh-in-Unity3D/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">【基础】U3D中的Mesh</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
 </article>
 
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> Prin
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
 
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
 
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/circle_image.png" alt="半个出家人"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/Unreal">虚幻引擎</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
 
-<!-- async load function -->
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
 <script>
-    function async(u, c) {
-      var d = document, t = 'script',
-          o = d.createElement(t),
-          s = d.getElementsByTagName(t)[0];
-      o.src = u;
-      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
-      s.parentNode.insertBefore(o, s);
-    }
-</script>
-<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
-<script>
-    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
-        anchors.options = {
-          visible: 'hover',
-          placement: 'left',
-          icon: 'ℬ'
-        };
-        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
-    })
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
 </script>
 
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
 
-<style  type="text/css">
-    /* place left on bigger screen */
-    @media all and (min-width: 800px) {
-        .anchorjs-link{
-            position: absolute;
-            left: -0.75em;
-            font-size: 1.1em;
-            margin-top : -0.1em;
-        }
-    }
-</style>
+<script src="/dist/main.js"></script>
 
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
 
-    <!-- Footer -->
-    <!-- Footer -->
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <ul class="list-inline text-center">
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
 
-                
-                    <li>
-                        <a target="_blank"  href="https://github.com/Prin">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
-                
-
-                
-                    <li>
-                        <a target="_blank" href="https://twitter.com/Prin">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
-                
-
-                
-                    <li>
-                        <a target="_blank" href="https://www.facebook.com/Prin">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
-                
-
-                
-                    <li>
-                        <a target="_blank" href="https://www.zhihu.com/people/Prin">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa  fa-stack-1x fa-inverse">知</i>
-                            </span>
-                        </a>
-                    </li>
-                
-
-                
-
-                
-
-                
-
-                </ul>
-                <p class="copyright text-muted">
-                    Copyright &copy; Prin 2020 
-                    <br>
-                    Powered by 
-                    <a href="https://github.com/dusign/hexo-theme-snail" target="_blank" rel="noopener">
-                        <i>hexo-theme-snail</i>
-                    </a> | 
-                    <iframe name="star" style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0"
-                        width="100px" height="20px"
-                        src="https://ghbtns.com/github-btn.html?user=dusign&repo=hexo-theme-snail&type=star&count=true">
-                    </iframe>
-                </p>
-            </div>
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
         </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
     </div>
 
-</footer>
+</div>
 
-<!-- jQuery -->
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
 
-<script src="/js/jquery.min.js"></script>
-
-
-<!-- Bootstrap Core JavaScript -->
-
-<script src="/js/bootstrap.min.js"></script>
-
-
-<!-- Custom Theme JavaScript -->
-
-<script src="/js/hux-blog.min.js"></script>
-
-
-<!-- Search -->
-
-<script src="/js/search.js"></script>
-
-
-<!-- async load function -->
 <script>
-    function async(u, c) {
-      var d = document, t = 'script',
-          o = d.createElement(t),
-          s = d.getElementsByTagName(t)[0];
-      o.src = u;
-      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
-      s.parentNode.insertBefore(o, s);
-    }
-</script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
 
-
-<!-- jquery.tagcloud.js -->
-<script>
-    // only load tagcloud.js in tag.html
-    if($('#tag_cloud').length !== 0){
-        async("https://www.prince-y-p.com/js/jquery.tagcloud.js",function(){
-            $.fn.tagcloud.defaults = {
-                //size: {start: 1, end: 1, unit: 'em'},
-                color: {start: '#bbbbee', end: '#0085a1'},
-            };
-            $('#tag_cloud a').tagcloud();
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
         })
     }
-</script>
+    viewer_init()
+</script> 
+<!-- MathJax -->
 
-<!--fastClick.js -->
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
 <script>
-    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
-        var $nav = document.querySelector("nav");
-        if($nav) FastClick.attach($nav);
-    })
-</script>
-
-
-<!-- Google Analytics -->
-
-
-<script>
-    // dynamic User by Hux
-    var _gaId = 'UA-XXXXXXXX-X';
-    var _gaDomain = 'yoursite';
-
-    // Originial
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', _gaId, _gaDomain);
-    ga('send', 'pageview');
-</script>
-
-
-
-
-<!-- Baidu Tongji -->
-
-
-<!-- Search -->
-
-    <script type="text/javascript">      
-        var search_path = "search.xml";
-        if (search_path.length == 0) {
-            search_path = "search.xml";
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
         }
-    var path = "/" + search_path;
-    searchFunc(path, 'local-search-input', 'local-search-result');
-    </script>
-
-
-<!-- busuanzi -->
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-
-
-
-
-
-	<a id="rocket" href="#top" class=""></a>
-	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
-    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
-
-    
-        <!-- background effects line -->
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
         
-
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
         
-            <script type="text/javascript" src="/js/mouse-click.js" content='[&quot;Keep calm&quot;,&quot;and&quot;,&quot;carry on&quot;]' color='[&quot;rgb(121,93,179)&quot; ,&quot;rgb(76,180,231)&quot; ,&quot;rgb(184,90,154)&quot;]'></script>
-        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
 
-        <!-- background effects end -->
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
     
 
-    <!--<script size="50" alpha='0.3' zIndex="-999" src="/js/ribbonStatic.js"></script>-->
-    
-        <script src="/js/ribbonDynamic.js"></script>
-    
+  </div>
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         tex2jax: {

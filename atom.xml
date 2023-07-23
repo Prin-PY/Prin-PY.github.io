@@ -1,0 +1,933 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>半个出家人</title>
+  
+  <subtitle>The world isn&#39;t split into good people and Death Eaters. We&#39;ve all got both light and dark inside us. What matters is the part we choose to act on. That&#39;s who we really are.</subtitle>
+  <link href="https://www.prince-y-p.com/atom.xml" rel="self"/>
+  
+  <link href="https://www.prince-y-p.com/"/>
+  <updated>2023-07-18T15:33:27.620Z</updated>
+  <id>https://www.prince-y-p.com/</id>
+  
+  <author>
+    <name>Prin</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>遇到的问题及解决</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3/</id>
+    <published>2023-07-20T15:00:29.351Z</published>
+    <updated>2023-07-18T15:33:27.620Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;修改代码不生效：需要在VS中Rebuild，或者在UE中对Module进行Recompile&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>类与API</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-%E7%B1%BB%E4%B8%8EAPI/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-%E7%B1%BB%E4%B8%8EAPI/</id>
+    <published>2023-07-20T15:00:29.348Z</published>
+    <updated>2023-07-18T15:33:27.620Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;UObject &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;UObject&quot;&gt;&lt;a href=&quot;#UObject&quot; class=&quot;headerlink&quot; title=&quot;UObject&quot;&gt;&lt;/a&gt;UObject&lt;/h2&gt;</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>无标题笔记</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-%E6%97%A0%E6%A0%87%E9%A2%98%E7%AC%94%E8%AE%B0/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-%E6%97%A0%E6%A0%87%E9%A2%98%E7%AC%94%E8%AE%B0/</id>
+    <published>2023-07-20T15:00:29.347Z</published>
+    <updated>2023-07-18T15:33:27.619Z</updated>
+    
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>技术笔记</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/</id>
+    <published>2023-07-20T15:00:29.345Z</published>
+    <updated>2023-07-18T15:33:27.619Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;UE_LOG:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/zhang1461376499/article/details/113351948&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://blog.csdn</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>常见问题</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</id>
+    <published>2023-07-20T15:00:29.343Z</published>
+    <updated>2023-07-18T15:33:27.618Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;adaptive icon 问题： &lt;a href=&quot;https://www.unrealengine.com/en-US/tech-blog/adding-adaptive-icons-to-a-ue4-project-for-android&quot; target=&quot;_blan</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【CI】Mac自动导入证书</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-%E3%80%90CI%E3%80%91Mac%E8%87%AA%E5%8A%A8%E5%AF%BC%E5%85%A5%E8%AF%81%E4%B9%A6/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-%E3%80%90CI%E3%80%91Mac%E8%87%AA%E5%8A%A8%E5%AF%BC%E5%85%A5%E8%AF%81%E4%B9%A6/</id>
+    <published>2023-07-20T15:00:29.341Z</published>
+    <updated>2023-07-18T15:33:27.617Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;code&gt;csharp pipeline { stages { stage(&amp;#39;Code Sign&amp;#39;) { steps { sh &amp;quot;&amp;quot;&amp;quot; # Create Temp Keychain and Import security cr</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【C++】常用预处理指令</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-%E3%80%90C-%E3%80%91%E5%B8%B8%E7%94%A8%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-%E3%80%90C-%E3%80%91%E5%B8%B8%E7%94%A8%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/</id>
+    <published>2023-07-20T15:00:29.338Z</published>
+    <updated>2023-07-18T15:33:27.617Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/cartzhang/article/details/22726167&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://blog.csdn.net/cartzhang/article</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Unreal资源管理</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Unreal%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Unreal%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/</id>
+    <published>2023-07-20T15:00:29.324Z</published>
+    <updated>2023-07-18T15:33:27.614Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;说明：较大的篇幅整理自知乎答主quabqi的文章。链接：&lt;a href=&quot;https://zhuanlan.zhihu.com/p/357904199&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://zhuanlan.zhihu.com/p/</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Unreal操作</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Unreal%E6%93%8D%E4%BD%9C/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Unreal%E6%93%8D%E4%BD%9C/</id>
+    <published>2023-07-20T15:00:29.321Z</published>
+    <updated>2023-07-18T15:33:27.584Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;入门配置&quot;&gt;&lt;a href=&quot;#入门配置&quot; class=&quot;headerlink&quot; title=&quot;入门配置&quot;&gt;&lt;/a&gt;入门配置&lt;/h2&gt;&lt;p&gt;VS配置：&lt;a href=&quot;https://docs.unrealengine.com/4.27/en-US/Product</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Unreal插件开发</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Unreal%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Unreal%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/</id>
+    <published>2023-07-20T15:00:29.319Z</published>
+    <updated>2023-07-18T15:33:27.583Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;目录结构&quot;&gt;&lt;a href=&quot;#目录结构&quot; class=&quot;headerlink&quot; title=&quot;目录结构&quot;&gt;&lt;/a&gt;目录结构&lt;/h2&gt;&lt;p&gt;Engine /[UE4 Root]/Engine/Plugins/[Plugin Name]/&lt;/p&gt;
+&lt;p&gt;Game /</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Unreal工程目录结构</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Unreal%E5%B7%A5%E7%A8%8B%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Unreal%E5%B7%A5%E7%A8%8B%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84/</id>
+    <published>2023-07-20T15:00:29.317Z</published>
+    <updated>2023-07-18T15:33:27.583Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://muyunsoft.com/blog/Unreal4/Basic/DirectoryStructure.html#%E6%A0%B9%E7%9B%AE%E5%BD%95&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;htt</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Unreal Plugin多个模块开发与编译</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Unreal-Plugin%E5%A4%9A%E4%B8%AA%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91%E4%B8%8E%E7%BC%96%E8%AF%91/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Unreal-Plugin%E5%A4%9A%E4%B8%AA%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91%E4%B8%8E%E7%BC%96%E8%AF%91/</id>
+    <published>2023-07-20T15:00:29.315Z</published>
+    <updated>2023-07-18T15:33:27.582Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;要写与模块名称相同的Module类，实现StartupModule、ShutdownModule函数，模块才能加载进来。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;assets/Unreal%20Plugin多个模块开发与编译/Image.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;模</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Unreal C++资料整理</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Unreal-C-%E8%B5%84%E6%96%99%E6%95%B4%E7%90%86/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Unreal-C-%E8%B5%84%E6%96%99%E6%95%B4%E7%90%86/</id>
+    <published>2023-07-20T15:00:29.313Z</published>
+    <updated>2023-07-18T15:33:27.579Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;文件管理系统（FPlatformFileManager）&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://unrealcommunity.wiki/file-and-folder-management-create-find-delete-et2g64gx&quot; target=</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Unreal c++常见问题</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Unreal-c-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Unreal-c-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</id>
+    <published>2023-07-20T15:00:29.311Z</published>
+    <updated>2023-07-18T15:33:27.578Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;类中静态成员变量-amp-amp-无法解析的外部符号：https-blog-csdn-net-u012911202-article-details-103532273&quot;&gt;&lt;a href=&quot;#类中静态成员变量-amp-amp-无法解析的外部符号：https-blog</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Unreal C++</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Unreal-C/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Unreal-C/</id>
+    <published>2023-07-20T15:00:29.308Z</published>
+    <updated>2023-07-18T15:33:27.575Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;概念 &lt;/li&gt;
+&lt;li&gt;Compiling &lt;ul&gt;
+&lt;li&gt;&lt;ul&gt;
+&lt;li&gt;我的Q&amp;amp;A &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;概念&quot;&gt;&lt;a href=&quot;#概念&quot; class=&quot;headerlink&quot;</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Unreal - 蓝图Blueprint</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Unreal-%E8%93%9D%E5%9B%BEBlueprint/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Unreal-%E8%93%9D%E5%9B%BEBlueprint/</id>
+    <published>2023-07-20T15:00:29.289Z</published>
+    <updated>2023-07-18T15:33:27.548Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;语言概述&quot;&gt;&lt;a href=&quot;#语言概述&quot; class=&quot;headerlink&quot; title=&quot;语言概述&quot;&gt;&lt;/a&gt;语言概述&lt;/h2&gt;&lt;h3 id=&quot;脚本语言&quot;&gt;&lt;a href=&quot;#脚本语言&quot; class=&quot;headerlink&quot; title=&quot;脚本语言&quot;&gt;&lt;/a</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Unity-Unreal</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Unity-Unreal/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Unity-Unreal/</id>
+    <published>2023-07-20T15:00:29.286Z</published>
+    <updated>2023-07-18T15:33:27.548Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;Unity-gt-Unreal&quot;&gt;&lt;a href=&quot;#Unity-gt-Unreal&quot; class=&quot;headerlink&quot; title=&quot;Unity-&amp;gt;Unreal&quot;&gt;&lt;/a&gt;Unity-&amp;gt;Unreal&lt;/h1&gt;&lt;p&gt;可以通过Unity那边的概念、结</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>UI方案</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-UI%E6%96%B9%E6%A1%88/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-UI%E6%96%B9%E6%A1%88/</id>
+    <published>2023-07-20T15:00:29.284Z</published>
+    <updated>2023-07-18T15:33:27.541Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;技术方案说明&quot;&gt;&lt;a href=&quot;#技术方案说明&quot; class=&quot;headerlink&quot; title=&quot;技术方案说明&quot;&gt;&lt;/a&gt;技术方案说明&lt;/h2&gt;&lt;h3 id=&quot;Why-Should-we-Use-C&quot;&gt;&lt;a href=&quot;#Why-Should-we-Use-</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>UE 移动设备调试</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-UE-%E7%A7%BB%E5%8A%A8%E8%AE%BE%E5%A4%87%E8%B0%83%E8%AF%95/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-UE-%E7%A7%BB%E5%8A%A8%E8%AE%BE%E5%A4%87%E8%B0%83%E8%AF%95/</id>
+    <published>2023-07-20T15:00:29.283Z</published>
+    <updated>2023-07-18T15:33:27.529Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=hEtu-ciPc7g&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://www.youtube.com/watch?v=hEtu-ciPc7g&lt;/a&gt;&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>UE - Rendering Pipeline</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-UE-Rendering-Pipeline/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-UE-Rendering-Pipeline/</id>
+    <published>2023-07-20T15:00:29.281Z</published>
+    <updated>2023-07-18T15:33:27.519Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;静态网格&quot;&gt;&lt;a href=&quot;#静态网格&quot; class=&quot;headerlink&quot; title=&quot;静态网格&quot;&gt;&lt;/a&gt;静态网格&lt;/h2&gt;&lt;h3 id=&quot;HLOD-Hierarchical-Level-of-Detail&quot;&gt;&lt;a href=&quot;#HLOD-Hierarc</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>UDIM贴图</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-UDIM%E8%B4%B4%E5%9B%BE/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-UDIM%E8%B4%B4%E5%9B%BE/</id>
+    <published>2023-07-20T15:00:29.279Z</published>
+    <updated>2023-07-18T15:33:27.518Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;U-Dimension (or “UDIM”) is a texture naming convention that enables multiple texture images to map to separate UV regions on a Static Mes</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Slate UI</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Slate-UI/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Slate-UI/</id>
+    <published>2023-07-20T15:00:29.278Z</published>
+    <updated>2023-07-18T15:33:27.500Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/418944210&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://zhuanlan.zhihu.com/p/418944210&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Mipmap与Texture Streaming</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Mipmap%E4%B8%8ETexture-Streaming/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Mipmap%E4%B8%8ETexture-Streaming/</id>
+    <published>2023-07-20T15:00:29.276Z</published>
+    <updated>2023-07-18T15:33:27.500Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Texture Streaming：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/544892912&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://zhuanlan.zhihu.com/p/54</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CI实践：Cross-platform build automation for UE4</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-CI%E5%AE%9E%E8%B7%B5%EF%BC%9ACross-platform-build-automation-for-UE4/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-CI%E5%AE%9E%E8%B7%B5%EF%BC%9ACross-platform-build-automation-for-UE4/</id>
+    <published>2023-07-20T15:00:29.274Z</published>
+    <updated>2023-07-18T15:33:27.499Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;projects with Jenkins&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.maygames.net/2020/07/03/cross-platform-build-automation-for-ue4-proj&quot; target=&quot;_blank&quot; r</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C++基础补充</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-C-%E5%9F%BA%E7%A1%80%E8%A1%A5%E5%85%85/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-C-%E5%9F%BA%E7%A1%80%E8%A1%A5%E5%85%85/</id>
+    <published>2023-07-20T15:00:29.271Z</published>
+    <updated>2023-07-18T15:33:27.498Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;cpp编译&quot;&gt;&lt;a href=&quot;#cpp编译&quot; class=&quot;headerlink&quot; title=&quot;cpp编译&quot;&gt;&lt;/a&gt;cpp编译&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/leonliu06/article/details/7</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C++基础补充-2</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-C-%E5%9F%BA%E7%A1%80%E8%A1%A5%E5%85%85-2/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-C-%E5%9F%BA%E7%A1%80%E8%A1%A5%E5%85%85-2/</id>
+    <published>2023-07-20T15:00:29.269Z</published>
+    <updated>2023-07-18T15:33:27.498Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;C++单例模式&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/sunchaothu/p/10389842.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://www.cnblogs.com/suncha</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Build - 踩坑</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Build-%E8%B8%A9%E5%9D%91/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Build-%E8%B8%A9%E5%9D%91/</id>
+    <published>2023-07-20T15:00:29.267Z</published>
+    <updated>2023-07-18T15:33:27.497Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;网络问题导致gradle打包失败 - 解析jar包时，无法下载所依赖的库&lt;/p&gt;
+&lt;p&gt;修改为国内源头的方式尝试多次失败。&lt;/p&gt;
+&lt;p&gt;使用代理的方式成功：&lt;/p&gt;
+&lt;p&gt;修改 \Engine\Build\Android\Java\gradle\gradle\wrappe</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Build - Unreal Build System</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Build-Unreal-Build-System/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Build-Unreal-Build-System/</id>
+    <published>2023-07-20T15:00:29.265Z</published>
+    <updated>2023-07-18T15:33:27.496Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;Build-Engine-from-Source&quot;&gt;&lt;a href=&quot;#Build-Engine-from-Source&quot; class=&quot;headerlink&quot; title=&quot;Build Engine from Source&quot;&gt;&lt;/a&gt;Build Engine f</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Build - UE CI</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Build-UE-CI/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Build-UE-CI/</id>
+    <published>2023-07-20T15:00:29.263Z</published>
+    <updated>2023-07-18T15:33:27.490Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;run Setup.bat for checking dependencies&lt;/p&gt;
+&lt;p&gt;run GenerateProjectFiles.bat for generating your project files&lt;/p&gt;
+&lt;p&gt;build engine in the </summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Actor Lifecycle</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-Actor-Lifecycle/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-Actor-Lifecycle/</id>
+    <published>2023-07-20T15:00:29.261Z</published>
+    <updated>2023-07-18T15:33:27.489Z</updated>
+    
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>9999 Unreal学习与拓展规划</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-9999-Unreal%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%8B%93%E5%B1%95%E8%A7%84%E5%88%92/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-9999-Unreal%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%8B%93%E5%B1%95%E8%A7%84%E5%88%92/</id>
+    <published>2023-07-20T15:00:29.259Z</published>
+    <updated>2023-07-18T15:33:27.488Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;Unreal-CI&quot;&gt;&lt;a href=&quot;#Unreal-CI&quot; class=&quot;headerlink&quot; title=&quot;Unreal CI&quot;&gt;&lt;/a&gt;Unreal CI&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;img src=&quot;assets/9999%20Unreal学习与拓展规</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>9999 Unreal入门路线</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-9999-Unreal%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-9999-Unreal%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/</id>
+    <published>2023-07-20T15:00:29.257Z</published>
+    <updated>2023-07-18T15:33:27.457Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;hr&gt;
+&lt;p&gt;烟雨迷离的经验&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;VS编译C++&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;IDE： Rider for UE&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;架构：知乎InsideUE4 公认比较好&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>4-3 Unreal_index</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unreal-4-3-Unreal-index/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unreal-4-3-Unreal-index/</id>
+    <published>2023-07-20T15:00:29.255Z</published>
+    <updated>2023-07-18T15:33:27.438Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;目录&quot;&gt;&lt;a href=&quot;#目录&quot; class=&quot;headerlink&quot; title=&quot;目录&quot;&gt;&lt;/a&gt;目录&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;UE%20-%20Rendering%20Pipeline.html&quot;&gt;UE - Rendering Pipe</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>资源路径与文件加载</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unity3D-%E8%B5%84%E6%BA%90%E8%B7%AF%E5%BE%84%E4%B8%8E%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unity3D-%E8%B5%84%E6%BA%90%E8%B7%AF%E5%BE%84%E4%B8%8E%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD/</id>
+    <published>2023-07-20T15:00:27.969Z</published>
+    <updated>2023-07-18T15:33:27.437Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;路径相关的测试：&lt;br&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/58710435&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://zhuanlan.zhihu.com/p/58710435&lt;/a&gt;&lt;br&gt;&lt;</summary>
+      
+    
+    
+    
+    <category term="Unity3D" scheme="https://www.prince-y-p.com/categories/Unity3D/"/>
+    
+    
+    <category term="Unity3D" scheme="https://www.prince-y-p.com/tags/Unity3D/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>资源管理工具</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unity3D-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unity3D-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/</id>
+    <published>2023-07-20T15:00:27.966Z</published>
+    <updated>2023-07-18T15:33:27.436Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://github.com/GameBuildingBlocks/UnityComponent/tree/2b5ca4c2d6bf0f036c8bd60adf244d89655b3438&quot; target=&quot;_blank&quot; rel=&quot;noopene</summary>
+      
+    
+    
+    
+    <category term="Unity3D" scheme="https://www.prince-y-p.com/categories/Unity3D/"/>
+    
+    
+    <category term="Unity3D" scheme="https://www.prince-y-p.com/tags/Unity3D/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>资源与内存(加载、卸载、Destroy)</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unity3D-%E8%B5%84%E6%BA%90%E4%B8%8E%E5%86%85%E5%AD%98-%E5%8A%A0%E8%BD%BD%E3%80%81%E5%8D%B8%E8%BD%BD%E3%80%81Destroy/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unity3D-%E8%B5%84%E6%BA%90%E4%B8%8E%E5%86%85%E5%AD%98-%E5%8A%A0%E8%BD%BD%E3%80%81%E5%8D%B8%E8%BD%BD%E3%80%81Destroy/</id>
+    <published>2023-07-20T15:00:27.964Z</published>
+    <updated>2023-07-18T15:33:27.436Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;Unity文件，文件引用，meta详解&quot;&gt;&lt;a href=&quot;#Unity文件，文件引用，meta详解&quot; class=&quot;headerlink&quot; title=&quot;Unity文件，文件引用，meta详解&quot;&gt;&lt;/a&gt;Unity文件，文件引用，meta详解&lt;/h2&gt;&lt;h3 i</summary>
+      
+    
+    
+    
+    <category term="Unity3D" scheme="https://www.prince-y-p.com/categories/Unity3D/"/>
+    
+    
+    <category term="Unity3D" scheme="https://www.prince-y-p.com/tags/Unity3D/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>获取场景点数和面数</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unity3D-%E8%8E%B7%E5%8F%96%E5%9C%BA%E6%99%AF%E7%82%B9%E6%95%B0%E5%92%8C%E9%9D%A2%E6%95%B0/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unity3D-%E8%8E%B7%E5%8F%96%E5%9C%BA%E6%99%AF%E7%82%B9%E6%95%B0%E5%92%8C%E9%9D%A2%E6%95%B0/</id>
+    <published>2023-07-20T15:00:27.953Z</published>
+    <updated>2023-07-18T15:33:27.430Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;Test&quot;&gt;&lt;a href=&quot;#Test&quot; class=&quot;headerlink&quot; title=&quot;Test&quot;&gt;&lt;/a&gt;Test&lt;/h2&gt;&lt;pre&gt;&lt;code class=&quot;lang-csharp&quot;&gt;
+int tris = 0, verts = 0; 
+
+//Game</summary>
+      
+    
+    
+    
+    <category term="Unity3D" scheme="https://www.prince-y-p.com/categories/Unity3D/"/>
+    
+    
+    <category term="Unity3D" scheme="https://www.prince-y-p.com/tags/Unity3D/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>编辑器扩展</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unity3D-%E7%BC%96%E8%BE%91%E5%99%A8%E6%89%A9%E5%B1%95/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unity3D-%E7%BC%96%E8%BE%91%E5%99%A8%E6%89%A9%E5%B1%95/</id>
+    <published>2023-07-20T15:00:27.951Z</published>
+    <updated>2023-07-18T15:34:38.637Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;菜单项&quot;&gt;&lt;a href=&quot;#菜单项&quot; class=&quot;headerlink&quot; title=&quot;菜单项&quot;&gt;&lt;/a&gt;菜单项&lt;/h2&gt;&lt;h3 id=&quot;MenuItem&quot;&gt;&lt;a href=&quot;#MenuItem&quot; class=&quot;headerlink&quot; title=&quot;MenuI</summary>
+      
+    
+    
+    
+    <category term="Unity3D" scheme="https://www.prince-y-p.com/categories/Unity3D/"/>
+    
+    
+    <category term="Unity3D" scheme="https://www.prince-y-p.com/tags/Unity3D/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>研究Unity引擎的技巧</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unity3D-%E7%A0%94%E7%A9%B6Unity%E5%BC%95%E6%93%8E%E7%9A%84%E6%8A%80%E5%B7%A7/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unity3D-%E7%A0%94%E7%A9%B6Unity%E5%BC%95%E6%93%8E%E7%9A%84%E6%8A%80%E5%B7%A7/</id>
+    <published>2023-07-20T15:00:27.949Z</published>
+    <updated>2023-07-18T15:33:27.427Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;调用Editor内部的函数&quot;&gt;&lt;a href=&quot;#调用Editor内部的函数&quot; class=&quot;headerlink&quot; title=&quot;调用Editor内部的函数&quot;&gt;&lt;/a&gt;调用Editor内部的函数&lt;/h1&gt;&lt;p&gt;参考:&lt;br&gt;&lt;a href=&quot;https://ww</summary>
+      
+    
+    
+    
+    <category term="Unity3D" scheme="https://www.prince-y-p.com/categories/Unity3D/"/>
+    
+    
+    <category term="Unity3D" scheme="https://www.prince-y-p.com/tags/Unity3D/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>强哥UI课</title>
+    <link href="https://www.prince-y-p.com/2023/07/20/Unity3D-%E5%BC%BA%E5%93%A5UI%E8%AF%BE/"/>
+    <id>https://www.prince-y-p.com/2023/07/20/Unity3D-%E5%BC%BA%E5%93%A5UI%E8%AF%BE/</id>
+    <published>2023-07-20T15:00:27.947Z</published>
+    <updated>2023-07-18T15:33:27.426Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;基础组件&quot;&gt;&lt;a href=&quot;#基础组件&quot; class=&quot;headerlink&quot; title=&quot;基础组件&quot;&gt;&lt;/a&gt;基础组件&lt;/h2&gt;&lt;h3 id=&quot;Canvas组件&quot;&gt;&lt;a href=&quot;#Canvas组件&quot; class=&quot;headerlink&quot; title=&quot;C</summary>
+      
+    
+    
+    
+    <category term="Unity3D" scheme="https://www.prince-y-p.com/categories/Unity3D/"/>
+    
+    
+    <category term="Unity3D" scheme="https://www.prince-y-p.com/tags/Unity3D/"/>
+    
+  </entry>
+  
+</feed>

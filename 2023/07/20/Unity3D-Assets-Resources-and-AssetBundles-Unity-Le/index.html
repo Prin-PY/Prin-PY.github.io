@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Assets, Resources and AssetBundles - Unity Le |  半个出家人</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/circle_image.png" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="半个出家人" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Unity3D-Assets-Resources-and-AssetBundles-Unity-Le"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Assets, Resources and AssetBundles - Unity Le
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/20/Unity3D-Assets-Resources-and-AssetBundles-Unity-Le/" class="article-date">
+  <time datetime="2023-07-20T15:00:27.105Z" itemprop="datePublished">2023-07-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">11.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">72 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>arn</p>
+<h2 id="1-A-guide-to-AssetBundles-and-Resources"><a href="#1-A-guide-to-AssetBundles-and-Resources" class="headerlink" title="1.A guide to AssetBundles and Resources"></a>1.A guide to AssetBundles and Resources</h2><p>This is a series of articles that provides an in-depth discussion of Assets and resource management in the Unity engine. It seeks to provide expert developers with deep, source-level knowledge of Unity’s Asset and serialization systems. It examines both the technical underpinnings of Unity’s AssetBundle system and the current best practices for employing them.</p>
+<p>The guide is broken down into four chapters:</p>
+<ol>
+<li>1. </li>
+</ol>
+<p>Assets, Objects and serialization discusses the low-level details of how Unity serializes Assets and handles references between Assets. It is strongly recommended that readers begin with this chapter as it defines terminology used throughout the guide.</p>
+<ol>
+<li>2. </li>
+</ol>
+<p>The Resources folder discusses the built-in Resources API.</p>
+<ol>
+<li>3. </li>
+</ol>
+<p>AssetBundle fundamentals builds on the information in chapter 1 to describe how AssetBundles operate, and discusses both the loading of AssetBundles and the loading of Assets from AssetBundles.</p>
+<ol>
+<li>4. </li>
+</ol>
+<p>AssetBundle usage patterns is a long article discussing many of the topics surrounding the practical uses of AssetBundles. It includes sections on assigning Assets to AssetBundles and on managing loaded Assets, and describes many common pitfalls encountered by developers using AssetBundles.</p>
+<p>Note: This guide’s terms for Objects and Assets differ from Unity’s public API naming conventions.</p>
+<p>The data this guide calls Objects are called Assets in many public Unity APIs, such as<a href="http://docs.unity3d.com/ScriptReference/AssetBundle.LoadAsset.html" target="_blank" rel="noopener"> AssetBundle.LoadAsset</a> and<a href="http://docs.unity3d.com/ScriptReference/Resources.UnloadUnusedAssets.html" target="_blank" rel="noopener"> Resources.UnloadUnusedAssets</a>. The files this guide calls Assets are rarely exposed to any public APIs. When they are exposed, it is generally only in build-related code, such as<a href="http://docs.unity3d.com/ScriptReference/AssetDatabase.html" target="_blank" rel="noopener"> AssetDatabase</a> and<a href="http://docs.unity3d.com/ScriptReference/BuildPipeline.html" target="_blank" rel="noopener"> BuildPipeline</a>. In these cases, they are called files in public APIs.</p>
+<p></p>
+<h2 id="2-Assets-Objects-and-serialization"><a href="#2-Assets-Objects-and-serialization" class="headerlink" title="2.Assets, Objects and serialization"></a>2.Assets, Objects and serialization</h2><p>This chapter covers the deep internals of Unity’s serialization system and how Unity maintains robust references between different Objects, both in the Unity Editor and at runtime. It also discusses the technical distinctions between Objects and Assets. The topics covered here are fundamental to understanding how to efficiently load and unload Assets in Unity. Proper Asset management is crucial to keeping loading times short and memory usage low.</p>
+<h2 id=""><a href="#" class="headerlink" title=" "></a> </h2><p>2.1. Inside Assets and Objects</p>
+<p>To understand how to properly manage data in Unity, it is important to understand how Unity identifies and serializes data. The first key point is the distinction between Assets and UnityEngine.Objects.</p>
+<p>An Asset is a file on disk, stored in the Assets folder of a Unity project. Textures, 3D models, or audio clips are common types of Assets. Some Assets contain data in formats native to Unity, such as materials. Other Assets need to be processed into native formats, such as FBX files.</p>
+<p>A UnityEngine.Object, or Object with a capitalized ‘O’, is a set of serialized data collectively describing a specific instance of a resource. This can be any type of resource which the Unity Engine uses, such as a mesh, sprite, AudioClip or AnimationClip. All Objects are subclasses of the<a href="http://docs.unity3d.com/ScriptReference/Object.html" target="_blank" rel="noopener"> UnityEngine.Object</a> base class.</p>
+<p>While most Object types are built-in, there are two special types.</p>
+<ol>
+<li>1. </li>
+</ol>
+<p>A<a href="http://docs.unity3d.com/ScriptReference/ScriptableObject.html" target="_blank" rel="noopener"> ScriptableObject</a> provides a convenient system for developers to define their own data types. These types can be natively serialized and deserialized by Unity, and manipulated in the Unity Editor’s Inspector window.</p>
+<ol>
+<li>2. </li>
+</ol>
+<p>A<a href="http://docs.unity3d.com/ScriptReference/MonoBehaviour.html" target="_blank" rel="noopener"> MonoBehaviour</a> provides a wrapper that links to a<a href="http://docs.unity3d.com/ScriptReference/MonoScript.html" target="_blank" rel="noopener"> MonoScript</a>. A MonoScript is an internal data type that Unity uses to hold a reference to a specific scripting class within a specific assembly and namespace. The MonoScript does not contain any actual executable code.</p>
+<p>There is a one-to-many relationship between Assets and Objects; that is, any given Asset file contains one or more Objects.</p>
+<h2 id="-1"><a href="#-1" class="headerlink" title=" "></a> </h2><p>2.2. Inter-Object references</p>
+<p>All UnityEngine.Objects can have references to other UnityEngine.Objects. These other Objects may reside within the same Asset file, or may be imported from other Asset files. For example, a material Object usually has one or more references to texture Objects. These texture Objects are generally imported from one or more texture Asset files (such as PNGs or JPGs).</p>
+<p>When serialized, these references consist of two separate pieces of data: a File GUID and a Local ID. The File GUID identifies the Asset file where the target resource is stored. A locally unique Local ID identifies each Object within an Asset file because an Asset file may contain multiple Objects. (Note: AA Local ID is unique from all the other Local IDs for the same Asset file.)</p>
+<p>File GUIDs are stored in .meta files. These .meta files are generated when Unity first imports an Asset, and are stored in the same directory as the Asset.</p>
+<p>The above identification and referencing system can be seen in a text editor: create a fresh Unity project and change its Editor Settings to expose Visible Meta Files and to serialize Assets as text. Create a material and import a texture into the project. Assign the material to a cube in the scene and save the scene.</p>
+<p>Using a text editor, open the .meta file associated with the material. A line labeled “guid” will appear near the top of the file. This line defines the material Asset’s File GUID. To find the Local ID, open the material file in a text editor. The material Object’s definition will look like this:</p>
+<pre><code>--- !u!21 &amp;2100000
+Material:
+ serializedVersion: 3
+ ... more data …
+</code></pre><p>In the above example, the number preceded by an ampersand is the material’s Local ID. If this material Object were located inside an Asset identified by the File GUID “abcdefg”, then the material Object could be uniquely identified as the combination of the File GUID “abcdefg” and the Local ID “2100000”.</p>
+<h2 id="-2"><a href="#-2" class="headerlink" title=" "></a> </h2><p>2.3. Why File GUIDs and Local IDs?</p>
+<p>Why is Unity’s File GUID and Local ID system necessary? The answer is robustness and to provide a flexible, platform-independent workflow.</p>
+<p>The File GUID provides an abstraction of a file’s specific location. As long as a specific File GUID can be associated with a specific file, that file’s location on disk becomes irrelevant. The file can be freely moved without having to update all Objects referring to the file.</p>
+<p>As any given Asset file may contain (or produce via import) multiple UnityEngine.Object resources, a Local ID is required to unambiguously distinguish each distinct Object.</p>
+<p>If the File GUID associated with an Asset file is lost, then references to all Objects in that Asset file will also be lost. This is why it is important that the .meta files must remain stored with the same file names and in the same folders as their associated Asset files. Note that Unity will regenerate deleted or misplaced .meta files.</p>
+<p>The Unity Editor has a map of specific file paths to known File GUIDs. A map entry is recorded whenever an Asset is loaded or imported. The map entry links the Asset’s specific path to the Asset’s File GUID. If the Unity Editor is open when a .meta file goes missing and the Asset’s path does not change, the Editor can ensure that the Asset retains the same File GUID.</p>
+<p>If the .meta file is lost while the Unity Editor is closed, or the Asset’s path changes without the .meta file moving along with the Asset, then all references to Objects within that Asset will be broken.</p>
+<h2 id="-3"><a href="#-3" class="headerlink" title=" "></a> </h2><p>2.4. Composite Assets and importers</p>
+<p>As mentioned in the Inside Assets and Objects section, non-native Asset types must be imported into Unity. This is done via an asset importer. While these importers are usually invoked automatically, they are also exposed to scripts via the <a href="http://docs.unity3d.com/ScriptReference/AssetImporter.html" target="_blank" rel="noopener">AssetImporter</a> API. For example, the <a href="http://docs.unity3d.com/ScriptReference/TextureImporter.html" target="_blank" rel="noopener">TextureImporter</a> API provides access to the settings used when importing individual texture Assets, such as PNG files.</p>
+<p>The result of the import process is one or more UnityEngine.Objects. These are visible in the Unity Editor as multiple sub-assets within the parent Asset, such as multiple sprites nested beneath a texture Asset that has been imported as a sprite atlas. Each of these Objects will share a File GUID as their source data is stored within the same Asset file. They will be distinguished within the imported texture Asset by a Local ID.</p>
+<p>The import process converts source Assets into formats suitable for the target platform selected in the Unity Editor. The import process can include a number of heavyweight operations, such as texture compression. As this is often a time-consuming process, imported Asset are cached in the Library folder, eliminating the need to re-import Assets again on the next Editor launch.</p>
+<p>Specifically, the results of the import process are stored in a folder named for the first two digits of the Asset’s File GUID. This folder is stored inside the Library/metadata/ folder. The individual Objects from the Asset are serialized into a single binary file that has a name identical to the Asset’s File GUID.</p>
+<p>This process applies to all Assets, not just non-native Assets. Native assets do not require lengthy conversion processes or re-serialization.</p>
+<h2 id="-4"><a href="#-4" class="headerlink" title=" "></a> </h2><p>2.5. Serialization and instances</p>
+<p>While File GUIDs and Local IDs are robust, GUID comparisons are slow and a more performant system is needed at runtime. Unity internally maintains a cache that translates File GUIDs and Local IDs into simple, session-unique integers (note: Internally, this cache is called the PersistentManager.) These integers are called Instance IDs, and are assigned in a simple, monotonically-increasing order when new Objects are registered with the cache.</p>
+<p>The cache maintains mappings between a given Instance ID, File GUID and Local ID defining the location of the Object’s source data, and the instance of the Object in memory (if any). This allows UnityEngine.Objects to robustly maintain references to each other. Resolving an Instance ID reference can quickly return the loaded Object represented by the Instance ID. If the target Object is not yet loaded, the File GUID and Local ID can be resolved to the Object’s source data, allowing Unity to load the object just-in-time.</p>
+<p>At startup, the Instance ID cache is initialized with data for all Objects immediately required by the project (i.e., referenced in built Scenes), as well as all Objects contained in the Resources folder. Additional entries are added to the cache when new assets are imported at runtime and when Objects are loaded from AssetBundles (note: An example of an Asset created at runtime would be a Texture2D Object created in script, like so: var myTexture = new Texture2D(1024, 768);). Instance ID entries are only removed from the cache when an AssetBundle providing access to a specific File GUID and Local ID is unloaded. When this occurs, the mapping between the Instance ID, its File GUID and Local ID are deleted to conserve memory. If the AssetBundle is re-loaded, a new Instance ID will be created for each Object loaded from the re-loaded AssetBundle.</p>
+<p>For a deeper discussion of the implications of unloading AssetBundles, see the Managing Loaded Assets section in the AssetBundle Usage Patterns step.</p>
+<p>On specific platforms, certain events can force Objects out of memory. For example, graphical Assets can be unloaded from graphics memory on iOS when an app is suspended. If these Objects originated in an AssetBundle that has been unloaded, Unity will be unable to reload the source data for the Objects. Any extant references to these Objects will also be invalid. In the preceding example, the scene may appear to have invisible meshes or magenta textures.</p>
+<p>Implementation note: At runtime, the above control flow is not literally accurate. Comparing File GUIDs and Local IDs at runtime would not be sufficiently performant during heavy loading operations. When building a Unity project, the File GUIDs and Local IDs are deterministically mapped into a simpler format. However, the concept remains identical, and thinking in terms of File GUIDs and Local IDs remains a useful analogy during runtime. This is also the reason why Asset File GUIDs cannot be queried at runtime.</p>
+<h2 id="-5"><a href="#-5" class="headerlink" title=" "></a> </h2><p>2.6. MonoScripts</p>
+<p>It is important to understand that a MonoBehaviour has a reference to a MonoScript, and MonoScripts simply contain the information needed to locate a specific script class. Neither type of Object contains the executable code of script class.</p>
+<p>A MonoScript contains three strings: assembly name, class name, and namespace.</p>
+<p>While building a project, Unity compiles all the loose script files in the Assets folder into Mono assemblies. C# scripts outside of the Plugins subfolder are placed into Assembly-CSharp.dll. Scripts within the Plugins subfolder are placed into Assembly-CSharp-firstpass.dll, and so on. In addition, Unity 2017.3 also introduces the ability to <a href="https://docs.unity3d.com/Manual/ScriptCompilationAssemblyDefinitionFiles.html" target="_blank" rel="noopener">define custom managed assemblies</a>.</p>
+<p>These assemblies, as well as pre-built assembly DLL files, are included in the final build of a Unity application. They are also the assemblies to which a MonoScript refers. Unlike other resources, all assemblies included in a Unity application are loaded on application start-up.</p>
+<p>This MonoScript Object is the reason why an AssetBundle (or a Scene or a prefab) does not actually contain executable code in any of the MonoBehaviour Components in the AssetBundle, Scene or prefab. This allows different MonoBehaviours to refer to specific shared classes, even if the MonoBehaviours are in different AssetBundles.</p>
+<h2 id="-6"><a href="#-6" class="headerlink" title=" "></a> </h2><p>2.7. Resource lifecycle</p>
+<p>To reduce loading times and manage an application’s memory footprint, it’s important to understand the resource lifecycle of UnityEngine.Objects. Objects are loaded into/unloaded from memory at specific and defined times.</p>
+<p>An Object is loaded automatically when:</p>
+<ol>
+<li>1. </li>
+</ol>
+<p>The Instance ID mapped to that Object is dereferenced</p>
+<ol>
+<li>2. </li>
+</ol>
+<p>The Object is currently not loaded into memory</p>
+<ol>
+<li>3. </li>
+</ol>
+<p>The Object’s source data can be located.</p>
+<p>Objects can also be explicitly loaded in scripts, either by creating them or by calling a resource-loading API (e.g., <a href="http://docs.unity3d.com/ScriptReference/AssetBundle.LoadAsset.html" target="_blank" rel="noopener">AssetBundle.LoadAsset</a>). When an Object is loaded, Unity tries to resolve any references by translating each reference’s File GUID and Local ID into an Instance ID. An Object will be loaded on-demand the first time its Instance ID is dereferenced if two criteria are true:</p>
+<ol>
+<li>1. </li>
+</ol>
+<p>The Instance ID references an Object that is not currently loaded</p>
+<ol>
+<li>2. </li>
+</ol>
+<p>The Instance ID has a valid File GUID and Local ID registered in the cache</p>
+<p>This generally occurs very shortly after the reference itself is loaded and resolved.</p>
+<p>If a File GUID and Local ID do not have an Instance ID, or if an Instance ID with an unloaded Object references an invalid File GUID and Local ID, then the reference is preserved but the actual Object will not be loaded. This appears as a “(Missing)” reference in the Unity Editor. In a running application, or in the Scene View, “(Missing)” Objects will be visible in different ways, depending on their types. For example, meshes will appear to be invisible, while textures may appear to be magenta.</p>
+<p>Objects are unloaded in three specific scenarios:</p>
+<ul>
+<li><p>Objects are automatically unloaded when unused Asset cleanup occurs. This process is triggered automatically when scenes are changed destructively (i.e. when <a href="https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager.html" target="_blank" rel="noopener">SceneManager.LoadScene</a> is invoked non-additively), or when a script invokes the<a href="http://docs.unity3d.com/ScriptReference/Resources.UnloadUnusedAssets.html" target="_blank" rel="noopener"> Resources.UnloadUnusedAssets</a> API. This process only unloads unreferenced Objects; an Object will only be unloaded if no Mono variable holds a reference to the Object, and there are no other live Objects holding references to the Object. Furthermore, note that anything marked with <a href="https://docs.unity3d.com/ScriptReference/HideFlags.DontUnloadUnusedAsset.html" target="_blank" rel="noopener">HideFlags.DontUnloadUnusedAsset</a> and <a href="https://docs.unity3d.com/ScriptReference/HideFlags.HideAndDontSave.html" target="_blank" rel="noopener">HideFlags.HideAndDontSave</a> will not be unloaded.</p>
+</li>
+<li><p>Objects sourced from the Resources folder can be explicitly unloaded by invoking the<a href="http://docs.unity3d.com/ScriptReference/Resources.UnloadAsset.html" target="_blank" rel="noopener"> Resources.UnloadAsset</a> API. The Instance ID for these Objects remains valid and will still contain a valid File GUID and LocalID entry. If any Mono variable or other Object holds a reference to an Object that is unloaded with<a href="http://docs.unity3d.com/ScriptReference/Resources.UnloadAsset.html" target="_blank" rel="noopener"> Resources.UnloadAsset</a>, then that Object will be reloaded as soon as any of the live references are dereferenced.</p>
+</li>
+<li><p>Objects sourced from AssetBundles are automatically and immediately unloaded when invoking the<a href="http://docs.unity3d.com/ScriptReference/AssetBundle.Unload.html" target="_blank" rel="noopener"> AssetBundle.Unload</a>(true) API. This invalidates the File GUID and Local ID of the Object’s Instance ID, and any live references to the unloaded Objects will become “(Missing)” references. From C# scripts, attempting to access methods or properties on an unloaded object will produce a NullReferenceException.</p>
+</li>
+</ul>
+<p>If <a href="http://docs.unity3d.com/ScriptReference/AssetBundle.Unload.html" target="_blank" rel="noopener">AssetBundle.Unload</a>(false) is called, live Objects sourced from the unloaded AssetBundle will not be destroyed, but Unity will invalidate the File GUID and Local ID references of their Instance IDs. It will be impossible for Unity to reload these Objects if they are later unloaded from memory and live references to the unloaded Objects remain. </p>
+<p>(Note: The most common case where Objects are removed from memory at runtime without being unloaded occurs when Unity loses control of its graphics context. This may occur when a mobile app is suspended and the app is forced into the background. In this case, the mobile OS usually evicts all graphical resources from GPU memory. When the app returns to the foreground, Unity must reload all needed Textures, Shaders and Meshes to the GPU before scene rendering can resume.)</p>
+<h2 id="-7"><a href="#-7" class="headerlink" title=" "></a> </h2><p>2.8. Loading large hierarchies</p>
+<p>When serializing hierarchies of Unity GameObjects, such as during prefabs serialization, it is important to remember that the entire hierarchy will be fully serialized. That is, every GameObject and Component in the hierarchy will be individually represented in the serialized data. This has interesting impacts on the time required to load and instantiate hierarchies of GameObjects.</p>
+<p>When creating any GameObject hierarchy, CPU time is spent in several different ways:</p>
+<ul>
+<li><p>Reading the source data (from storage, from an AssetBundle, from another GameObject, etc.)</p>
+</li>
+<li><p>Setting up the parent-child relationships between the new Transforms</p>
+</li>
+<li><p>Instantiating the new GameObjects and Components</p>
+</li>
+<li><p>Awakening the new GameObjects and Components on the main thread</p>
+</li>
+</ul>
+<p>The latter three time costs are generally invariant regardless of whether the hierarchy is being cloned from an existing hierarchy or is being loaded from storage. However, the time to read the source data increases linearly with the number of Components and GameObjects serialized into the hierarchy, and is also multiplied by the speed of the data source.</p>
+<p>On all current platforms, it is considerably faster to read data from elsewhere in memory rather than loading it from a storage device. Further, the performance characteristics of the available storage media vary widely between different platforms. Therefore, when loading prefabs on platforms with slow storage, the time spent reading the prefab’s serialized data from storage can rapidly exceed the time spent instantiating the prefab. That is, the cost of the loading operation is bound to storage I/O time.</p>
+<p>As mentioned before, when serializing a monolithic prefab, every GameObject and component’s data is serialized separately, which may duplicate data. For example, a UI screen with 30 identical elements will have the identical element serialized 30 times, producing a large blob of binary data. At load time, the data for all of the GameObjects and Components on each one of those 30 duplicate elements must be read from disk before being transferred to the newly-instantiated Object. This file reading time is a significant contributor to the overall cost of instantiating large prefabs. Large hierarchies should be instantiated in modular chunks, and then be stitched together at runtime.</p>
+<p>Unity 5.4 note: Unity 5.4 altered the representation of transforms in memory. Each root transform’s entire child hierarchy is stored in compact, contiguous regions of memory. When instantiating new GameObjects that will be instantly reparented into another hierarchy, consider using the new <a href="https://docs.unity3d.com/ScriptReference/Object.Instantiate.html" target="_blank" rel="noopener">GameObject.Instantiate</a> overloaded variants which accept a parent argument. Using this overload avoids the allocation of a root transform hierarchy for the new GameObject. In tests, this speeds up the time required for an instantiate operation by about 5-10%.</p>
+<p></p>
+<h2 id="3-The-Resources-folder"><a href="#3-The-Resources-folder" class="headerlink" title="3.The Resources folder"></a>3.The Resources folder</h2><p>This chapter discusses the Resources system. This is the system that allows developers to store Assets within one or more folders named Resources and to load or unload Objects from those Assets at runtime using the<a href="http://docs.unity3d.com/ScriptReference/Resources.html" target="_blank" rel="noopener"> Resources</a> API.</p>
+<h2 id="-8"><a href="#-8" class="headerlink" title=" "></a> </h2><p>3.1. Best Practices for the Resources System</p>
+<p>Don’t use it.</p>
+<p>This strong recommendation is made for several reasons:</p>
+<ul>
+<li><p>Use of the Resources folder makes fine-grained memory management more difficult</p>
+</li>
+<li><p>Improper use of Resources folders will increase application startup time and the length of builds</p>
+</li>
+<li><p>As the number of Resources folders increases, management of the Assets within those folders becomes very difficult</p>
+</li>
+<li><p>The Resources system degrades a project’s ability to deliver custom content to specific platforms and eliminates the possibility of incremental content upgrades</p>
+</li>
+<li><p>AssetBundle Variants are Unity’s primary tool for adjusting content on a per-device basis</p>
+</li>
+</ul>
+<h3 id="-9"><a href="#-9" class="headerlink" title=" "></a> </h3><p>3.2. Proper uses of the Resources system</p>
+<p>There are two specific use cases where the Resources system can be helpful without impeding good development practices:</p>
+<ol>
+<li>1. </li>
+</ol>
+<p>The ease of the Resources folder makes it an excellent system to rapidly prototype. However, when a project moves into full production, the use of the Resources folder should be eliminated.</p>
+<ol>
+<li>2. </li>
+</ol>
+<p>The Resources folder may be useful in some trivial cases, if the content is:</p>
+<ol>
+<li>3. </li>
+</ol>
+<p>Generally required throughout a project’s lifetime</p>
+<ol>
+<li>4. </li>
+</ol>
+<p>Not memory-intensive</p>
+<ol>
+<li>5. </li>
+</ol>
+<p>Not prone to patching, or does not vary across platforms or devices</p>
+<ol>
+<li>6. </li>
+</ol>
+<p>Used for minimal bootstrapping</p>
+<p>Examples of this second case include MonoBehaviour singletons used to host prefabs, or ScriptableObjects containing third-party configuration data, such as a Facebook App ID.</p>
+<h3 id="-10"><a href="#-10" class="headerlink" title=" "></a> </h3><p>3.3. Serialization of Resources</p>
+<p>The Assets and Objects in all folders named “Resources” are combined into a single serialized file when a project is built. This file also contains metadata and indexing information, similar to an AssetBundle. As described in the <a href="https://docs.unity3d.com/Manual/AssetBundlesIntro.html" target="_blank" rel="noopener">AssetBundle documentation</a>, this index includes a serialized lookup tree that is used to resolve a given Object’s name into its appropriate File GUID and Local ID. It is also used to locate the Object at a specific byte offset in the serialized file’s body.</p>
+<p>On most platforms, the lookup data structure is a balanced search tree, which has a construction time that grows at an O(n log(n)) rate. This growth also causes the index’s loading time to grow more-than-linearly as the number of Objects in Resources folders increases.</p>
+<p>This operation is unskippable and occurs at application startup time while the initial non-interactive splash screen is displayed. Initializing a Resources system containing 10,000 assets has been observed to consume multiple seconds on low-end mobile devices, even though most of the Objects contained in Resources folders are rarely actually needed to load into an application’s first scene.</p>
+<p></p>
+<h2 id="4-AssetBundle-fundamentals"><a href="#4-AssetBundle-fundamentals" class="headerlink" title="4.AssetBundle fundamentals"></a>4.AssetBundle fundamentals</h2><p>This chapter discusses AssetBundles. It introduces the fundamental systems upon which AssetBundles are built, as well as the core APIs used to interact with AssetBundles. In particular, it discusses both the loading and unloading of AssetBundles themselves, as well as the loading and unloading of specific Asset and Objects from AssetBundles.</p>
+<p>For more patterns and best practices on the uses of AssetBundles, see the next chapter in this series.</p>
+<h2 id="-11"><a href="#-11" class="headerlink" title=" "></a> </h2><p>4.1. Overview</p>
+<p>The AssetBundle system provides a method for storing one or more files in an archival format that Unity can index and serialize. AssetBundles are Unity’s primary tool for the delivery and updating of non-code content after installation. This permits developers to submit a smaller app package, minimize runtime memory pressure, and selectively load content optimized for the end-user’s device.</p>
+<p>Understanding the way AssetBundles work is essential to building a successful Unity project for mobile devices. For an overall description of AssetBundle contents, review the <a href="https://docs.unity3d.com/Manual/AssetBundlesIntro.html" target="_blank" rel="noopener">AssetBundle documentation</a>.</p>
+<h2 id="-12"><a href="#-12" class="headerlink" title=" "></a> </h2><p>4.2. AssetBundle layout</p>
+<p>To summarize, an AssetBundle consists of two parts: a header and data segment.</p>
+<p>The header contains information about the AssetBundle, such as its identifier, compression type, and a manifest. The manifest is a lookup table keyed by an Object’s name. Each entry provides a byte index that indicates where a given Object can be found within the AssetBundle’s data segment. On most platforms, this lookup table is implemented as a balanced search tree. Specifically, Windows and OSX-derived platforms (including iOS) employ a red-black tree. Therefore, the time needed to construct the manifest will increase more than linearly as the number of Assets within an AssetBundle grows.</p>
+<p>The data segment contains the raw data generated by serializing the Assets in the AssetBundle. If LZMA is specified as the compression scheme, the complete byte array for all serialized assets is compressed. If LZ4 is instead specified, bytes for separate Assets are individually compressed. If no compression is used, the data segment will remain as raw byte streams.</p>
+<p>Prior to Unity 5.3, Objects could not be compressed individually inside an AssetBundle. As a consequence, if a version of Unity before 5.3 is instructed to read one or more Objects from a compressed AssetBundle, Unity had to decompress the entire AssetBundle. Generally, Unity cached a decompressed copy of the AssetBundle to improve loading performance for subsequent loading requests on the same AssetBundle.</p>
+<h2 id="-13"><a href="#-13" class="headerlink" title=" "></a> </h2><p>4.3. Loading AssetBundles</p>
+<p>AssetBundles can be loaded via four distinct APIs. The behavior of these four APIs is different depending on two criteria:</p>
+<ol>
+<li>1. </li>
+</ol>
+<p>Whether the AssetBundle is LZMA compressed, LZ4 compressed or uncompressed</p>
+<ol>
+<li>2. </li>
+</ol>
+<p>The platform on which the AssetBundle is being loaded</p>
+<p>These APIs are:</p>
+<ul>
+<li><p>AssetBundle.LoadFromMemory(Async optional)</p>
+</li>
+<li><p>AssetBundle.LoadFromFile(Async optional)</p>
+</li>
+<li><p>UnityWebRequest’s DownloadHandlerAssetBundle</p>
+</li>
+<li><p>WWW.LoadFromCacheOrDownload (on Unity 5.6 or older)</p>
+</li>
+</ul>
+<h3 id="-14"><a href="#-14" class="headerlink" title=" "></a> </h3><p>4.3.1 AssetBundle.LoadFromMemory(Async)</p>
+<p>Unity’s recommendation is not to use this API.</p>
+<p><a href="https://docs.unity3d.com/ScriptReference/AssetBundle.LoadFromMemoryAsync.html" target="_blank" rel="noopener">AssetBundle.LoadFromMemoryAsync</a> loads an AssetBundle from a managed-code byte array (byte[] in C#). It will always copy the source data from the managed-code byte array into a newly-allocated, contiguous block of native memory. If the AssetBundle is LZMA compressed, it will decompress the AssetBundle while copying. Uncompressed and LZ4-compressed AssetBundles will be copied verbatim.</p>
+<p>The peak amount of memory consumed by this API will be at least twice the size of the AssetBundle: one copy in native memory created by the API, and one copy in the managed byte array passed to the API. Assets loaded from an AssetBundle created via this API will therefore be duplicated three times in memory: once in the managed-code byte array, once in the native-memory copy of the AssetBundle and a third time in GPU or system memory for the asset itself.</p>
+<p>Prior to Unity 5.3.3, this API was known as <strong>AssetBundle.CreateFromMemory</strong>. Its functionality has not changed.</p>
+<h3 id="-15"><a href="#-15" class="headerlink" title=" "></a> </h3><p>4.3.2. AssetBundle.LoadFromFile(Async)</p>
+<p><a href="https://docs.unity3d.com/ScriptReference/AssetBundle.LoadFromFile.html" target="_blank" rel="noopener">AssetBundle.LoadFromFile</a> is a highly-efficient API intended for loading uncompressed or LZ4-compressed AssetBundle from local storage, such as a hard disk or an SD card.</p>
+<p>On desktop standalone, console, and mobile platforms, the API will only load the AssetBundle’s header, and will leave the remaining data on disk. The AssetBundle’s Objects will be loaded on-demand as loading methods (e.g. AssetBundle.Load) are called or as their InstanceIDs are dereferenced. No excess memory will be consumed in this scenario. In the Unity Editor, the API will load the entire AssetBundle into memory, as if the bytes were read off disk and AssetBundle.LoadFromMemoryAsync was used. This API can cause memory spikes to appear during AssetBundle loading if the project is profiled in the Unity Editor. This should not affect performance on-device and these spikes should be re-tested on-device before taking remedial action.</p>
+<p>Note: On Android devices with Unity 5.3 or older, this API will fail when trying to load AssetBundles from the Streaming Assets path. This issue has been resolved in Unity 5.4. For more details, see the section Distribution - shipped with project section of the AssetBundle usage patterns step.</p>
+<p>Prior to Unity 5.3, this API was known as <strong>AssetBundle.CreateFromFile</strong>. Its functionality has not been changed.</p>
+<h3 id="-16"><a href="#-16" class="headerlink" title=" "></a> </h3><p>4.3.3. AssetBundleDownloadHandler</p>
+<p>The <a href="http://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html" target="_blank" rel="noopener">UnityWebRequest</a> API allows developers to specify exactly how Unity should handle downloaded data and allows developers to eliminate unnecessary memory usage. The simplest way to download an AssetBundle using UnityWebRequest is call <a href="http://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.GetAssetBundle.html" target="_blank" rel="noopener">UnityWebRequest.GetAssetBundle</a>.</p>
+<p>For the purposes of this guide, the class of interest is <a href="http://docs.unity3d.com/ScriptReference/Networking.DownloadHandlerAssetBundle.html" target="_blank" rel="noopener">DownloadHandlerAssetBundle</a>. Using a worker thread, it streams downloaded data into a fixed-size buffer and then spools the buffered data to either temporary storage or the AssetBundle cache, depending on how the Download Handler has been configured. All of these operations occur in native code, eliminating the risk of expanding the managed heap. Additionally, this Download Handler does not keep a native-code copy of all downloaded bytes, further reducing the memory overhead of downloading an AssetBundle.</p>
+<p>LZMA-compressed AssetBundles will be decompressed during download and cached using LZ4 compression. This behavior may be changed by setting <a href="https://docs.unity3d.com/ScriptReference/Caching-compressionEnabled.html" target="_blank" rel="noopener">Caching.CompressionEnabled</a>.</p>
+<p>When the download is complete, the <a href="http://docs.unity3d.com/ScriptReference/Networking.DownloadHandlerAssetBundle-assetBundle.html" target="_blank" rel="noopener">assetBundle</a> property of the Download Handler provides access to the downloaded AssetBundle, as if AssetBundle.LoadFromFile had been called on the downloaded AssetBundle.</p>
+<p>If caching information is provided to a UnityWebRequest object, and the requested AssetBundle already exists in Unity’s cache, then the AssetBundle will become available immediately and this API will operate identically to AssetBundle.LoadFromFile.</p>
+<p>Prior to Unity 5.6, the UnityWebRequest system used a fixed pool of worker threads and an internal job system to safeguard against excessive, concurrent downloads. The size of the thread pool was not configurable. In Unity 5.6, these safeguards have been removed to accommodate more modern hardware, and allow for faster access to HTTP response codes and headers.</p>
+<h3 id="-17"><a href="#-17" class="headerlink" title=" "></a> </h3><p>4.3.4. WWW.LoadFromCacheOrDownload</p>
+<p>Note: Beginning in Unity 2017.1, <a href="http://docs.unity3d.com/ScriptReference/WWW.LoadFromCacheOrDownload.html" target="_blank" rel="noopener">WWW.LoadFromCacheOrDownload</a> simply wraps around UnityWebRequest. Accordingly, developers using Unity 2017.1 or higher should migrate to UnityWebRequest. WWW.LoadFromCacheOrDownload will be deprecated in a future release.</p>
+<p>The following information is applicable to Unity 5.6 or older.</p>
+<p><a href="http://docs.unity3d.com/ScriptReference/WWW.LoadFromCacheOrDownload.html" target="_blank" rel="noopener">WWW.LoadFromCacheOrDownload</a> is an API that allows loading of Objects from both remote servers and local storage. Files can be loaded from local storage via a file:// URL. If the AssetBundle is present in the Unity cache, this API will behave exactly like AssetBundle.LoadFromFile.</p>
+<p>If an AssetBundle has not yet been cached, then WWW.LoadFromCacheOrDownload will read the AssetBundle from its source. If the AssetBundle is compressed, it will be decompressed using a worker thread and written into the cache. Otherwise, it will be written directly into the cache via the worker thread. Once the AssetBundle is cached, WWW.LoadFromCacheOrDownload will load header information from the cached, decompressed AssetBundle. The API will then behave identically to an AssetBundle loaded with AssetBundle.LoadFromFile. This cache is shared between WWW.LoadFromCacheOrDownload and UnityWebRequest. Any AssetBundle downloaded with one API will also be available via the other API.</p>
+<p>While the data will be decompressed and written to the cache via a fixed-size buffer, the WWW object will keep a full copy of the AssetBundle’s bytes in native memory. This extra copy of the AssetBundle is kept to support the <a href="http://docs.unity3d.com/ScriptReference/WWW-bytes.html" target="_blank" rel="noopener">WWW.bytes</a> property.</p>
+<p>Due to the memory overhead of caching an AssetBundle’s bytes in the WWW object, AssetBundles should remain small - a few megabytes, at most. For more discussion of AssetBundle sizing, see the<a href="https://unity3d.com/learn/tutorials/topics/best-practices/asset-bundle-usage-patterns#Asset_Assignment_Strategies" target="_blank" rel="noopener"> </a>Asset assignment strategies section in the<a href="https://unity3d.com/learn/tutorials/topics/best-practices/asset-bundle-usage-patterns" target="_blank" rel="noopener"> </a>AssetBundle usage patterns chapter.</p>
+<p>Unlike UnityWebRequest, each call to this API will spawn a new worker thread. Accordingly, on platforms with limited memory, such as mobile devices, only a single AssetBundle at a time should be downloaded using this API, in order to avoid memory spikes. Be careful of creating an excessive number of threads when calling this API multiple times. If more than 5 AssetBundles need to be downloaded, create and manage a download queue in script code to ensure that only a few AssetBundle downloads are running occurring simultaneously.</p>
+<h3 id="-18"><a href="#-18" class="headerlink" title=" "></a> </h3><p>4.3.5. Recommendations</p>
+<p>In general, AssetBundle.LoadFromFile should be used whenever possible. This API is the most efficient in terms of speed, disk usage and runtime memory usage.</p>
+<p>For projects that must download or patch AssetBundles, it is strongly recommended to use<a href="https://unity3d.com/learn/tutorials/topics/best-practices/assetbundle-fundamentals?playlist=30089#AssetBundleDownloadHandler" target="_blank" rel="noopener"> </a>UnityWebRequest for projects using Unity 5.3 or newer, and WWW.LoadFromCacheOrDownload for projects using Unity 5.2 or older. As detailed in the<a href="https://unity3d.com/learn/tutorials/topics/best-practices/asset-bundle-usage-patterns#Distribution" target="_blank" rel="noopener"> </a>Distribution section, it is possible to prime the AssetBundle Cache with Bundles included within a project’s installer.</p>
+<p>When using either UnityWebRequest or WWW.LoadFromCacheOrDownload, ensure that the downloader code properly calls Dispose after loading the AssetBundle. Alternately, C#’s<a href="https://msdn.microsoft.com/en-us//library/yh598w02.aspx" target="_blank" rel="noopener"> using</a> statement is the most convenient way to ensure that a WWW or UnityWebRequest is safely disposed.</p>
+<p>For projects with substantial engineering teams that require unique, specific caching or downloading requirements, a custom downloader may be considered. Writing a custom downloader is a non-trivial engineering task, and any custom downloader should be made compatible with AssetBundle.LoadFromFile. See the Distribution section of the next step for more details.</p>
+<h2 id="-19"><a href="#-19" class="headerlink" title=" "></a> </h2><p>4.4. Loading Assets From AssetBundles</p>
+<p>UnityEngine.Objects can be loaded from AssetBundles using three distinct APIs that are all attached to the AssetBundle object, which have both synchronous and asynchronous variants:</p>
+<ul>
+<li><p><a href="https://docs.unity3d.com/ScriptReference/AssetBundle.LoadAsset.html" target="_blank" rel="noopener">LoadAsset</a> (<a href="https://docs.unity3d.com/ScriptReference/AssetBundle.LoadAssetAsync.html" target="_blank" rel="noopener">LoadAssetAsync</a>)</p>
+</li>
+<li><p><a href="https://docs.unity3d.com/ScriptReference/AssetBundle.LoadAllAssets.html" target="_blank" rel="noopener">LoadAllAssets</a> (<a href="https://docs.unity3d.com/ScriptReference/AssetBundle.LoadAllAssetsAsync.html" target="_blank" rel="noopener">LoadAllAssetsAsync</a>)</p>
+</li>
+<li><p><a href="https://docs.unity3d.com/ScriptReference/AssetBundle.LoadAssetWithSubAssets.html" target="_blank" rel="noopener">LoadAssetWithSubAssets</a> (<a href="https://docs.unity3d.com/ScriptReference/AssetBundle.LoadAssetWithSubAssetsAsync.html" target="_blank" rel="noopener">LoadAssetWithSubAssetsAsync</a>)</p>
+</li>
+</ul>
+<p>The synchronous versions of these APIs will always be faster than their asynchronous counterpart, by at least one frame.</p>
+<p>Asynchronous loads will load multiple Objects per frame, up to their time-slice limits. See the<a href="https://unity3d.com/learn/tutorials/topics/best-practices/assetbundle-fundamentals?playlist=30089#Lowlevel_Loading_Details" target="_blank" rel="noopener"> </a>Low-level loading details section for the underlying technical reasons for this behavior.</p>
+<p>LoadAllAssets should be used when loading multiple independent UnityEngine.Objects. It should only be used when the majority or all of the Objects within an AssetBundle need to be loaded. Compared to the other two APIs, LoadAllAssets is slightly faster than multiple individual calls to LoadAssets. Therefore, if the number of assets to be loaded is large, but less than 66% of the AssetBundle needs to be loaded at a single time, consider splitting the AssetBundle into multiple smaller bundles and using LoadAllAssets.</p>
+<p>LoadAssetWithSubAssets should be used when loading a composite Asset which contains multiple embedded Objects, such as an FBX model with embedded animations or a sprite atlas with multiple sprites embedded inside it. If the Objects that need to be loaded all come from the same Asset, but are stored in an AssetBundle with many other unrelated Objects, then use this API.</p>
+<p>For any other case, use LoadAsset or LoadAssetAsync.</p>
+<h3 id="-20"><a href="#-20" class="headerlink" title=" "></a> </h3><p>4.4.1. Low-level loading details</p>
+<p>UnityEngine.Object loading is performed off the main thread: an Object’s data is read from storage on a worker thread. Anything which does not touch thread-sensitive parts of the Unity system (scripting, graphics) will be converted on the worker thread. For example, VBOs will be created from meshes, textures will be decompressed, etc.</p>
+<p>From Unity 5.3 onward, Object loading has been parallelized. Multiple Objects are deserialized, processed and integrated on worker threads. When an Object finishes loading, its Awake callback will be invoked and the Object will become available to the rest of the Unity Engine during the next frame.</p>
+<p>The synchronous AssetBundle.Load methods will pause the main thread until Object loading is complete. They will also time-slice Object loading so that Object integration does not occupy more than a certain number of milliseconds of frame time. The number of milliseconds is set by the property Application.backgroundLoadingPriority:</p>
+<ul>
+<li><p>ThreadPriority.High: Maximum 50 milliseconds per frame</p>
+</li>
+<li><p>ThreadPriority.Normal: Maximum 10 milliseconds per frame</p>
+</li>
+<li><p>ThreadPriority.BelowNormal: Maximum 4 milliseconds per frame</p>
+</li>
+<li><p>ThreadPriority.Low: Maximum 2 milliseconds per frame.</p>
+</li>
+</ul>
+<p>From Unity 5.2 onwards, multiple Objects are loaded until the frame-time limit for Object loading is reached. Assuming all other factors equal, the asynchronous variants of the asset loading APIs will always take longer to complete than the comparable synchronous version due to the minimum one-frame delay between issuing the asynchronous call and the object becoming available to the Engine.</p>
+<h3 id="-21"><a href="#-21" class="headerlink" title=" "></a> </h3><p>4.4.2. AssetBundle dependencies</p>
+<p>The dependencies among AssetBundles are automatically tracked using two different APIs, depending on the runtime environment. In the Unity Editor, AssetBundle dependencies can be queried via the<a href="http://docs.unity3d.com/ScriptReference/AssetDatabase.html" target="_blank" rel="noopener"> AssetDatabase</a> API. AssetBundle assignments and dependencies can be accessed and changed via the<a href="http://docs.unity3d.com/ScriptReference/AssetImporter.html" target="_blank" rel="noopener"> AssetImporter</a> API. At runtime, Unity provides an optional API to load the dependency information generated during an AssetBundle build via a ScriptableObject-based<a href="http://docs.unity3d.com/ScriptReference/AssetBundleManifest.html" target="_blank" rel="noopener"> AssetBundleManifest</a> API.</p>
+<p>An AssetBundle is dependent upon another AssetBundle when one or more of the parent AssetBundle’s UnityEngine.Objects refers to one or more of the other AssetBundle’s UnityEngine.Objects. For more information on inter-Object references, see the<a href="https://unity3d.com/learn/tutorials/temas/best-practices/assets-objects-and-serialization#InterObject_References" target="_blank" rel="noopener"> </a>Inter-Object references section of the<a href="https://unity3d.com/learn/tutorials/temas/best-practices/assets-objects-and-serialization" target="_blank" rel="noopener"> </a>Assets, Objects and Serialization step.</p>
+<p>As described in the Serialization and instances section of that step, AssetBundles serve as sources for the source data identified by the FileGUID &amp; LocalID of each Object contained within the AssetBundle.</p>
+<p>Because an Object is loaded when its Instance ID is first dereferenced, and because an Object is assigned a valid Instance ID when its AssetBundle is loaded, the order in which AssetBundles are loaded is not important. Instead, it is important to load all AssetBundles that contain dependencies of an Object before loading the Object itself. Unity will not attempt to automatically load any child AssetBundles when a parent AssetBundle is loaded.</p>
+<p>Example:</p>
+<p>Assume material A refers to texture B. Material A is packaged into AssetBundle 1, and texture B is packaged into AssetBundle 2.</p>
+<p><img src="assets/Assets,%20Resources%20and%20AssetBundles%20-%20Unity%20Le/f2a6f87c-5842-4acb-b220-2d7917e1f29f_ab1.jpg" alt=""></p>
+<p>In this use case, AssetBundle 2 must be loaded prior to loading Material A out of AssetBundle 1.</p>
+<p>This does not imply that AssetBundle 2 must be loaded before AssetBundle 1, or that Texture B must be loaded explicitly from AssetBundle 2. It is sufficient to have AssetBundle 2 loaded prior to loading Material A out of AssetBundle 1.</p>
+<p>However, Unity will not automatically load AssetBundle 2 when AssetBundle 1 is loaded. This must be done manually in script code.</p>
+<p>For more information on AssetBundle dependencies, refer to the <a href="https://docs.unity3d.com/Manual/AssetBundles-Dependencies.html" target="_blank" rel="noopener">manual page</a>.</p>
+<h3 id="-22"><a href="#-22" class="headerlink" title=" "></a> </h3><p>4.4.3. AssetBundle manifests</p>
+<p>When executing the AssetBundle build pipeline using the BuildPipeline.BuildAssetBundles API, Unity serializes an Object containing each AssetBundle’s dependency information. This data is stored in a separate AssetBundle, which contains a single Object of the<a href="http://docs.unity3d.com/ScriptReference/AssetBundleManifest.html" target="_blank" rel="noopener"> AssetBundleManifest</a> type.</p>
+<p>This Asset will be stored in an AssetBundle with the same name as the parent directory where the AssetBundles are being built. If a project builds its AssetBundles to a folder at (projectroot)/build/Client/, then the AssetBundle containing the manifest will be saved as (projectroot)/build/Client/Client.manifest.</p>
+<p>The AssetBundle containing the manifest can be loaded, cached and unloaded just like any other AssetBundle.</p>
+<p>The AssetBundleManifest Object itself provides the<a href="http://docs.unity3d.com/ScriptReference/AssetBundleManifest.GetAllAssetBundles.html" target="_blank" rel="noopener"> GetAllAssetBundles</a> API to list all AssetBundles built concurrently with the manifest and two methods to query the dependencies of a specific AssetBundle:</p>
+<ul>
+<li><p><a href="http://docs.unity3d.com/ScriptReference/AssetBundleManifest.GetAllDependencies.html" target="_blank" rel="noopener">AssetBundleManifest.GetAllDependencies</a> returns all of an AssetBundle’s hierarchical dependencies, which includes the dependencies of the AssetBundle’s direct children, its children’s children, etc.</p>
+</li>
+<li><p><a href="http://docs.unity3d.com/ScriptReference/AssetBundleManifest.GetDirectDependencies.html" target="_blank" rel="noopener">AssetBundleManifest.GetDirectDependencies</a> returns only an AssetBundle’s direct children</p>
+</li>
+</ul>
+<p>Note that both of these APIs allocate string arrays. Accordingly, they should only be used sparingly, and not during performance-sensitive portions of an application’s lifetime.</p>
+<h3 id="-23"><a href="#-23" class="headerlink" title=" "></a> </h3><p>4.4.4. Recommendations</p>
+<p>In many cases, it is preferable to load as many needed Objects as possible before players enter performance-critical areas of an application, such as the main game level or world. This is particularly critical on mobile platforms, where access to local storage is slow and the memory churn of loading and unloading Objects at play-time can trigger the garbage collector.</p>
+<p>For projects that must load and unload Objects while the application is interactive, see the<a href="https://unity3d.com/learn/tutorials/topics/best-practices/asset-bundle-usage-patterns#Managing_Loaded_Assets" target="_blank" rel="noopener"> </a>Managing loaded assets section of the AssetBundle usage patterns step for more information on unloading Objects and AssetBundles.</p>
+<p></p>
+<h2 id="5-AssetBundle-usage-patterns"><a href="#5-AssetBundle-usage-patterns" class="headerlink" title="5.AssetBundle usage patterns"></a>5.AssetBundle usage patterns</h2><p>The previous step in this series covered the<a href="https://unity3d.com/learn/tutorials/topics/best-practices/asset-bundle-fundamentals" target="_blank" rel="noopener"> </a>fundamentals of AssetBundles, which included the low-level behavior of various loading APIs. This chapter discusses problems and potential solutions to various aspects of using AssetBundles in practice.</p>
+<h2 id="-24"><a href="#-24" class="headerlink" title=" "></a> </h2><p>5.1 Managing loaded Assets</p>
+<p>It is critical to carefully control the size and number of loaded Objects in memory-sensitive environments. Unity does not automatically unload Objects when they are removed from the active scene. Asset cleanup is triggered at specific times, and it can also be triggered manually.</p>
+<p>AssetBundles themselves must be carefully managed. An AssetBundle backed by a file on local storage (either in the Unity cache or one loaded via <a href="http://docs.unity3d.com/ScriptReference/AssetBundle.LoadFromFile.html" target="_blank" rel="noopener">AssetBundle.LoadFromFile</a>) has minimal memory overhead, rarely consuming more than a few dozen kilobytes. However, this overhead can still become problematic if a large number of AssetBundles are present.</p>
+<p>As most projects allow users to re-experience content (such as replaying a level), it’s important to know when to load or unload an AssetBundle. If an AssetBundle is unloaded improperly, it can cause Object duplication in memory. Improperly unloading AssetBundles can also result in undesirable behavior in certain circumstances, such as causing textures to go missing. To understand why this can happen, refer to the Inter-Object references section of the Assets, Objects, and serialization step.</p>
+<p>The most important thing to understand when managing assets and AssetBundles is the difference in behavior when calling <a href="http://docs.unity3d.com/ScriptReference/AssetBundle.Unload.html" target="_blank" rel="noopener">AssetBundle.Unload</a> with either true or false for the unloadAllLoadedObjects parameter.</p>
+<p>This API will unload the header information of the AssetBundle being called. The unloadAllLoadedObjects parameter determines whether to also unload all Objects instantiated from this AssetBundle. If set to true, then all Objects originating from the AssetBundle will also be immediately unloaded – even if they are currently being used in the active scene.</p>
+<p>For example, assume a material M was loaded from an AssetBundle AB, and assume M is currently in the active scene.</p>
+<p><img src="assets/Assets,%20Resources%20and%20AssetBundles%20-%20Unity%20Le/76e89c67-741d-4b74-9356-fd72c187f4dc_ab2a.jpg" alt=""></p>
+<p>If AssetBundle.Unload(true) is called, then M will be removed from the scene, destroyed and unloaded. However, if AssetBundle.Unload(false) is called, then AB’s header information will be unloaded but M will remain in the scene and will still be functional. Calling AssetBundle.Unload(false) breaks the link between M and AB. If AB is loaded again later, then fresh copies of the Objects contained in AB will be loaded into memory.</p>
+<p><img src="assets/Assets,%20Resources%20and%20AssetBundles%20-%20Unity%20Le/f82652fb-5175-4b25-b362-bfdd8527a340_ab2b.jpg" alt=""></p>
+<p>If AB is loaded again later, then a new copy of the AssetBundle’s header information will be reloaded. However, M was not loaded from this new copy of AB. Unity does not establish any link between the new copy of AB and M.</p>
+<p><img src="assets/Assets,%20Resources%20and%20AssetBundles%20-%20Unity%20Le/9bad77ee-6cdd-4e5c-886d-dc02142e421d_ab2c.jpg" alt=""></p>
+<p>If AssetBundle.LoadAsset() were called to reload M, Unity would not interpret the old copy of M as being an instance of the data in AB. Therefore, Unity will load a new copy of M and there will be two identical copies of M in the scene.</p>
+<p><img src="assets/Assets,%20Resources%20and%20AssetBundles%20-%20Unity%20Le/e1119799-f21d-4d2f-a56a-550302752728_ab2d.jpg" alt=""></p>
+<p>For most projects, this behavior is undesirable. Most projects should use AssetBundle.Unload(true) and adopt a method to ensure that Objects are not duplicated. Two common methods are:</p>
+<ol>
+<li>1. </li>
+</ol>
+<p>Having well-defined points during the application’s lifetime at which transient AssetBundles are unloaded, such as between levels or during a loading screen. This is the simpler and most common option.</p>
+<ol>
+<li>2. </li>
+</ol>
+<p>Maintaining reference-counts for individual Objects and unload AssetBundles only when all of their constituent Objects are unused. This permits an application to unload and reload individual Objects without duplicating memory.</p>
+<p>If an application must use AssetBundle.Unload(false), then individual Objects can only be unloaded in two ways:</p>
+<ol>
+<li>1. </li>
+</ol>
+<p>Eliminate all references to an unwanted Object, both in the scene and in code. After this is done, call <a href="http://docs.unity3d.com/ScriptReference/Resources.UnloadUnusedAssets.html" target="_blank" rel="noopener">Resources.UnloadUnusedAssets</a>.</p>
+<ol>
+<li>2. </li>
+</ol>
+<p>Load a scene non-additively. This will destroy all Objects in the current scene and invoke <a href="http://docs.unity3d.com/ScriptReference/Resources.UnloadUnusedAssets.html" target="_blank" rel="noopener">Resources.UnloadUnusedAssets</a> automatically.</p>
+<p>If a project has well-defined points where the user can be made to wait for Objects to load and unload, such as in between game modes or levels, these points should be used to unload as many Objects as necessary and to load new Objects.</p>
+<p>The simplest way to do this is to package discrete chunks of a project into scenes, and then build those scenes into AssetBundles, along with all of their dependencies. The application can then enter a “loading” scene, fully unload the AssetBundle containing the old scene, and then load the AssetBundle containing the new scene.</p>
+<p>While this is the simplest flow, some projects require more complex AssetBundle management. As every project is different, there is no universal AssetBundle design pattern.</p>
+<p>When deciding how to group Objects into AssetBundles, it is generally best to start by bundling Objects into AssetBundles if they must be loaded or updated at the same time. For example, consider a role-playing game. Individual maps and cutscenes can be grouped into AssetBundles by scene, but some Objects will be needed in most scenes. AssetBundles could be built to provide portraits, the in-game UI, and different character models and textures. These latter Objects and Assets could then be grouped into a second set of AssetBundles that are loaded at startup and remain loaded for the lifetime of the app.</p>
+<p>Another problem can arise if Unity must reload an Object from its AssetBundle after the AssetBundle has been unloaded. In this case, the reload will fail and the Object will appear in the Unity Editor’s hierarchy as a (Missing) Object.</p>
+<p>This primarily occurs when Unity loses and regains control over its graphics context, such as when a mobile app is suspended or the user locks their PC. In this case, Unity must re-upload textures and shaders to the GPU. If the source AssetBundle for these assets is unavailable, the application will render Objects in the scene as magenta.</p>
+<h2 id="-25"><a href="#-25" class="headerlink" title=" "></a> </h2><p>5.2. Distribution</p>
+<p>There are two basic ways to distribute a project’s AssetBundles to clients: installing them simultaneously with the project or downloading them after installation.</p>
+<p>The decision whether to ship AssetBundles within or after installation is driven by the capabilities and restrictions of the platforms on which the project will run. Mobile projects usually opt for post-install downloads to reduce initial install size and remain below over-the-air download size limits. Console and PC projects generally ship AssetBundles with their initial install.</p>
+<p>Proper architecture permits patching new or revised content into your project post-install regardless of how the AssetBundles are delivered initially. For more information on this, see the <a href="https://docs.unity3d.com/Manual/AssetBundles-Patching.html" target="_blank" rel="noopener">Patching with AssetBundles</a> section of the Unity Manual.</p>
+<h3 id="-26"><a href="#-26" class="headerlink" title=" "></a> </h3><p>5.2.1. Shipped with project</p>
+<p>Shipping AssetBundles with the project is the simplest way to distribute them as it does not require additional download-management code. There are two major reasons why a project might include AssetBundles with the install:</p>
+<ul>
+<li><p>To reduce project build times and permit simpler iterative development. If these AssetBundles do not need to be updated separately from the application itself, then the AssetBundles can be included with the application by storing the AssetBundles in Streaming Assets. See the Streaming Assets section, below.</p>
+</li>
+<li><p>To ship an initial revision of updatable content. This is commonly done to save end-users time after their initial install or to serve as the basis for later patching. Streaming Assets is not ideal for this case. However, if writing a custom downloading and caching system is not an option, then an initial revision of updatable content can be loaded into the Unity cache from Streaming Assets (See the Cache Priming section, below).</p>
+</li>
+</ul>
+<h4 id="-27"><a href="#-27" class="headerlink" title=" "></a> </h4><p>5.2.1.1. Streaming Assets</p>
+<p>The easiest way to include any type of content, including AssetBundles, within a Unity application at install time is to build the content into the /Assets/StreamingAssets/ folder, prior to building the project. Anything contained in the StreamingAssets folder at build time will be copied into the final application.</p>
+<p>The full path to the StreamingAssets folder on local storage is accessible via the property <a href="http://docs.unity3d.com/ScriptReference/Application-streamingAssetsPath.html" target="_blank" rel="noopener">Application.streamingAssetsPath</a> at runtime. The AssetBundles can then be loaded with via AssetBundle.LoadFromFile on most platforms.</p>
+<p>Android Developers: On Android, assets in the StreamingAssets folders are stored into the APK and may take more time to load if they are compressed, as files stored in an APK can use different storage algorithms. The algorithm used may vary from one Unity version to another. You can use an archiver such as 7-zip to open the APK to determine if the files are compressed or not. If they are, you can expect AssetBundle.LoadFromFile() to perform more slowly. In this case, you can retrieve the cached version by using <a href="https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.GetAssetBundle.html" target="_blank" rel="noopener">UnityWebRequest.GetAssetBundle</a> as a workaround. By using UnityWebRequest, the AssetBundle will be uncompressed and cached during the first run, allowing for following executions to be faster. Note that this will will take more storage space, as the AssetBundle will be copied to the cache. Alternatively, you can export your Gradle project and add an extension to your AssetBundles at build time. You can then edit the build.gradle file and add that extension to the noCompress section. Once done, you should be able to use AssetBundle.LoadFromFile() without having to pay the decompression performance cost.</p>
+<p>Note: Streaming Assets is not a writable location on some platforms. If a project’s AssetBundles need to be updated after installation, either use WWW.LoadFromCacheOrDownload or write a custom downloader.</p>
+<h3 id="-28"><a href="#-28" class="headerlink" title=" "></a> </h3><p>5.2.2. Downloaded post-install</p>
+<p>The favored method of delivering AssetBundles to mobile devices is to download them after app installation. This also allows the content to be updated after installation without forcing users to re-download the entire application. On many platforms, application binaries must undergo an expensive and lengthy re-certification process. Therefore, developing a good system for post-install downloads is vital.</p>
+<p>The simplest way to deliver AssetBundles is to place them on a web server and deliver them via UnityWebRequest. Unity will automatically cache downloaded AssetBundles on local storage. If the downloaded AssetBundle is LZMA compressed, the AssetBundle will be stored in the cache either as uncompressed or re-compressed as LZ4 (dependent on the <a href="https://docs.unity3d.com/ScriptReference/Caching-compressionEnabled.html" target="_blank" rel="noopener">Caching.compressionEnabled</a> setting), for faster loading in the future. If the downloaded bundle is LZ4 compressed, the AssetBundle will be stored compressed. If the cache fills up, Unity will remove the least recently used AssetBundle from the cache. See the Built-in caching section for more details.</p>
+<p>It is generally recommended to start by using UnityWebRequest when possible, or WWW.LoadFromCacheOrDownload only if using Unity 5.2 or older. Only invest in a custom download system if the built-in APIs’ memory consumption, caching behavior or performance are unacceptable for a specific project, or if a project must run platform-specific code to achieve its requirements.</p>
+<p>Examples of situations which may prevent the use of UnityWebRequest or WWW.LoadFromCacheOrDownload:</p>
+<ul>
+<li><p>When fine-grained control over the AssetBundle cache is required</p>
+</li>
+<li><p>When a project needs to implement a custom compression strategy</p>
+</li>
+<li><p>When a project wishes to use platform-specific APIs to satisfy certain requirements, such as the need to stream data while inactive.</p>
+</li>
+<li><p>Example: Using iOS’ Background Tasks API to download data while in the background.</p>
+</li>
+<li><p>When AssetBundles must be delivered over SSL on platforms where Unity does not have proper SSL support (such as PC).</p>
+</li>
+</ul>
+<h3 id="-29"><a href="#-29" class="headerlink" title=" "></a> </h3><p>5.2.3. Built-in caching</p>
+<p>Unity has a built-in AssetBundle caching system that can be used to cache AssetBundles downloaded via the UnityWebRequest API, which has an overload accepting an AssetBundle version number as an argument. This number is not stored inside the AssetBundle, and is not generated by the AssetBundle system.</p>
+<p>The caching system keeps track of the last version number passed to UnityWebRequest. When this API is called with a version number, the caching system checks to see if there is a cached AssetBundle by comparing version numbers. If these numbers match, the system will load the cached AssetBundle. If the numbers do not match, or there is no cached AssetBundle, then Unity will download a new copy. This new copy will be associated with the new version number.</p>
+<p>AssetBundles in the caching system are identified only by their file names, and not by the full URL from which they are downloaded. This means that an AssetBundle with the same file name can be stored in multiple different locations, such as a Content Delivery Network. As long as the file names are identical, the caching system will recognize them as the same AssetBundle.</p>
+<p>It is up to each individual application to determine an appropriate strategy for assigning version numbers to AssetBundles, and to pass these numbers to UnityWebRequest. The numbers may come from a unique identifiers of sorts, such as a CRC value. Note that while AssetBundleManifest.GetAssetBundleHash() may also be used for this purpose, we don’t recommend this function for versioning, as it provides just an estimation, and not a true hash calculation).</p>
+<p>See the <a href="https://docs.unity3d.com/Manual/AssetBundles-Patching.html" target="_blank" rel="noopener">Patching with AssetBundles</a> section of the Unity Manual for more details.</p>
+<p>In Unity 2017.1 onward, the <a href="https://docs.unity3d.com/ScriptReference/Caching.html" target="_blank" rel="noopener">Caching</a> API has been extended to provide more granular control, by allow developers to select an active cache from multiple caches. Prior versions of Unity may only modify <a href="https://docs.unity3d.com/560/Documentation/ScriptReference/Caching-expirationDelay.html" target="_blank" rel="noopener">Caching.expirationDelay</a> and <a href="https://docs.unity3d.com/560/Documentation/ScriptReference/Caching-maximumAvailableDiskSpace.html" target="_blank" rel="noopener">Caching.maximumAvailableDiskSpace</a> to remove cached items (these properties remain in Unity 2017.1 in the <a href="https://docs.unity3d.com/ScriptReference/Cache.html" target="_blank" rel="noopener">Cache class</a>).</p>
+<p><a href="http://docs.unity3d.com/ScriptReference/Caching-expirationDelay.html" target="_blank" rel="noopener">expirationDelay</a> is the minimum number of seconds that must elapse before an AssetBundle is automatically deleted. If an AssetBundle is not accessed during this time, it will be deleted automatically.</p>
+<p><a href="http://docs.unity3d.com/ScriptReference/Caching-maximumAvailableDiskSpace.html" target="_blank" rel="noopener">maximumAvailableDiskSpace</a> specifies the amount of space on local storage, in bytes, that the cache may use before it begins deleting AssetBundles that have been used less recently than the expirationDelay. When the limit is reached, Unity will delete the AssetBundle in the cache which was least recently opened (or marked as used via Caching.MarkAsUsed). Unity will delete cached AssetBundles until there is sufficient space to complete the new download.</p>
+<h4 id="-30"><a href="#-30" class="headerlink" title=" "></a> </h4><p>5.2.3.1. Cache Priming</p>
+<p>Because AssetBundles are identified by their file names, it is possible to “prime” the cache with AssetBundles shipped with the application. To do this, store the initial or base version of each AssetBundle in /Assets/StreamingAssets/. The process is identical to the one detailed in the<a href="https://unity3d.com/learn/tutorials/temas/best-practices/assetbundle-usage-patterns?playlist=30089#Shipped_with_Project" target="_blank" rel="noopener"> </a>Shipped with project section.</p>
+<p>The cache can be populated by loading AssetBundles from Application.streamingAssetsPath the first time the application is run. From then on, the application can call UnityWebRequest normally (UnityWebRequest can also be used to initially load AssetBundles from the StreamingAssets path as well).</p>
+<h3 id="-31"><a href="#-31" class="headerlink" title=" "></a> </h3><p>5.2.3. Custom downloaders</p>
+<p>Writing a custom downloader gives an application full control over how AssetBundles are downloaded, decompressed and stored. As the engineering work involved is non-trivial, we recommend this approach only for larger teams. There are four major considerations when writing a custom downloader:</p>
+<ul>
+<li><p>Download mechanism</p>
+</li>
+<li><p>Storage location</p>
+</li>
+<li><p>Compression type</p>
+</li>
+<li><p>Patching</p>
+</li>
+</ul>
+<p>For information on patching AssetBundles, see the<a href="https://docs.unity3d.com/Manual/AssetBundles-Patching.html" target="_blank" rel="noopener"> Patching with AssetBundles</a> section of the Unity Manual.</p>
+<h4 id="-32"><a href="#-32" class="headerlink" title=" "></a> </h4><p>5.2.3.1. Downloading</p>
+<p>For most applications, HTTP is the simplest method to download AssetBundles. However, implementing an HTTP-based downloader is not the simplest task. Custom downloaders must avoid excessive memory allocations, excessive thread usage and excessive thread wakeups. Unity’s WWW class is unsuitable for reasons exhaustively described in the WWW.LoadFromCacheOrDownload section of the AssetBundle fundamentals step.</p>
+<p>When writing a custom downloader, there are three options:</p>
+<ul>
+<li><p>C#’s HttpWebRequest and WebClient classes</p>
+</li>
+<li><p>Custom native plugins</p>
+</li>
+<li><p>Asset store packages</p>
+</li>
+</ul>
+<p>5.2.3.1.1. C# classes</p>
+<p>If an application does not require HTTPS/SSL support, C#’s <a href="https://msdn.microsoft.com/en-us/library/system.net.webclient%28v=vs.110%29.aspx" target="_blank" rel="noopener">WebClient</a> class provides the simplest possible mechanism for downloading AssetBundles. It is capable of asynchronously downloading any file directly to local storage without excessive managed memory allocation.</p>
+<p>To download an AssetBundle with WebClient, allocate an instance of the class and pass it the URL of the AssetBundle to download and a destination path. If more control is required over the request’s parameters, it is possible to write a downloader using C#’s <a href="https://msdn.microsoft.com/en-us/library/system.net.httpwebrequest%28v=vs.90%29.aspx" target="_blank" rel="noopener">HttpWebRequest</a> class:</p>
+<ol>
+<li>1. </li>
+</ol>
+<p>Get a byte stream from HttpWebResponse.GetResponseStream.</p>
+<ol>
+<li>2. </li>
+</ol>
+<p>Allocate a fixed-size byte buffer on the stack.</p>
+<ol>
+<li>3. </li>
+</ol>
+<p>Read from the response stream into the buffer.</p>
+<ol>
+<li>4. </li>
+</ol>
+<p>Write the buffer to disk using C#’s File.IO APIs, or any other streaming IO system.</p>
+<p>5.2.3.1.2. Asset Store Packages</p>
+<p>Several asset store packages offer native-code implementations to download files via HTTP, HTTPS and other protocols. Before writing a custom native-code plugin for Unity, it is recommended to evaluate available Asset Store packages.</p>
+<p>5.2.3.1.3. Custom Native Plugins</p>
+<p>Writing a custom native plugin is the most time-intensive, but most flexible method for downloading data in Unity. Due to the high programming time requirements and high technical risk, this method is only recommended if no other method is capable of satisfying an application’s requirements. For example, a custom native plugin may be necessary if an application must use SSL communication on platforms without C# SSL support in Unity.</p>
+<p>A custom native plugin will generally wrap a target platform’s native downloading APIs. Examples include <a href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSURLConnection_Class/" target="_blank" rel="noopener">NSURLConnection</a> on iOS and <a href="http://download.java.net/jdk7/archive/b123/docs/api/java/net/HttpURLConnection.html" target="_blank" rel="noopener">java.net.HttpURLConnection</a> on Android. Consult each platform’s native documentation for further details on using these APIs.</p>
+<h4 id="-33"><a href="#-33" class="headerlink" title=" "></a> </h4><p>5.2.3.2. Storage</p>
+<p>On all platforms, Application.persistentDataPath points to a writable location that should be used for storing data that should persist between runs of an application. When writing a custom downloader, it is strongly recommended to use a subdirectory of Application.persistentDataPath to store downloaded data.</p>
+<p>Application.streamingAssetPath is not writable and is a poor choice for an AssetBundle cache. Example locations for streamingAssetsPath include:</p>
+<ul>
+<li><p>OSX: Within .app package; not writable.</p>
+</li>
+<li><p>Windows: Within install directory (e.g. Program Files); usually not writable</p>
+</li>
+<li><p>iOS: Within .ipa package; not writable</p>
+</li>
+<li><p>Android: Within .apk file; not writable</p>
+</li>
+</ul>
+<h2 id="-34"><a href="#-34" class="headerlink" title=" "></a> </h2><p>5.3. Asset Assignment Strategies</p>
+<p>Deciding how to divide a project’s assets into AssetBundles is not simple. It is tempting to adopt a simplistic strategy, such as placing all Objects in their own AssetBundle or using only a single AssetBundle, but these solutions have significant drawbacks:</p>
+<ul>
+<li><p>Having too few AssetBundles…</p>
+</li>
+<li><p>Increases runtime memory usage</p>
+</li>
+<li><p>Increases loading times</p>
+</li>
+<li><p>Requires larger downloads</p>
+</li>
+<li><p>Having too many AssetBundles…</p>
+</li>
+<li><p>Increases build times</p>
+</li>
+<li><p>Can complicate development</p>
+</li>
+<li><p>Increases total download time</p>
+</li>
+</ul>
+<p>The key decision is how to group Objects into AssetBundles. The primary strategies are:</p>
+<ul>
+<li><p>Logical entities</p>
+</li>
+<li><p>Object Types</p>
+</li>
+<li><p>Concurrent content</p>
+</li>
+</ul>
+<p>More information about these grouping strategies can be found in the <a href="https://docs.unity3d.com/Manual/AssetBundles-Preparing.html" target="_blank" rel="noopener">Manual</a>.</p>
+<h2 id="-35"><a href="#-35" class="headerlink" title=" "></a> </h2><p>5.4. Common pitfalls</p>
+<p>This section describes several problems that commonly appear in projects using AssetBundles.</p>
+<h3 id="-36"><a href="#-36" class="headerlink" title=" "></a> </h3><p>5.5.1. Asset duplication</p>
+<p>Unity 5’s AssetBundle system will discover all dependencies of an Object when the Object is built into an AssetBundle. This dependency information is used to determine the set of Objects that will be included in an AssetBundle.</p>
+<p>Objects that are explicitly assigned to an AssetBundle will only be built into that AssetBundle. An Object is “explicitly assigned” when that Object’s AssetImporter has its assetBundleName property set to a non-empty string. This can be done in the Unity Editor by selecting an AssetBundle in the Object’s Inspector, or from Editor scripts.</p>
+<p>Objects can also be assigned to an AssetBundle by defining them as part of an <a href="https://docs.unity3d.com/ScriptReference/AssetBundleBuild.html" target="_blank" rel="noopener">AssetBundle building map</a>, which is to be used in conjunction with the overloaded <a href="https://docs.unity3d.com/ScriptReference/BuildPipeline.BuildAssetBundles.html" target="_blank" rel="noopener">BuildPipeline.BuildAssetBundles()</a> function that takes in an array of AssetBundleBuild.</p>
+<p>Any Object that is not explicitly assigned in an AssetBundle will be included in all AssetBundles that contain 1 or more Objects that reference the untagged Object.</p>
+<p>For example, if two different Objects are assigned to two different AssetBundles, but both have references to a common dependency Object, then that dependency Object will be copied into both AssetBundles. The duplicated dependency will also be instanced, meaning that the two copies of the dependency Object will be considered different Objects with a different identifiers. This will increase the total size of the application’s AssetBundles. This will also cause two different copies of the Object to be loaded into memory if the application loads both of its parents.</p>
+<p>There are several ways to address this problem:</p>
+<ol>
+<li>1. </li>
+</ol>
+<p>Ensure that Objects built into different AssetBundles do not share dependencies. Any Objects which do share dependencies can be placed into the same AssetBundle without duplicating their dependencies.</p>
+<ul>
+<li>This method usually is not viable for projects with many shared dependencies. It produces monolithic AssetBundles that must be rebuilt and re-downloaded too frequently to be convenient or efficient.</li>
+</ul>
+<ol>
+<li>1. </li>
+</ol>
+<p>Segment AssetBundles so that no two AssetBundles that share a dependency will be loaded at the same time.</p>
+<ul>
+<li>This method may work for certain types of projects, such as level-based games. However, it still unnecessarily increases the size of the project’s AssetBundles, and increases both build times and loading times.</li>
+</ul>
+<ol>
+<li>1. </li>
+</ol>
+<p>Ensure that all dependency assets are built into their own AssetBundles. This entirely eliminates the risk of duplicated assets, but also introduces complexity. The application must track dependencies between AssetBundles, and ensure that the right AssetBundles are loaded before calling any AssetBundle.LoadAsset APIs.</p>
+<p>Object dependencies are tracked via the AssetDatabase API, located in the UnityEditor namespace. As the namespace implies, this API is only available in the Unity Editor and not at runtime. AssetDatabase.GetDependencies can be used to locate all of the immediate dependencies of a specific Object or Asset. Note that these dependencies may have their own dependencies. Additionally, the AssetImporter API can be used to query the AssetBundle to which any specific Object is assigned.</p>
+<p>By combining the AssetDatabase and AssetImporter APIs, it is possible to write an Editor script that ensures that all of an AssetBundle’s direct or indirect dependencies are assigned to AssetBundles, or that no two AssetBundles share dependencies that have not been assigned to an AssetBundle. Due to the memory cost of duplicating assets, it is recommended that all projects have such a script.</p>
+<h3 id="-37"><a href="#-37" class="headerlink" title=" "></a> </h3><p>5.5.2. Sprite atlas duplication</p>
+<p>Any automatically-generated sprite atlas will be assigned to the AssetBundle containing the Sprite Objects from which the sprite atlas was generated. If the sprite Objects are assigned to multiple AssetBundles, then the sprite atlas will not be assigned to an AssetBundle and will be duplicated. If the Sprite Objects are not assigned to an AssetBundle, then the sprite atlas will also not be assigned to an AssetBundle.</p>
+<p>To ensure that sprite atlases are not duplicated, check that all sprites tagged into the same sprite atlas are assigned to the same AssetBundle.</p>
+<p>Note that in Unity 5.2.2p3 and older, automatically-generated sprite atlases will never be assigned to an AssetBundle. Because of this, they will be included in any AssetBundles containing their constituent sprites and also any AssetBundles referencing their constituent sprites. Because of this problem, it is strongly recommended that all Unity 5 projects using Unity’s sprite packer upgrade to Unity 5.2.2p4, 5.3 or any newer version of Unity.</p>
+<h3 id="-38"><a href="#-38" class="headerlink" title=" "></a> </h3><p>5.5.3. Android textures</p>
+<p>Due to heavy device fragmentation in the Android ecosystem, it is often necessary to compress textures into several different formats. While all Android devices support ETC1, ETC1 does not support textures with alpha channels. Should an application not require OpenGL ES 2 support, the cleanest way to solve the problem is to use ETC2, which is supported by all Android OpenGL ES 3 devices.</p>
+<p>Most applications need to ship on older devices where ETC2 support is unavailable. One way to solve this problem is with Unity 5’s AssetBundle Variants (refer to Unity’s Android optimization guide for details on other options).</p>
+<p>To use AssetBundle Variants, all textures that cannot be cleanly compressed using ETC1 must be isolated into texture-only AssetBundles. Next, create sufficient variants of these AssetBundles to support the non-ETC2-capable slices of the Android ecosystem, using vendor-specific texture compression formats such as DXT5, PVRTC and ATITC. For each AssetBundle Variant, change the included textures’ TextureImporter settings to the compression format appropriate to the Variant.</p>
+<p>At runtime, support for the different texture compression formats can be detected using the<a href="http://docs.unity3d.com/ScriptReference/SystemInfo.SupportsTextureFormat.html" target="_blank" rel="noopener"> SystemInfo.SupportsTextureFormat</a> API. This information should be used to select and load the AssetBundle Variant containing textures compressed in a supported format.</p>
+<p>More information on Android texture compression formats can be found<a href="http://developer.android.com/guide/topics/graphics/opengl.html#textures" target="_blank" rel="noopener"> here</a>.</p>
+<h3 id="-39"><a href="#-39" class="headerlink" title=" "></a> </h3><p>5.5.4. iOS file handle overuse</p>
+<p>Current versions of Unity are not affected by this issue.</p>
+<p>In versions prior to Unity 5.3.2p2, Unity would hold an open file handle to an AssetBundle the entire time that the AssetBundle is loaded. This is not a problem on most platforms. However, iOS limits the number of file handles a process may simultaneously have open to 255. If loading an AssetBundle causes this limit to be exceeded, the loading call will fail with a “Too Many Open File Handles” error.</p>
+<p>This was a common problem for projects trying to divide their content across many hundreds or thousands of AssetBundles.</p>
+<p>For projects unable to upgrade to a patched version of Unity, temporary solutions are:</p>
+<ul>
+<li><p>Reducing the number of AssetBundles in use by merging related AssetBundles</p>
+</li>
+<li><p>Using AssetBundle.Unload(false) to close an AssetBundle’s file handle, and managing the loaded Objects’ lifecycles manually</p>
+</li>
+</ul>
+<h2 id="-40"><a href="#-40" class="headerlink" title=" "></a> </h2><p>5.5. AssetBundle Variants</p>
+<p>A key feature of the AssetBundle system is the introduction of AssetBundle Variants. The purpose of Variants is to allow an application to adjust its content to better suit its runtime environment. Variants permit different UnityEngine.Objects in different AssetBundle files to appear as being the “same” Object when loading Objects and resolving Instance ID references. Conceptually, it permits two UnityEngine.Objects to appear to share the same File GUID &amp; Local ID, and identifies the actual UnityEngine.Object to load by a string Variant ID.</p>
+<p>There are two primary use cases for this system:</p>
+<ol>
+<li>1. </li>
+</ol>
+<p>Variants simplify the loading of AssetBundles appropriate for a given platform.</p>
+<ul>
+<li>Example: A build system might create an AssetBundle containing high-resolution textures and complex shaders suitable for a standalone DirectX11 Windows build, and a second AssetBundle with lower-fidelity content intended for Android. At runtime, the project’s resource loading code can then load the appropriate AssetBundle Variant for its platform, and the Object names passed into the AssetBundle.Load API do not need to change.</li>
+</ul>
+<ol>
+<li>1. </li>
+</ol>
+<p>Variants allow an application to load different content on the same platform, but with different hardware.</p>
+<ul>
+<li><p>This is key for supporting a wide range of mobile devices. An iPhone 4 is incapable of displaying the same fidelity of content as the latest iPhone in any real-world application.</p>
+</li>
+<li><p>On Android, AssetBundle Variants can be used to tackle the immense fragmentation of screen aspect ratios and DPIs between devices.</p>
+</li>
+</ul>
+<h3 id="-41"><a href="#-41" class="headerlink" title=" "></a> </h3><p>5.5.1. Limitations</p>
+<p>A key limitation of the AssetBundle Variant system is that it requires Variants to be built from distinct Assets. This limitation applies even if the only variations between those Assets is their import settings. If the only distinction between a texture built into Variant A and Variant B is the specific texture compression algorithm selected in the Unity texture importer, Variant A and Variant B must still be entirely different Assets. This means that Variant A and Variant B must be separate files on disk.</p>
+<p>This limitation complicates the management of large projects as multiple copies of a specific Asset must be kept in source control. All copies of an Asset must be updated when developers wish to change the content of the Asset. There are no built-in workarounds for this problem.</p>
+<p>Most teams implement their own form of AssetBundle Variants. This is done by building AssetBundles with well-defined suffixes appended to their filenames, in order to identify the specific variant a given AssetBundle represents. Custom code programmatically alters the importer settings of the included Assets when building these AssetBundles. Some developers have extended their custom systems to also be able to alter parameters on components attached to prefabs.</p>
+<h2 id="-42"><a href="#-42" class="headerlink" title=" "></a> </h2><p>5.6. Compressed or uncompressed?</p>
+<p>Whether to compress AssetBundles requires several important considerations, which include:</p>
+<ul>
+<li><p>Loading time: Uncompressed AssetBundles are much faster to load than compressed AssetBundles when loading from local storage or a local cache.</p>
+</li>
+<li><p>Build time: LZMA and LZ4 are very slow when compressing files, and the Unity Editor processes AssetBundles serially. Projects with a large number of AssetBundles will spend a lot of time compressing them.</p>
+</li>
+<li><p>Application size: If the AssetBundles are shipped in the application, compressing them will reduce the application’s total size. Alternatively, the AssetBundles can be downloaded post-install.</p>
+</li>
+<li><p>Memory usage: Prior to Unity 5.3, all of Unity’s decompression mechanisms required the entire compressed AssetBundle to be loaded into memory prior to decompression. If memory usage is important, use either uncompressed or LZ4 compressed AssetBundles.</p>
+</li>
+<li><p>Download time: Compression may only be necessary if the AssetBundles are large, or if users are in a bandwidth-constrained environment, such as downloading on low-speed or metered connections. If only a few tens of megabytes of data are being delivered to PCs on high-speed connections, it may be possible to omit compression.</p>
+</li>
+</ul>
+<h4 id="-43"><a href="#-43" class="headerlink" title=" "></a> </h4><p>5.6.1. Crunch Compression</p>
+<p>Bundles which consist primarily of DXT-compressed textures which use the Crunch compression algorithm should be built uncompressed.</p>
+<h2 id="-44"><a href="#-44" class="headerlink" title=" "></a> </h2><p>5.7. AssetBundles and WebGL</p>
+<p>All AssetBundle decompression and loading in a WebGL project must occur on the main thread, due to Unity’s WebGL export option not currently supporting worker threads. The downloading of AssetBundles is delegated to the browser using XMLHttpRequest. Once downloaded, compressed AssetBundles will be decompressed on Unity’s main thread, therefore stalling execution of the Unity content depending on the size of the bundle.</p>
+<p>Unity recommends that developers prefer small asset bundles to avoid incurring performance issues. This approach will also be more memory efficient than using large asset bundles. Unity WebGL only supports LZ4-compressed and uncompressed asset bundles, however, it is possible to apply gzip/brotli compression on the bundles generated by Unity. In that case you will need to configure your web server accordingly so that the files are decompressed on download by the browser. See <a href="https://docs.unity3d.com/Manual/webgl-deploying.html" target="_blank" rel="noopener">here</a> for more details.</p>
+<p>If you are using Unity 5.5 or older, consider avoiding LZMA for your AssetBundles and compress using LZ4 instead, which is decompressed very efficiently on-demand. Unity 5.6 removes LZMA as a compression option for the WebGL platform.</p>
+<p></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.prince-y-p.com/2023/07/20/Unity3D-Assets-Resources-and-AssetBundles-Unity-Le/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/20/Unity3D-Atlas-%E5%9B%BE%E9%9B%86/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Atlas(图集)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/20/Unity3D-Assembly-Definition-File-Package-Manager/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Assembly Definition File &amp; Package Manager</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> Prin
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/circle_image.png" alt="半个出家人"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/Unreal">虚幻引擎</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

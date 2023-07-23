@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>BatchMode |  半个出家人</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/circle_image.png" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="半个出家人" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Unity3D-BatchMode"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  BatchMode
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/20/Unity3D-BatchMode/" class="article-date">
+  <time datetime="2023-07-20T15:00:27.144Z" itemprop="datePublished">2023-07-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">6 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="使用原理"><a href="#使用原理" class="headerlink" title="使用原理"></a>使用原理</h2><h3 id="DOS"><a href="#DOS" class="headerlink" title="DOS"></a>DOS</h3><p>DOS是Disk Operation System(磁盘操作系统）的简称，是个人计算机上的一类操作系统。它直接操纵管理硬盘的文件，一般都是黑底白色文字的界面。<br>DOS就是人与机器的一座桥梁，是罩在机器硬件外面的一层“外壳”，只需通过一些接近于自然语言的DOS命令，就可以轻松地完成绝大多数对机器的日常操作。<br>此外，DOS还能有效地管理各种软硬件资源，对它们进行合理的调度，所有的软件和硬件都在DOS的监控和管理之下，有条不紊地进行着自己的工作，但是在操作不慎情况下也会死机。<br><strong>MS-DOS</strong> 是MicroSoft-dos，它不是纯DOS，是基于Windows的DOS程序，在功能上类似于DOS，但是不一样。<br>最新的Windows操作系统中，MS-dos的核心依然存在，只是加上Windows当作系统的图形界面。<br>微软图形界面操作系统 Windows NT 问世以来，DOS是一个 <strong>后台程序</strong> 的形式出现的。名为 <strong>Windows命令提示符</strong> 。可以通过点击运行- <strong>CMD</strong> 进入。</p>
+<h4 id="DOS命令"><a href="#DOS命令" class="headerlink" title="DOS命令"></a>DOS命令</h4><p>DOS命令行不许要去专门当做一门语言学习，你只需要根据自己的需求百度一下命令行的使用方式即可。</p>
+<h3 id="Batch-bat文件"><a href="#Batch-bat文件" class="headerlink" title="Batch(.bat文件)"></a>Batch(.bat文件)</h3><p><strong>批处理(Batch)</strong> ，也称为 <strong>批处理脚本</strong> 。通常被认为是一种简化的脚本语言，也称作宏。它应用于DOS和Windows系统中。<br>它是由DOS或者Windows系统内嵌的命令解释器（通常是COMMAND. COM或者CMD.EXE）解释运行。类似于Unix中的Shell脚本。批处理文件具有.bat或者.cmd的扩展名，其最简单的例子，是逐行书写在命令行中会用到的各种命令。<br><strong>使用</strong> ：在“命令提示”下键入批处理文件的名称，或者双击该批处理文件，系统就会调用Cmd.exe运行该批处理程序。<br><strong>运行</strong> ：运行批处理程序时，首先扫描整个批处理程序，然后从第一行代码开始向下逐句执行所有的命令，直至程序结尾或遇见exit命令或出错意外退出。</p>
+<blockquote>
+<p>批处理程序虽然是在命令行环境中运行，但不仅仅能使用命令行软件，任何当前系统下可运行的程序都可以放在批处理文件中运行。</p>
+</blockquote>
+<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><h5 id="echo-命令"><a href="#echo-命令" class="headerlink" title="echo 命令"></a>echo 命令</h5><p>语法: echo [{on|off}] [message]<br>Sample：@echo off / echo hello world</p>
+<p>打开回显或关闭请求回显功能，或显示消息。如果没有任何参数，echo命令将显示当前回显设置。<br>在实际应用中我们会把这条命令和重定向符号（也称为管道符号，一般用&gt; &gt;&gt; ^）结合来实现输入一些命令到特定的文件中，例如：</p>
+<pre><code class="lang-csharp">
+echo test&gt;test.txt 
+
+# 会创建一个名为&quot;test&quot;的文本文件，并将&quot;test&quot;输入到文本文件中。
+</code></pre>
+<p>在批处理文件的开头，通常有：<br>echo off<br>原因是”@”可以将本行的命令关闭回显，搭配”echo off”就可以不显示”echo off”的回显了。</p>
+<h5 id="rem-命令"><a href="#rem-命令" class="headerlink" title="rem 命令"></a>rem 命令</h5><p>语法：Rem [注释内容]<br>Sample：Rem 你好。</p>
+<p>注释命令，类似于在C语言中的/ <em>——–</em> /，它并不会被执行，只是起一个注释的作用，只有在编辑批处理时才会被看到，主要用于方便修改。<br>:: 也具有rem的功能<br>但::和rem还是有区别的，当关闭回显时，rem和::后的内容都不会显示。<br>但是当打开回显时，rem后的内容会显示出来，然而::后的内容仍然不会显示。</p>
+<h5 id="pause"><a href="#pause" class="headerlink" title="pause"></a>pause</h5><p>暂停命令。运行 Pause 命令时，将显示下面的消息：<br>Press any key to continue…（或：请按任意键继续…)</p>
+<h5 id="call"><a href="#call" class="headerlink" title="call"></a>call</h5><h5 id="start"><a href="#start" class="headerlink" title="start"></a>start</h5><h5 id="goto"><a href="#goto" class="headerlink" title="goto"></a>goto</h5><h5 id="set"><a href="#set" class="headerlink" title="set"></a>set</h5><h4 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h4><h3 id="其他概念"><a href="#其他概念" class="headerlink" title="其他概念"></a>其他概念</h3><p>Bash(Bourne-Again SHell): Unix shell的一种，能运行于大多数类Unix系统的操作系统之上，包括Linux与Mac OS X v10.4都将它作为默认shell。<br>是一个命令处理器，通常运行于文本窗口中，并能执行用户直接输入的命令。Bash还能从文件中读取命令，这样的文件称为脚本。</p>
+<h3 id="Unity-Editor拓展"><a href="#Unity-Editor拓展" class="headerlink" title="Unity Editor拓展"></a>Unity Editor拓展</h3><p>放在工程目录下Assets/Editor文件下的方法都是对Unity引擎编辑器的拓展，一般常见的插件都会编写一部分编辑器拓展代码来自定义插件的Inspector面板等其他操作。</p>
+<h3 id="Editor方法触发方式"><a href="#Editor方法触发方式" class="headerlink" title="Editor方法触发方式"></a>Editor方法触发方式</h3><h4 id="MenuItem"><a href="#MenuItem" class="headerlink" title="MenuItem"></a>MenuItem</h4><h4 id="EditorWindow-gt-Button"><a href="#EditorWindow-gt-Button" class="headerlink" title="EditorWindow-&gt;Button"></a>EditorWindow-&gt;Button</h4><pre><code class="lang-csharp">
+using UnityEditor; 
+
+using UnityEngine; 
+
+public class MyClass : EditorWindow
+
+{ 
+
+// 重写window面板
+
+private void OnGUI()
+
+{ 
+
+if(GUILayout.Button(&quot;MyFunc1&quot;)) 
+
+{ 
+
+MyFunc1(); 
+
+} 
+
+} 
+
+// 打开窗口
+
+[MenuItem(&quot;My Tools/My Window&quot;)] 
+
+private static void OpenMyWindow()
+
+{ 
+
+GetWindow&lt;MyClass&gt; (true, &quot;My Window&quot;); 
+
+} 
+
+[MenuItem(&quot;My Tools/MyFunc1&quot;)] 
+
+private static void MyFunc1()
+
+{ 
+
+//..你的操作
+
+Debug.Log (&quot;你的操作&quot;); 
+
+} 
+
+}
+</code></pre>
+<h4 id="利用批处理来调用"><a href="#利用批处理来调用" class="headerlink" title="利用批处理来调用"></a>利用批处理来调用</h4><p>更多Unity Command line arguments：<a href="https://docs.unity3d.com/Manual/CommandLineArguments.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/CommandLineArguments.html</a></p>
+<blockquote>
+<p>最新Unity支持直接用.bat脚本直接导出linux、MacOS、Window的应用，暂时不支持Android和IOS等其它终端的输出。</p>
+</blockquote>
+<pre><code class="lang-csharp">
+using UnityEditor; 
+
+public class MyWindow : EditorWindow
+
+{ 
+
+public static void MyFunc1()
+
+{ 
+
+Debug.Log(&quot;MyFunc1 Operation&quot;); 
+
+} 
+
+} 
+
+``` ```csharp 
+
+rem 发布工具
+
+@echo off 
+
+echo 启动 Unity.exe 请稍后... 
+
+start /min D:\Unity\Editor\Unity.exe -batchmode -projectPath D:\MyProject\BatchProject -executeMethod MyClass.MyFunc1 
+
+Pause
+
+taskkill /f /im unity.exe
+</code></pre>
+<h5 id="命令介绍"><a href="#命令介绍" class="headerlink" title="命令介绍"></a>命令介绍</h5><p>echo 为DOS编程中一种显示消息的方法</p>
+<p>start DOS编程中用于启动应用程序的命令<br>-batchmode 是Unity提供的Command line arguments中较为常用的一种，它是后台运行Unity，不显示Unity界面，这对于把机械的工作交给策划？美术？是极其重要的。<br>在-batchmode下运行Unity。这应该始终与其他命令行参数一起使用，因为 <strong>它确保没有出现弹出窗口，并且不需要任何人为干预</strong> 。执行脚本代码期间发生异常时，资产服务器更新失败或其他失败的操作，Unity立即退出并返回代码1。<br>请注意，在批处理模式下，Unity将其日志输出的最小版本发送到控制台。但是，日志文件仍然包含完整的日志信息。在编辑器打开相同的项目时以批处理模式打开项目不受支持; Unity的一个实例只能一次运行。</p>
+<p>-projectPath 指定项目的路径</p>
+<p>-executeMethod(ClassName.MethodName) 调用Unity编辑器某个类型中的某个方法</p>
+<p>一旦Unity启动，项目打开，并且执行了可选的Asset Server更新之后，执行静态方法。这可以用于执行持续集成，执行单元测试，构建或准备数据等任务。要从命令行进程返回错误，请抛出异常，导致Unity退出代码1，或者使用非零返回代码调用EditorApplication.Exit。要传递参数，将它们添加到命令行并使用函数检索它们System.Environment.GetCommandLineArgs。要使用-executeMethod，您需要将封闭的脚本放在编辑器文件夹中。要执行的方法必须定义为static。</p>
+<p>Ref: <a href="https://blog.csdn.net/qq_29579137/article/details/76598929" target="_blank" rel="noopener">https://blog.csdn.net/qq_29579137/article/details/76598929</a></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.prince-y-p.com/2023/07/20/Unity3D-BatchMode/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/20/Unity3D-Camera-Screen/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Camera &amp; Screen
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/20/Unity3D-A%E8%AE%A1%E5%88%92/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">A计划</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> Prin
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/circle_image.png" alt="半个出家人"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/Unreal">虚幻引擎</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

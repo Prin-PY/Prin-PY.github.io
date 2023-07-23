@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>ScriptableObject |  半个出家人</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/circle_image.png" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="半个出家人" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Unity3D-ScriptableObject"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  ScriptableObject
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/20/Unity3D-ScriptableObject/" class="article-date">
+  <time datetime="2023-07-20T15:00:27.299Z" itemprop="datePublished">2023-07-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2.4k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">10 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <blockquote>
+<p>文档：<a href="https://docs.unity3d.com/ScriptReference/ScriptableObject.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/ScriptableObject.html</a><br> <a href="https://docs.unity3d.com/Manual/class-ScriptableObject.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/class-ScriptableObject.html</a></p>
+</blockquote>
+<p>ScriptableObject类直接继承自Object类；它和MonoBehaviour是并列的，都继承自Object（但MonoBehaviour并不是直接继承自Object）</p>
+<p>是一个 <strong>数据容器</strong> ，可以用来存储大量的数据，它是可序列化的。</p>
+<h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><ol>
+<li><p>存储数据：在游戏运行时创建脚本化对象实例，然后可以将数据保存到本地（如果不保存，它会在游戏结束后销毁）；</p>
+</li>
+<li><p>减少内存：将数据存储在ScriptableObject对象中，在代码中可以进行引用，来减少工程以及游戏运行时因拷贝值所造成的内存占用；</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>ScriptableObject与预制体</strong> ：当你有一个预制体，它附加了一些mono脚本，包含了一些数据，每次我们实例化预制体的时候它都会拷贝assets下原预制体的值生成一份自己的拷贝，然后我们可以修改场景内预制体的值而并不影响assets下预制体的值，这是prefab的特性，对于我们从一个prefab模板生成属性不同的游戏对象是很有用的，但是如果prefab里的脚本数据是不需要修改的，它就会造成很大的资源浪费，尤其在数据很多的时候；为了避免这种问题，我们可以在不需要修改prefab里的脚本数据时，考虑使用ScriptableObject来存储这些重复的数据，然后其它所有预制体都可以使用引用的方式来访问这份数据，这就意味着不管场景中实例了多少预制体，在内存中就只需要有一份数据；它所带给我们的启示就是， <strong>当预制体中的脚本里有大量重复数据时，我们要想着将数据抽离，单独保存在本地</strong></p>
+</blockquote>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ol>
+<li><strong>Unity编辑器外不可操作</strong> ：仅在编辑器中才可以保存修改的数据（因为ScriptableObject对象虽然声明在UnityEngine中，但是它的Scriptable是通过UnityEditor命名空间下的类例如Editor类等来实现的），所以在部署构建的时候不可以用于存储游戏运行时更改的数据，但是可以使用之前存储好的数据。也就是ScriptableObject生成的数据资源文件 <strong>在Editor外具有只读属性</strong> ，如果你需要在游戏中修改数据并存储下来，就不推荐使用ScriptableObject了；</li>
+</ol>
+<blockquote>
+<p>就像我们不可以在游戏运行时修改一个shader资源的代码、不可以修改一个纹理资源的像素内容一样，而在Unity Editor里可以修改ScriptableObject是因为Unity的编辑器对它格式的支持</p>
+</blockquote>
+<ol>
+<li><p>继承自UnityEngine.Object，不必附着在对象上也无需/不能赋给Gameobject或Prefab</p>
+</li>
+<li><p>可以被serialize，可以在资源面板创建一个对应的.asset文件，把数据存储在资源文件中，通过属性面板可修改数值。该文件表示一个ScriptableObject的对象实例的序列化文件，退出之后也不会丢失。</p>
+</li>
+<li><p>本身是个类，可以引用，在项目之间共享</p>
+</li>
+<li><p>回调少 ：OnEnable 、OnDisable、OnDestroy</p>
+</li>
+<li><p>persistent：当它被绑定到.asset文件或者AssetBundle等资源文件中的时候（它可以通过Resources.UnloadUnusedAssets来被unload出内存。可以通过脚本引用或其他需要的时候被再次load到内存）<br>非persistent：通过CreateInstance&lt;&gt;来创建的时候（它可以通过GC被直接destroy掉（如果没有任何引用的话）。如果不想被GC的话，可以使用HideFlags.HideAndDontSave）</p>
+</li>
+</ol>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
+<li><p>unity内置的一种储存容器</p>
+</li>
+<li><p>PlayMode储存数据更改（再也不怕更改数据没保存了）<br>3</p>
+</li>
+</ol>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><pre><code class="lang-csharp">
+//在游戏运行时创建一个Scriptable类型的实例，不使用时被GC回收；
+
+//静态方法，使用了ScriptableObject类约束的泛型参数T
+
+public static T CreateInstance&lt;T&gt;() where T : ScriptableObject; 
+
+//实例化一个对象，返回一个实例；类似于GameObject的Instantiate()，其它函数也和GameObject类似
+
+public static T Instantiate(T original);
+</code></pre>
+<p>???<br>ScriptableObject内部实现上也继承自MonoBehavior，它只有四个消息函数，Awake()、OnDestroy()、OnEnable()、OnDisable()；</p>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><h3 id="MenuItem"><a href="#MenuItem" class="headerlink" title="MenuItem"></a>MenuItem</h3><p>需要指定创建的目录和资源名称，如果资源已经存在，则不会创建新资源；</p>
+<pre><code class="lang-csharp">
+public class MakeScriptableObject { 
+
+[MenuItem(&quot;Assets/Create/My Scriptable Object&quot;)] 
+
+public static void CreateMyAsset()
+
+{ 
+
+MyScriptableObjectClass asset = ScriptableObject.CreateInstance&lt;MyScriptableObjectClass&gt;(); 
+
+AssetDatabase.CreateAsset(asset, &quot;Assets/NewScripableObject.asset&quot;); 
+
+AssetDatabase.SaveAssets(); 
+
+EditorUtility.FocusProjectWindow(); 
+
+Selection.activeObject = asset; 
+
+} 
+
+}
+</code></pre>
+<h3 id="CreateAssetMenu"><a href="#CreateAssetMenu" class="headerlink" title="CreateAssetMenu"></a>CreateAssetMenu</h3><p>可以在Assets下任意目录创建资源，而且可以创建多个资源；</p>
+<pre><code class="lang-csharp">
+[CreateAssetMenu(fileName = &quot;data&quot;, menuName = &quot;ScriptableObjects/SpawnManagerScriptableObject&quot;, order = 1)] 
+
+public class SpawnManagerScriptableObject : ScriptableObject { 
+
+public string prefabName; 
+
+public int numberOfPrefabsToCreate; 
+
+public Vector3[] spawnPoints; 
+
+}
+</code></pre>
+<p>在Assets下创建一个可编程对象资源，设置好所需数据；如果需要在其它脚本中获取该数据，是需要声明一个该类型变量，然后为其赋值或加载该数据资源；然后，就像使用用一个类中的公有变量一样使用即可；</p>
+<pre><code class="lang-csharp">
+public SpawnManagerScriptableObject spawnManagerValues; 
+
+//spawnManagerValues.prefabName
+</code></pre>
+<h3 id="动态创建"><a href="#动态创建" class="headerlink" title="动态创建"></a>动态创建</h3><pre><code class="lang-csharp">
+ScriptableObject.CreateInstance&lt;MyScriptableObject &gt;();
+</code></pre>
+<h3 id="CreateAssets-amp-FindAssets-amp-ScriptableObject"><a href="#CreateAssets-amp-FindAssets-amp-ScriptableObject" class="headerlink" title="CreateAssets &amp; FindAssets &amp; ScriptableObject"></a>CreateAssets &amp; FindAssets &amp; ScriptableObject</h3><ol>
+<li><p>对于ScriptableObject，使用CreateInstance来创建Asset实例对象<br><code>testI = (ScriptObj)ScriptableObject.CreateInstance(typeof(ScriptObj));</code></p>
+</li>
+<li><p>对于其他资源类型，使用new来创建对象</p>
+</li>
+<li><p>然后调用 <code>AssetDatabase.CreateAsset</code>函数，将实例对象作为资源存储在Assets路径当中。</p>
+</li>
+<li><p>最后使用<code>AssetDatabase.FindAssets</code>获取相应资源的GUID</p>
+</li>
+<li><p>由 <code>AssetDatabase.GUIDToAssetPath</code> 获取相应资源的路径。</p>
+</li>
+</ol>
+<pre><code class="lang-csharp">
+// This script file has two CS classes. The first is a simple Unity ScriptableObject script.
+
+// The class it defines is used by the Example class below.
+
+// (This is a single Unity script file. You could split this file into a ScriptObj.cs and an
+
+// Example.cs file which is more structured.)
+
+using UnityEngine; 
+
+using UnityEditor; 
+
+public class ScriptObj : ScriptableObject
+
+{ 
+
+public void Awake()
+
+{ 
+
+Debug.Log(&quot;ScriptObj created&quot;); 
+
+} 
+
+} 
+
+// Use ScriptObj to show how AssetDabase.FindAssets can be used
+
+public class Example
+
+{ 
+
+static ScriptObj testI; 
+
+static ScriptObj testJ; 
+
+static ScriptObj testK; 
+
+[MenuItem(&quot;Examples/FindAssets Example two&quot;)] 
+
+static void ExampleScript()
+
+{ 
+
+CreateAssets(); 
+
+NamesExample(); 
+
+LabelsExample(); 
+
+TypesExample(); 
+
+} 
+
+static void CreateAssets()
+
+{ 
+
+testI = (ScriptObj)ScriptableObject.CreateInstance(typeof(ScriptObj)); 
+
+AssetDatabase.CreateAsset(testI, &quot;Assets/AssetFolder/testI.asset&quot;); 
+
+testJ = (ScriptObj)ScriptableObject.CreateInstance(typeof(ScriptObj)); 
+
+AssetDatabase.CreateAsset(testJ, &quot;Assets/AssetFolder/testJ.asset&quot;); 
+
+// create an asset in a sub-folder and with a name which contains a space
+
+testK = (ScriptObj)ScriptableObject.CreateInstance(typeof(ScriptObj)); 
+
+AssetDatabase.CreateAsset(testK, &quot;Assets/AssetFolder/SpecialFolder/testK example.asset&quot;); 
+
+// an asset with a material will be used later
+
+Material material = new Material(Shader.Find(&quot;Standard&quot;)); 
+
+AssetDatabase.CreateAsset(material, &quot;Assets/AssetFolder/SpecialFolder/MyMaterial.mat&quot;); 
+
+} 
+
+static void NamesExample()
+
+{ 
+
+Debug.Log(&quot; FINDING ASSETS BY NAME &quot;); 
+
+string[] results; 
+
+results = AssetDatabase.FindAssets(&quot;testI&quot;); 
+
+foreach (string guid in results) 
+
+{ 
+
+Debug.Log(&quot;testI: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
+
+} 
+
+results = AssetDatabase.FindAssets(&quot;testJ&quot;); 
+
+foreach (string guid in results) 
+
+{ 
+
+Debug.Log(&quot;testJ: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
+
+} 
+
+results = AssetDatabase.FindAssets(&quot;testK example&quot;); 
+
+foreach (string guid in results) 
+
+{ 
+
+Debug.Log(&quot;testK example: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
+
+} 
+
+Debug.Log(&quot;*** More complex asset search ***&quot;); 
+
+// find all assets that contain test (which is all assets)
+
+results = AssetDatabase.FindAssets(&quot;test&quot;); 
+
+foreach (string guid in results) 
+
+{ 
+
+Debug.Log(&quot;name:test - &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
+
+} 
+
+} 
+
+static void LabelsExample()
+
+{ 
+
+Debug.Log(&quot; FINDING ASSETS BY LABELS &quot;); 
+
+string[] setLabels; 
+
+setLabels = new string[] {&quot;wrapper&quot;}; 
+
+AssetDatabase.SetLabels(testI, setLabels); 
+
+setLabels = new string[] {&quot;bottle&quot;, &quot;banana&quot;, &quot;carrot&quot;}; 
+
+AssetDatabase.SetLabels(testJ, setLabels); 
+
+setLabels = new string[] {&quot;swappable&quot;, &quot;helmet&quot;}; 
+
+AssetDatabase.SetLabels(testK, setLabels); 
+
+// label searching:
+
+// testI has wrapper, testK has swappable, so both have &#39;app&#39;
+
+// testJ has bottle, so have a label searched as &#39;bot&#39;
+
+string[] getGuids = AssetDatabase.FindAssets(&quot;l:app l:bot&quot;); 
+
+foreach (string guid in getGuids) 
+
+{ 
+
+Debug.Log(&quot;label lookup: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
+
+} 
+
+} 
+
+static void TypesExample()
+
+{ 
+
+Debug.Log(&quot; FINDING ASSETS BY TYPE &quot;); 
+
+string[] guids; 
+
+// search for a ScriptObject called ScriptObj
+
+guids = AssetDatabase.FindAssets(&quot;t:ScriptObj&quot;); 
+
+foreach (string guid in guids) 
+
+{ 
+
+Debug.Log(&quot;ScriptObj: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
+
+} 
+
+guids = AssetDatabase.FindAssets(&quot;t:ScriptObj l:helmet&quot;); 
+
+foreach (string guid in guids) 
+
+{ 
+
+Debug.Log(&quot;ScriptObj+bottle: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
+
+} 
+
+} 
+
+}
+</code></pre>
+<h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><p>ScriptableObject的生命周期和其他资源都是类似的：</p>
+<p>当它是被绑定到.asset文件或者AssetBundle等资源文件中的时候，它就是persistent的，这意味着<br>它可以通过Resources.UnloadUnusedAssets来被unload出内存<br>可以通过脚本引用或其他需要的时候被再次load到内存<br>如果是通过CreateInstance&lt;&gt;来创建的，它就是非persistent的，这意味着<br>它可以通过GC被直接destroy掉（如果没有任何引用的话）<br>如果不想被GC的话，可以使用HideFlags.HideAndDontSave</p>
+<h2 id="其他高级应用Demo"><a href="#其他高级应用Demo" class="headerlink" title="其他高级应用Demo"></a>其他高级应用Demo</h2><p><a href="https://blog.csdn.net/candycat1992/article/details/52181814" target="_blank" rel="noopener">https://blog.csdn.net/candycat1992/article/details/52181814</a></p>
+<h3 id="保存信息"><a href="#保存信息" class="headerlink" title="保存信息"></a>保存信息</h3><p>step1.创建你用于共享数据的类（例如EnemyData）</p>
+<pre><code class="lang-csharp">
+using UnityEngine; 
+
+public class EnemyData: ScriptableObject
+
+{ 
+
+public string name; 
+
+public Color thisColor; 
+
+public Vector3[] spawnPoints; 
+
+}
+</code></pre>
+<p>step2.新建一个脚本扩展Editor,使编辑器能够创建自定义的ScriptableObject对象</p>
+<pre><code class="lang-csharp">
+using UnityEngine; 
+
+using UnityEditor; 
+
+//新建一个Editor文件夹，放在里面
+
+public class MakeEnemyData{ 
+
+[MenuItem(&quot;Assets/Editor/Scriptable Object&quot;)] //定义了如何新建的路径
+
+public static void CreateMyAsset()
+
+{ 
+
+//将EnemyData创建为asset
+
+EnemyData asset = ScriptableObject.CreateInstance&lt;EnemyData&gt;(); 
+
+//设置新创建的NewScripableObject文件的初始路径
+
+AssetDatabase.CreateAsset(asset, &quot;Assets/NewScripableObject.asset&quot;); 
+
+AssetDatabase.SaveAssets(); 
+
+EditorUtility.FocusProjectWindow(); 
+
+Selection.activeObject = asset; 
+
+} 
+
+}
+</code></pre>
+<p>step3. 在需要引用的脚本中引用</p>
+<pre><code class="lang-csharp">
+using UnityEngine; 
+
+public class EnemyAI : MonoBehaviour { 
+
+public EnemyData data; //data配置的数据就可以被所有相同种类的怪物共享，节省内存
+
+}
+</code></pre>
+<h3 id="用作配置文件"><a href="#用作配置文件" class="headerlink" title="用作配置文件"></a>用作配置文件</h3><pre><code class="lang-csharp">
+[CreateAssetMenu] 
+
+public class GameSettings : ScriptableObject
+
+{ 
+
+[Serializable] 
+
+public class PlayerInfo
+
+{ 
+
+public string Name; 
+
+public Color Color; 
+
+... 
+
+} 
+
+public List&lt;PlayerInfo&gt; players; 
+
+private static GameSettings _instance; 
+
+public static GameSettings Instance 
+
+{ 
+
+get
+
+{ 
+
+if (!_instance) 
+
+_instance = Resources.FindObjectsOfTypeAll&lt;GameSettings&gt;().FirstOrDefault(); 
+
+#if UNITY_EDITOR
+
+if (!_instance) 
+
+InitializeFromDefault(UnityEditor.AssetDatabase.LoadAssetAtPath&lt;GameSettings&gt;(&quot;Assets/Test game settings.asset&quot;)); 
+
+#endif
+
+return _instance; 
+
+} 
+
+} 
+
+public int NumberOfRounds; 
+
+public static void LoadFromJSON(string path)
+
+{ 
+
+if (!_instance) DestroyImmediate(_instance); 
+
+_instance = ScriptableObject.CreateInstance&lt;GameSettings&gt;(); 
+
+JsonUtility.FromJsonOverwrite(System.IO.File.ReadAllText(path), _instance); 
+
+_instance.hideFlags = HideFlags.HideAndDontSave; 
+
+} 
+
+public void SaveToJSON(string path)
+
+{ 
+
+Debug.LogFormat(&quot;Saving game settings to {0}&quot;, path); 
+
+System.IO.File.WriteAllText(path, JsonUtility.ToJson(this, true)); 
+
+} 
+
+public static void InitializeFromDefault(GameSettings settings)
+
+{ 
+
+if (_instance) DestroyImmediate(_instance); 
+
+_instance = Instantiate(settings); 
+
+_instance.hideFlags = HideFlags.HideAndDontSave; 
+
+} 
+
+#if UNITY_EDITOR
+
+[UnityEditor.MenuItem(&quot;Window/Game Settings&quot;)] 
+
+public static void ShowGameSettings()
+
+{ 
+
+UnityEditor.Selection.activeObject = Instance; 
+
+} 
+
+#endif
+
+... 
+
+} 
+
+``` ```csharp 
+
+public class MainMenuController : MonoBehaviour
+
+{ 
+
+public GameSettings GameSettingsTemplate; 
+
+... 
+
+public string SavedSettingsPath { 
+
+get { 
+
+return System.IO.Path.Combine(Application.persistentDataPath, &quot;tanks-settings.json&quot;); 
+
+} 
+
+} 
+
+void Start () { 
+
+if (System.IO.File.Exists(SavedSettingsPath)) 
+
+GameSettings.LoadFromJSON(SavedSettingsPath); 
+
+else
+
+GameSettings.InitializeFromDefault(GameSettingsTemplate); 
+
+foreach(var info in GetComponentsInChildren&lt;PlayerInfoController&gt;()) 
+
+info.Refresh(); 
+
+NumberOfRoundsSlider.value = GameSettings.Instance.NumberOfRounds; 
+
+} 
+
+public void Play()
+
+{ 
+
+GameSettings.Instance.SaveToJSON(SavedSettingsPath); 
+
+GameState.CreateFromSettings(GameSettings.Instance); 
+
+SceneManager.LoadScene(1, LoadSceneMode.Single); 
+
+} 
+
+... 
+
+}
+</code></pre>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref:"></a>Ref:</h2><p><a href="https://blog.csdn.net/qq_36383623/article/details/99649941" target="_blank" rel="noopener">https://blog.csdn.net/qq_36383623/article/details/99649941</a><br><a href="https://blog.csdn.net/candycat1992/article/details/52181814" target="_blank" rel="noopener">https://blog.csdn.net/candycat1992/article/details/52181814</a></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.prince-y-p.com/2023/07/20/Unity3D-ScriptableObject/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/20/Unity3D-Shader%E5%8F%98%E4%BD%93%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E4%B8%8E%E4%BC%98%E5%8C%96/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Shader变体相关知识与优化
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/20/Unity3D-Project-Settings%E4%B8%8E%E4%BC%98%E5%8C%96%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E7%82%B9/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Project Settings与优化相关知识点</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> Prin
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/circle_image.png" alt="半个出家人"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/Unreal">虚幻引擎</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

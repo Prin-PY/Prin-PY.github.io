@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Build - Unreal Build System |  半个出家人</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/circle_image.png" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="半个出家人" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Unreal-Build-Unreal-Build-System"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Build - Unreal Build System
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/20/Unreal-Build-Unreal-Build-System/" class="article-date">
+  <time datetime="2023-07-20T15:00:29.265Z" itemprop="datePublished">2023-07-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">6 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Build-Engine-from-Source"><a href="#Build-Engine-from-Source" class="headerlink" title="Build Engine from Source"></a>Build Engine from Source</h2><h2 id="Build-Project-的步骤与原理"><a href="#Build-Project-的步骤与原理" class="headerlink" title="Build Project 的步骤与原理"></a>Build Project 的步骤与原理</h2><p>整体的打包流程如下：Build-&gt;Cook-&gt;Stage-&gt;Pakage-&gt;Archive</p>
+<p>Build: This stage compiles the executeables for the selected platform.</p>
+<p>Cook: This stage cooks content by executing the Editor in a special mode.</p>
+<p>Stage: This stage copies the executables and content to a staging area; a standalone directory outside of the development directory.<br>build cook</p>
+<p>(run )</p>
+<p>package</p>
+<p>platform</p>
+<p>task</p>
+<h2 id="Build-Project-工具与自动化"><a href="#Build-Project-工具与自动化" class="headerlink" title="Build Project 工具与自动化"></a>Build Project 工具与自动化</h2><p><img src="assets/Build%20-%20Unreal%20Build%20System/Image.png" alt=""></p>
+<p>via. <a href="https://www.maygames.net/2020/07/03/cross-platform-build-automation-for-ue4-projects-with-jenkins/" target="_blank" rel="noopener">https://www.maygames.net/2020/07/03/cross-platform-build-automation-for-ue4-projects-with-jenkins/</a></p>
+<h3 id="UnrealBuildTool-UBT"><a href="#UnrealBuildTool-UBT" class="headerlink" title="UnrealBuildTool (UBT)"></a>UnrealBuildTool (UBT)</h3><p>a custom tool that manages the process of building Unreal Engine 4 (UE4) source code across a variety of build configurations.</p>
+<p>Unreal Build Tool is a console application that does a lot of magic like generating project files, invoking unreal header tool, invoking the compiler and linker for different platforms and flavours of build.</p>
+<h3 id="UnrealHeaderTool-UHT"><a href="#UnrealHeaderTool-UHT" class="headerlink" title="UnrealHeaderTool (UHT)"></a>UnrealHeaderTool (UHT)</h3><p>a custom parsing and code-generation tool that supports the UObject system</p>
+<h3 id="AutomationTool"><a href="#AutomationTool" class="headerlink" title="AutomationTool"></a>AutomationTool</h3><h4 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h4><p>building<br>cooking<br>running games<br>running automation tests<br>scripting other operations to be executed on our build farm</p>
+<h4 id="How-AT-Works"><a href="#How-AT-Works" class="headerlink" title="How AT Works"></a>How AT Works</h4><p>finds all automation projects (saved as Visual Studio C# projects with an .Automation.csproj extension), compiles them, and then uses reflection to find the appropriate command to be executed.</p>
+<h4 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h4><p>RunUAT.bat/.sh: Unreal提供了bat/shell脚本，来调用UnreaAutomationTool.exe。</p>
+<ol>
+<li>根据情况判断是否要编译UnreaAutomationTool.exe本身</li>
+<li>启动UnreaAutomationTool.exe</li>
+</ol>
+<p>位置<br>Windows: Engine/Build/BatchFiles/RunUAT.bat<br>Mac: Engine/Build/BatchFiles/RunUAT.sh</p>
+<p><code>csharp RunUAT.bat Command1 [-Arg1 -Arg2...] Command2 [-Arg3 -Arg4…] ...</code> </p>
+<p>参数解释：<a href="https://zhuanlan.zhihu.com/p/41931214" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/41931214</a></p>
+<h3 id="GenerateProjectFiles"><a href="#GenerateProjectFiles" class="headerlink" title="GenerateProjectFiles"></a>GenerateProjectFiles</h3><p>当使用Unreal Source时，there are no Visual Studio (VS) or Xcode project files included for compiling and running the engine or example games.</p>
+<p>generates your Visual Studio solution and projects for Windows</p>
+<p>the first step is building the build tool. This happens invoking MSBuild on Source\Programs\UnrealBuildTool\UnrealBuiltTool.csproj.</p>
+<p>如果安装预编译好的Unreal引擎，那么是没有GenerateProjectFiles.bat脚本的。可以右键uproject文件，点击Generate Visual Studio Project Files来生成Project文件，也可以直接使用Unreal Build Tool来实现</p>
+<p><code>csharp &quot;\path\to\UE_4.22\Engine\Binaries\DotNET\UnrealBuildTool.exe&quot; -ProjectFiles -UsePrecompiled -Game &quot;absolute\path\to\your\project\file.uproject&quot; # 在Windows上生成Visual Studio Project # 在Mac上生成 XCode Project，(Visual Studio for Mac cannot be used, because it does not support C++)</code> </p>
+<h3 id="BuildGraph"><a href="#BuildGraph" class="headerlink" title="BuildGraph"></a>BuildGraph</h3><p>BuildGraph integrates with UnrealBuildTool, AutomationTool, and the editor, and can be extended and customized for your projects.</p>
+<p>More: <a href="https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/BuildTools/AutomationTool/BuildGraph/" target="_blank" rel="noopener">https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/BuildTools/AutomationTool/BuildGraph/</a></p>
+<h2 id="Unreal-CI-实践"><a href="#Unreal-CI-实践" class="headerlink" title="Unreal CI 实践"></a>Unreal CI 实践</h2><p>注意：Unreal的配置保存在Config目录下的 XXX.ini 文件当中，这个文件配置好之后，需要进版本管理的，否则在更新工程后会出现配置失效的问题。尤其是iOS打包时配置的证书问题。</p>
+<p>UE4游戏开发基础命令【部署环境、编译引擎、构建代码】：<a href="https://www.cnblogs.com/kekec/p/8684068.html" target="_blank" rel="noopener">https://www.cnblogs.com/kekec/p/8684068.html</a></p>
+<h3 id="Windows-Build-Android"><a href="#Windows-Build-Android" class="headerlink" title="Windows Build Android"></a>Windows Build Android</h3><h4 id="GenerateProjFiles"><a href="#GenerateProjFiles" class="headerlink" title="GenerateProjFiles"></a>GenerateProjFiles</h4><p>UnrealBuildTool.exe -projectfiles -project=”%UPROJECT_PATH%” -game -rocket -progress</p>
+<h4 id="Compile-Codes"><a href="#Compile-Codes" class="headerlink" title="Compile Codes"></a>Compile Codes</h4><p>可以用MSBuild进行编译：<br>“%MSBUILD_EXE%” “%PROJ_VS_SLN%” /t:build /p:Platform=%PLATFORM%;verbosity=diagnostic</p>
+<h4 id="BuildCook"><a href="#BuildCook" class="headerlink" title="BuildCook"></a>BuildCook</h4><p><code>csharp &quot;%RUN_UAT_BAT%&quot; BuildCookRun -project=&quot;%UPROJECT_PATH%&quot; -noP4 -platform=%PLATFORM% -clientconfig=Development -cook -allmaps -build -stage -pak -archive -NoCompile -archivedirectory=&quot;%ARCHIVE_DIR%&quot; -nocompile</code> </p>
+<h4 id="RunUAT"><a href="#RunUAT" class="headerlink" title="RunUAT"></a>RunUAT</h4><p>RunUAT可以把编译到出包的工作全部自动化地执行，一键出包，只需要配置参数，来决定开启哪些功能、执行哪些步骤就可以了。</p>
+<p><a href="https://blog.csdn.net/zhangxiaofan666/article/details/79567017" target="_blank" rel="noopener">https://blog.csdn.net/zhangxiaofan666/article/details/79567017</a></p>
+<p><code>csharp &quot;%RUN_UAT_BAT%&quot; BuildCookRun -project=&quot;%UPROJECT_PATH%&quot;-noP4 -platform=%PLATFORM% -clientconfig=Development -serverconfig=Development -cook -allmaps -build -stage -pak -archive -archivedirectory=&quot;%ARCHIVE_DIR%&quot; -nocompileeditor</code> </p>
+<p>如果不执行某个阶段，把某个参数去掉就可以了。</p>
+<h3 id="Mac-Build-iOS"><a href="#Mac-Build-iOS" class="headerlink" title="Mac Build iOS"></a>Mac Build iOS</h3><h4 id="GenerateProjFiles-1"><a href="#GenerateProjFiles-1" class="headerlink" title="GenerateProjFiles"></a>GenerateProjFiles</h4><p><code>csharp U_BUILD_TOOL_EXE=&quot;/Users/Shared/Epic Games/UE_4.27/Engine/Binaries/DotNET/UnrealBuildTool.exe&quot; echo ${UPROJECT_PATH} mono &quot;${U_BUILD_TOOL_EXE}&quot; -projectfiles -project=&quot;${UPROJECT_PATH}&quot; -game -rocket -progress</code> </p>
+<h4 id="Xcode-Build-Engine-Build-Project"><a href="#Xcode-Build-Engine-Build-Project" class="headerlink" title="Xcode Build Engine, Build Project"></a>Xcode Build Engine, Build Project</h4><p><code>csharp xcodebuild -workspace PROJECT_NAME.xcworkspace -scheme Engine xcodebuild -workspace PROJECT_NAME.xcworkspace -scheme PROJECT_NAME</code> </p>
+<h4 id="证书与签名问题"><a href="#证书与签名问题" class="headerlink" title="证书与签名问题"></a>证书与签名问题</h4><p>注意：配置要进版本管理。</p>
+<p>理论上，只要在Config当中，配置好BundlID、证书的名称等信息，使用UAT就可以直接打包了，工具会自动查找、使用证书来进行签名。只需要 unlock keychain就可以了</p>
+<p><code>csharp security unlock-keychain -p &quot;enter password&quot;</code> </p>
+<p>签名失败：</p>
+<ul>
+<li>Code Signing Error： <a href="https://medium.com/@ceyhunkeklik/how-to-fix-ios-application-code-signing-error-4818bd331327" target="_blank" rel="noopener">https://medium.com/@ceyhunkeklik/how-to-fix-ios-application-code-signing-error-4818bd331327</a></li>
+<li><a href="https://developer.apple.com/forums/thread/669328" target="_blank" rel="noopener">https://developer.apple.com/forums/thread/669328</a></li>
+<li><a href="https://stackoverflow.com/questions/24023639/xcode-command-usr-bin-codesign-failed-with-exit-code-1-errsecinternalcomponen" target="_blank" rel="noopener">https://stackoverflow.com/questions/24023639/xcode-command-usr-bin-codesign-failed-with-exit-code-1-errsecinternalcomponen</a></li>
+</ul>
+<p>自动导入证书：<a href="https://zhuanlan.zhihu.com/p/400261513" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/400261513</a><br>说明：证书是自动导入到Keychain里面，UE在使用UAT打包的时候，会自动在里面找Keychain，所以UE配置证书，只是配一个证书的名字。上文中，导入证书是向Keychain当中导入。</p>
+<hr>
+<h4 id="RunUAT-1"><a href="#RunUAT-1" class="headerlink" title="RunUAT"></a>RunUAT</h4><p><code>csharp &quot;%RUN_UAT_BAT%&quot; BuildCookRun -project=&quot;%UPROJECT_PATH%&quot;-noP4 -platform=%PLATFORM% -clientconfig=Development -serverconfig=Development -cook -allmaps -build -stage -pak -archive -archivedirectory=&quot;%ARCHIVE_DIR%&quot; -nocompileeditor</code> </p>
+<h3 id="Windows-Remote-Mac-Build-iOS"><a href="#Windows-Remote-Mac-Build-iOS" class="headerlink" title="Windows Remote Mac Build iOS"></a>Windows Remote Mac Build iOS</h3><p>手动打包教程：<br><a href="https://www.jianshu.com/p/04188aa411b4" target="_blank" rel="noopener">https://www.jianshu.com/p/04188aa411b4</a><br><a href="https://blog.csdn.net/u011047958/article/details/78300086" target="_blank" rel="noopener">https://blog.csdn.net/u011047958/article/details/78300086</a></p>
+<p>使用IPhonePackager.exe，自动导入证书：<a href="https://ue5wiki.com/wiki/32489/" target="_blank" rel="noopener">https://ue5wiki.com/wiki/32489/</a></p>
+<h3 id="错误排坑"><a href="#错误排坑" class="headerlink" title="错误排坑"></a>错误排坑</h3><h4 id="Android-SDK问题"><a href="#Android-SDK问题" class="headerlink" title="Android SDK问题"></a>Android SDK问题</h4><p><a href="https://stackoverflow.com/questions/68387270/android-studio-error-installed-build-tools-revision-31-0-0-is-corrupted" target="_blank" rel="noopener">https://stackoverflow.com/questions/68387270/android-studio-error-installed-build-tools-revision-31-0-0-is-corrupted</a></p>
+<p>Installed Build Tools revision 31.0.0 is corrupted. Remove and install again using the SDK Manager.</p>
+<p>The main problem is the two files missing in SDK build tool 31 that are:<br>dx.bat<br>dx.jar</p>
+<p>The solution is that these files are named d8 in the file location so changing their name to dx will solve the error.</p>
+<h4 id="引用丢失问题"><a href="#引用丢失问题" class="headerlink" title="引用丢失问题"></a>引用丢失问题</h4><p>问题：删除插件，打包失败 。<br>原因：场景还在引用这个插件。右键场景-&gt;Reference Viewer，可见场景对插件中组件的引用关系。</p>
+<p>Unreal比较奇怪的一点是，如果场景对Actor有引用，但是Actor资源被删除了，World Outliner里面是看不到的。</p>
+<p>解决方法：找到引用这个资源的场景，啥都不做，save一下，None引用就没有了。</p>
+<h4 id="Adding-Adaptive-Icons-to-a-UE4-project-for-Android"><a href="#Adding-Adaptive-Icons-to-a-UE4-project-for-Android" class="headerlink" title="Adding Adaptive Icons to a UE4 project for Android"></a>Adding Adaptive Icons to a UE4 project for Android</h4><p><a href="https://www.unrealengine.com/en-US/tech-blog/adding-adaptive-icons-to-a-ue4-project-for-android" target="_blank" rel="noopener">https://www.unrealengine.com/en-US/tech-blog/adding-adaptive-icons-to-a-ue4-project-for-android</a></p>
+<h4 id="丢失dSYM"><a href="#丢失dSYM" class="headerlink" title="丢失dSYM"></a>丢失dSYM</h4><p>-SkipBuildEditor: 不编译编辑器</p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://ericlemes.com/2018/11/23/understanding-unreal-build-tool/" target="_blank" rel="noopener">https://ericlemes.com/2018/11/23/understanding-unreal-build-tool/</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/144656367" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/144656367</a></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.prince-y-p.com/2023/07/20/Unreal-Build-Unreal-Build-System/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unreal/" rel="tag">Unreal</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/20/Unreal-Build-%E8%B8%A9%E5%9D%91/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Build - 踩坑
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/20/Unreal-Build-UE-CI/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Build - UE CI</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> Prin
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/circle_image.png" alt="半个出家人"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/Unreal">虚幻引擎</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>
