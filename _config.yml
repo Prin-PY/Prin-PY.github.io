@@ -3,8 +3,8 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Prin's World
-subtitle: The world isn't split into good people and Death Eaters. We've all got both light and dark inside us. 
+title: 半个出家人
+subtitle: The world isn't split into good people and Death Eaters. We've all got both light and dark inside us.
           What matters is the part we choose to act on. That's who we really are.
 author: Prin
 language: en
@@ -77,21 +77,21 @@ featured-condition-size: 1              # A tag will be featured if the size of 
 
 
 ## Friends
-friends: [
-    {
-        title: "Dusign's Blog",
-        href: "https://blog.csdn.net/d_Nail"
-    },{
-        title: "Dusign's Web",
-        href: "#"
-    },{
-        title: "Dusign's Github",
-        href: "https://github.com/dusign"
-    },{
-        title: "Other",
-        href: "#"
-    }
-]
+#friends: [
+#    {
+#        title: "Dusign's Blog",
+#        href: "https://blog.csdn.net/d_Nail"
+#    },{
+#        title: "Dusign's Web",
+#        href: "#"
+#    },{
+#        title: "Dusign's Github",
+#        href: "https://github.com/dusign"
+#    },{
+#        title: "Other",
+#        href: "#"
+#    }
+#]
 
 math:
   enable: true
@@ -149,7 +149,7 @@ archive_generator:
   yearly: true
   monthly: true
   daily: false
-  
+
 # Markdown-it config
 ## Docs: https://github.com/celsomiranda/hexo-renderer-markdown-it/wiki
 markdown:
@@ -160,11 +160,11 @@ markdown:
     linkify: true
     typographer: true
     quotes: '“”‘’'
-  
+
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: snail
+theme: ayer
 
 #sitemap
 sitemap:
@@ -177,7 +177,7 @@ path: baidusitemap.xml
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
 - type: git
-  repository: 
+  repository:
     github: git@github.com:Prin-PY/Prin-PY.github.io.git
     gitee: git@gitee.com:princeypeng/PrinceYPeng.git
   branch: master
@@ -258,10 +258,10 @@ chinese_blog:
 
 backup:
   type: git
-  theme: snail
+  theme: ayer
   message: Back up my www.prince-y-p.com blog
   repository:
-    github: git@github.com:Prin-PY/Prin-PY.github.io.git,backup 
+    github: git@github.com:Prin-PY/Prin-PY.github.io.git,backup
 #    gitee: git@gitee.com:princeypeng/PrinceYPeng.git,backup
 
 
@@ -270,3 +270,13 @@ baidu_url_submit:
   host: www.prince-y-p.com    # 在百度站长平台中添加的域名
   token: 5yzYPfYWjDHnxtMX      # 秘钥, 可以在【链接提交】-【自动提交】-【主动推送】下面看到，接口调用地址最后面 token=xxxxx 即为你的 token
   path: baidu_urls.txt   # 文本文档的地址， 新链接会保存在此文本文档里
+
+
+feed:
+  type: atom  # RSS Feed 类型，可以是 'atom' 或 'rss2'，默认是 'atom'
+  path: atom.xml  # RSS Feed 文件的路径，相对于博客的根目录
+  limit: 40  # RSS Feed 中显示的最大文章数量
+  hub:  # PubSubHubbub 的 URL，可以为空
+  content: false  # 是否在 RSS Feed 中包含全文
+  content_limit: 140  # 如果 'content' 为 'false'，则此选项指定摘要的最大字符数
+  order_by: -date  # 文章排序方式，'-date' 为按发布日期降序排序
