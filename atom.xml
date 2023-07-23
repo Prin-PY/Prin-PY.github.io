@@ -6,7 +6,7 @@
   <link href="https://www.prince-y-p.com/atom.xml" rel="self"/>
   
   <link href="https://www.prince-y-p.com/"/>
-  <updated>2023-07-18T15:33:27.620Z</updated>
+  <updated>2023-07-23T16:23:34.534Z</updated>
   <id>https://www.prince-y-p.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Test2</title>
+    <link href="https://www.prince-y-p.com/2023/07/24/Unreal-Test2/"/>
+    <id>https://www.prince-y-p.com/2023/07/24/Unreal-Test2/</id>
+    <published>2023-07-23T16:23:22.206Z</published>
+    <updated>2023-07-23T16:23:34.534Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;UE_LOG:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/zhang1461376499/article/details/113351948&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://blog.csdn</summary>
+      
+    
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/categories/Unreal/"/>
+    
+    
+    <category term="Unreal" scheme="https://www.prince-y-p.com/tags/Unreal/"/>
+    
+  </entry>
   
   <entry>
     <title>遇到的问题及解决</title>
@@ -897,28 +920,6 @@ int tris = 0, verts = 0;
       
       
     <summary type="html">&lt;h1 id=&quot;调用Editor内部的函数&quot;&gt;&lt;a href=&quot;#调用Editor内部的函数&quot; class=&quot;headerlink&quot; title=&quot;调用Editor内部的函数&quot;&gt;&lt;/a&gt;调用Editor内部的函数&lt;/h1&gt;&lt;p&gt;参考:&lt;br&gt;&lt;a href=&quot;https://ww</summary>
-      
-    
-    
-    
-    <category term="Unity3D" scheme="https://www.prince-y-p.com/categories/Unity3D/"/>
-    
-    
-    <category term="Unity3D" scheme="https://www.prince-y-p.com/tags/Unity3D/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>强哥UI课</title>
-    <link href="https://www.prince-y-p.com/2023/07/20/Unity3D-%E5%BC%BA%E5%93%A5UI%E8%AF%BE/"/>
-    <id>https://www.prince-y-p.com/2023/07/20/Unity3D-%E5%BC%BA%E5%93%A5UI%E8%AF%BE/</id>
-    <published>2023-07-20T15:00:27.947Z</published>
-    <updated>2023-07-18T15:33:27.426Z</updated>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;基础组件&quot;&gt;&lt;a href=&quot;#基础组件&quot; class=&quot;headerlink&quot; title=&quot;基础组件&quot;&gt;&lt;/a&gt;基础组件&lt;/h2&gt;&lt;h3 id=&quot;Canvas组件&quot;&gt;&lt;a href=&quot;#Canvas组件&quot; class=&quot;headerlink&quot; title=&quot;C</summary>
       
     
     

@@ -171,6 +171,143 @@
     
     
     <article
+  id="post-Unity3D-Skinned-Mesh-Renderer"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/20/Unity3D-Skinned-Mesh-Renderer/"
+    >Skinned Mesh Renderer</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/20/Unity3D-Skinned-Mesh-Renderer/" class="article-date">
+  <time datetime="2023-07-20T15:00:27.329Z" itemprop="datePublished">2023-07-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Motion-Vector"><a href="#Motion-Vector" class="headerlink" title="Motion Vector"></a>Motion Vector</h2><p><img src="assets/Skinned%20Mesh%20Renderer/1606707414304.png" alt="Alt text"></p>
+<p>Motion vectors provide you with a texture with two channels that calculate the positional difference objects render in camera space between this frame and the previous frame.</p>
+<blockquote>
+<p>In video compression, a motion vector is the key element in the motion estimation process. It is used to represent a macroblock in a picture based on the position of this macroblock (or a similar one) in another picture, called the reference picture. — Wikipedia<br> In video editing motion vectors are used to compress video by storing the changes to an image from one frame to the next. — <a href="https://www.webopedia.com/TERM/M/motion_vector.html" target="_blank" rel="noopener">webopedia</a></p>
+</blockquote>
+<h3 id="算法的关键点"><a href="#算法的关键点" class="headerlink" title="算法的关键点"></a>算法的关键点</h3><p>In fact all of these terms refer to the process of finding corresponding points between two images or video frames. The points that correspond to each other in two views (images or frames) of a real scene or object are “usually” the same point in that scene or on that object. Before we do motion estimation, we must define our measurement of correspondence, i.e., the matching metric, which is a measurement of how similar two image points are. There is no right or wrong here; the choice of matching metric is usually related to what the final estimated motion is used for as well as the optimisation strategy in the estimation process.</p>
+<h3 id="Unity中的Mesh-Renderer-Motion-Vectors"><a href="#Unity中的Mesh-Renderer-Motion-Vectors" class="headerlink" title="Unity中的Mesh Renderer Motion Vectors"></a>Unity中的Mesh Renderer Motion Vectors</h3><p><strong>Motion vectors</strong> track the per-pixel object velocity from one frame to the next in screen space. 描述当前像素下的片元，在相邻两帧之间，屏幕空间位置的差。</p>
+<p>实现原理与兼容性 - When set, the camera renders another pass (after opaque but before Image Effects): First, a full screen pass is rendered to reconstruct screen-space motion from the camera movement, then, any moving objects have a custom <strong>pass</strong> to render their object-specific motion. The <strong>buffer</strong> uses the RenderTextureFormat.RGHalf format, so this feature only works on platforms where this format is supported.</p>
+<p><strong>Velocity Buffer</strong> - 是一个全屏尺寸的 RenderTexture，motion vector 组成的Buffer。</p>
+<h4 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h4><ul>
+<li><p>Use this velocity to reconstruct previous positions.</p>
+</li>
+<li><p>Using this information you can apply specific Image Effects such as <strong>motion blur</strong> or <strong>temporal anti-aliasing</strong>.</p>
+</li>
+</ul>
+<h4 id="skinned-motion-vectors"><a href="#skinned-motion-vectors" class="headerlink" title="skinned motion vectors"></a>skinned motion vectors</h4><p>There is a cost to skinned motion vectors, though; they require twice as much memory per skinned mesh because the graphics memory on the GPU becomes double buffered (one buffer for the current frame and one buffer for the previous frame). The buffers track motion between frames; the velocity is the current frame’s position minus the last frame’s position.</p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>使用Motion Vector实现相关的后处理特效:<br>相机上的脚本: </p>
+<pre><code class="lang-csharp">
+using UnityEngine; 
+
+[ExecuteInEditMode] 
+
+[RequireComponent(typeof(Camera))] 
+
+public class DatamoshEffect : MonoBehaviour { 
+
+public Material DMmat; //datamosh material
+
+void Start () { 
+
+this.GetComponent().depthTextureMode=DepthTextureMode.MotionVectors; 
+
+//generate the motion vector texture @ &#39;_CameraMotionVectorsTexture&#39;
+
+} 
+
+private void OnRenderImage(RenderTexture src, RenderTexture dest)
+
+{ 
+
+Graphics.Blit(src,dest,DMmat); 
+
+} 
+
+} 
+
+``` ```csharp 
+
+sampler2D _MainTex; 
+
+sampler2D _CameraMotionVectorsTexture; 
+
+fixed4 frag (v2f i) : SV_Target 
+
+{ 
+
+fixed4 col = tex2D(_MainTex, i.uv); 
+
+float4 mot = tex2D(_CameraMotionVectorsTexture,i.uv); 
+
+col+=mot;//add motion vector values to the current colors
+
+return col; 
+
+} 
+
+``` ```csharp 
+
+fixed4 frag (v2f i) : SV_Target 
+
+{ 
+
+float4 mot = tex2D(_CameraMotionVectorsTexture,i.uv); 
+
+//add motion vectors directly to UV position for sampling color
+
+fixed4 col = tex2D(_MainTex, i.uv+mot.rg); 
+
+return col; 
+
+}
+</code></pre>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p><a href="https://gitee.com/xianglinlove/Avatar" target="_blank" rel="noopener">https://gitee.com/xianglinlove/Avatar</a><br><a href="https://zhuanlan.zhihu.com/p/41763382" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/41763382</a><br><a href="https://github.com/xieliujian/UnityDemo_Avatar" target="_blank" rel="noopener">https://github.com/xieliujian/UnityDemo_Avatar</a><br><a href="https://blog.uwa4d.com/archives/avartar.html" target="_blank" rel="noopener">https://blog.uwa4d.com/archives/avartar.html</a><br><a href="https://github.com/zouchunyi/UnityAvater" target="_blank" rel="noopener">https://github.com/zouchunyi/UnityAvater</a></p>
+<h2 id="优秀的相关资料"><a href="#优秀的相关资料" class="headerlink" title="优秀的相关资料"></a>优秀的相关资料</h2><p>在 Unity SRP 实现 Temporal Anti-aliasing: <a href="https://zhuanlan.zhihu.com/p/138866533" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/138866533</a></p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://en.wikipedia.org/wiki/Motion_vector" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Motion_vector</a><br><a href="https://ompuco.wordpress.com/2018/03/29/creating-your-own-datamosh-effect/" target="_blank" rel="noopener">https://ompuco.wordpress.com/2018/03/29/creating-your-own-datamosh-effect/</a><br><a href="https://www.webopedia.com/TERM/M/motion_vector.html" target="_blank" rel="noopener">https://www.webopedia.com/TERM/M/motion_vector.html</a><br><a href="https://zhuanlan.zhihu.com/p/138866533" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/138866533</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-Shader变体相关知识与优化"
   class="article article-type-post"
   itemscope
@@ -2658,63 +2795,6 @@ Material mat = new Material(Shader.Find(&quot;shadername&quot;));
 <p>UV坐标：水平方向是U，竖直方向是V。因为图片（纹理）是一个二维的平面，所以只需要UV坐标便可以确定图片的位置。（当然也有三维贴图，要用到UVW坐标，暂时还接触不到。）</p>
 <h2 id="三者关系"><a href="#三者关系" class="headerlink" title="三者关系"></a>三者关系</h2><p>材质 Material包含贴图 Map，贴图包含纹理 Texture。<br>材质(Material)：物体的质地，物体看起来是什么做的<br>贴图(Map)<br>纹理(Texture)：普通的材质图片<br>贴图 + 着色器(Shader) = 材质球</p>
 <h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://gameinstitute.qq.com/community/detail/115074" target="_blank" rel="noopener">https://gameinstitute.qq.com/community/detail/115074</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-LUA相关"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-LUA%E7%9B%B8%E5%85%B3/"
-    >LUA相关</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-LUA%E7%9B%B8%E5%85%B3/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.227Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="相关网站"><a href="#相关网站" class="headerlink" title="相关网站"></a>相关网站</h2><ul>
-<li><p><a href="https://github.com/mpeterv/luacheck" target="_blank" rel="noopener">https://github.com/mpeterv/luacheck</a></p>
-</li>
-<li></li>
-</ul>
  
       <!-- reward -->
       
