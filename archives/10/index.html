@@ -171,7 +171,7 @@
     
     
     <article
-  id="post-Unity3D-LUA相关"
+  id="post-Unity3D-Map及其与Material、Texture的关系"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -182,8 +182,8 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-LUA%E7%9B%B8%E5%85%B3/"
-    >LUA相关</a> 
+  <a class="article-title" href="/2023/07/25/Unity3D-Map%E5%8F%8A%E5%85%B6%E4%B8%8EMaterial%E3%80%81Texture%E7%9A%84%E5%85%B3%E7%B3%BB/"
+    >Map及其与Material、Texture的关系</a> 
 </h2>
  
 
@@ -191,7 +191,7 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-LUA%E7%9B%B8%E5%85%B3/" class="article-date">
+      <a href="/2023/07/25/Unity3D-Map%E5%8F%8A%E5%85%B6%E4%B8%8EMaterial%E3%80%81Texture%E7%9A%84%E5%85%B3%E7%B3%BB/" class="article-date">
   <time datetime="2023-07-25T12:56:23.253Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
@@ -202,11 +202,12 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="相关网站"><a href="#相关网站" class="headerlink" title="相关网站"></a>相关网站</h2><ul>
-<li><p><a href="https://github.com/mpeterv/luacheck" target="_blank" rel="noopener">https://github.com/mpeterv/luacheck</a></p>
-</li>
-<li></li>
-</ul>
+  <h2 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h2><blockquote>
+<p>贴图的英语 Map 其实包含了另一层含义就是“映射”。<br> 贴图指的是映射关系，其功能就是把纹理通过 UV 坐标映射到3D 物体表面。贴图包含了除了纹理以外其他很多信息，比方说 UV 坐标、贴图输入输出控制等等。</p>
+</blockquote>
+<p>UV坐标：水平方向是U，竖直方向是V。因为图片（纹理）是一个二维的平面，所以只需要UV坐标便可以确定图片的位置。（当然也有三维贴图，要用到UVW坐标，暂时还接触不到。）</p>
+<h2 id="三者关系"><a href="#三者关系" class="headerlink" title="三者关系"></a>三者关系</h2><p>材质 Material包含贴图 Map，贴图包含纹理 Texture。<br>材质(Material)：物体的质地，物体看起来是什么做的<br>贴图(Map)<br>纹理(Texture)：普通的材质图片<br>贴图 + 着色器(Shader) = 材质球</p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://gameinstitute.qq.com/community/detail/115074" target="_blank" rel="noopener">https://gameinstitute.qq.com/community/detail/115074</a></p>
  
       <!-- reward -->
       
@@ -261,60 +262,6 @@
        
   <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="蒙皮-Skinning"><a href="#蒙皮-Skinning" class="headerlink" title="蒙皮(Skinning)"></a>蒙皮(Skinning)</h3><p>将模型的网格皮肤(skin mesh)绑定给骨骼的过程</p>
 <h3 id="刚体蒙皮"><a href="#刚体蒙皮" class="headerlink" title="刚体蒙皮"></a>刚体蒙皮</h3><h3 id="顶点混合"><a href="#顶点混合" class="headerlink" title="顶点混合"></a>顶点混合</h3> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-GPU和CPU的区别"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-GPU%E5%92%8CCPU%E7%9A%84%E5%8C%BA%E5%88%AB/"
-    >GPU和CPU的区别</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-GPU%E5%92%8CCPU%E7%9A%84%E5%8C%BA%E5%88%AB/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.251Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h3 id="GPU"><a href="#GPU" class="headerlink" title="GPU"></a>GPU</h3><p>GPU比较适合大量可并行的简单任务。比如场景渲染，光照处理等等。<br>GPU也支持一些其他的运算，比如通过GLSL，HLSL和Cg支持并行运算等等。<br>GPU同时也对游戏中的一些物理效果提供支持，比如PhysX。<br><strong>GPU负责显示特效</strong></p>
-<h3 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h3><p>CPU用于一些数值运算，比如伤害，随机数等等。同时你的敌人AI也是CPU运算出来的。<br>越是大型的单机游戏，游戏资源量越大，资源的实时加载以及处理也是大多由CPU来完成的。<br><strong>CPU负责游戏逻辑</strong></p>
- 
       <!-- reward -->
       
     </div>
@@ -462,6 +409,60 @@ GUILayout.EndVertical();
 </li>
 </ul>
 <h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://forum.unity.com/threads/tiers-in-graphicsettings.485408/" target="_blank" rel="noopener">https://forum.unity.com/threads/tiers-in-graphicsettings.485408/</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-GPU和CPU的区别"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-GPU%E5%92%8CCPU%E7%9A%84%E5%8C%BA%E5%88%AB/"
+    >GPU和CPU的区别</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-GPU%E5%92%8CCPU%E7%9A%84%E5%8C%BA%E5%88%AB/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.251Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h3 id="GPU"><a href="#GPU" class="headerlink" title="GPU"></a>GPU</h3><p>GPU比较适合大量可并行的简单任务。比如场景渲染，光照处理等等。<br>GPU也支持一些其他的运算，比如通过GLSL，HLSL和Cg支持并行运算等等。<br>GPU同时也对游戏中的一些物理效果提供支持，比如PhysX。<br><strong>GPU负责显示特效</strong></p>
+<h3 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h3><p>CPU用于一些数值运算，比如伤害，随机数等等。同时你的敌人AI也是CPU运算出来的。<br>越是大型的单机游戏，游戏资源量越大，资源的实时加载以及处理也是大多由CPU来完成的。<br><strong>CPU负责游戏逻辑</strong></p>
  
       <!-- reward -->
       

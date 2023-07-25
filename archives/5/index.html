@@ -171,6 +171,139 @@
     
     
     <article
+  id="post-Unity3D-小知识点与小工具"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B8%8E%E5%B0%8F%E5%B7%A5%E5%85%B7/"
+    >小知识点与小工具</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B8%8E%E5%B0%8F%E5%B7%A5%E5%85%B7/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.368Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Gizmos"><a href="#Gizmos" class="headerlink" title="Gizmos"></a>Gizmos</h2><p><strong>Gizmos</strong> 在编辑模式下Gizmos可以提供可视化的提示。它们只在Scene场景中显示不在Play模式下显示，但是你可以通过工具栏调整它们。</p>
+<p><strong>Gizmos公共类</strong> 允许你绘制图标，线条，和其他的东西。Gizmos在<code>OnDrawGizmos</code>方法中执行绘制，它被Unity编辑器自动调用。另一个可选的方法是<code>OnDrawGizmosSelected</code>，它只能被可选的对象调用。</p>
+<p>Demo: 绘制顶点的位置，利用OnDrawGizmos在每个顶点绘制一个小球。</p>
+<p><code>csharp private void OnDrawGizmos () { Gizmos.color = Color.black; for (int i = 0; i &lt; vertices.Length; i++) { Gizmos.DrawSphere(vertices[i], 0.1f); } }</code> </p>
+<h2 id="OnValidate"><a href="#OnValidate" class="headerlink" title="OnValidate"></a>OnValidate</h2><p>调用时机:</p>
+<ul>
+<li>脚本被加载时</li>
+<li>Inspector 中的任何值被修改时</li>
+</ul>
+<p>Cases：<br>设置循环值</p>
+<p><code>csharp using UnityEngine; using System.Collections; public class OnValidateExample : MonoBehaviour { public float objectRotation; void OnValidate() { // objectRotation objectRotation = objectRotation % 360; } }</code> </p>
+<p>需要设计人员输入 16 到 4096 之间 2的整数次幂时。<br>Unity提供了ClosestPowerOfTwo函数，方便我们取得最接近的值。同时我们使用RangeAttribute 属性来限定一下输入数值的区间，同时能更好的看出来处理后的值跟原始输入值的区别。</p>
+<p><code>csharp using UnityEngine; using System.Collections; public class OnValidateExample : MonoBehaviour { [RangeAttribute(16, 4096)] public int textureSize; void OnValidate() { // textureSize textureSize = Mathf.ClosestPowerOfTwo(textureSize); } }</code> </p>
+<p>使用场景 -需要“Nitro”车的速度比其他车的速度大至少20mph.</p>
+<p><code>csharp using UnityEngine; using System.Collections; public class OnValidateExample : MonoBehaviour { [RangeAttribute(10, 300)] [Tooltip(&quot;mph&quot;)] public int maxCarSpeed; [RangeAttribute(10, 300)] [Tooltip(&quot;mph&quot;)] public int maxNitroSpeed; const int minNitroSpeedExtra = 20; void OnValidate() { // speed check if (maxNitroSpeed &lt; maxCarSpeed + minNitroSpeedExtra) maxNitroSpeed = maxCarSpeed + minNitroSpeedExtra; } }</code> </p>
+<h2 id="动态添加tag"><a href="#动态添加tag" class="headerlink" title="动态添加tag"></a>动态添加tag</h2><p><code>csharp #region 动态添加tag static void AddTag(string tag, GameObject obj) { if (!isHasTag(tag)) { SerializedObject tagManager = new SerializedObject(obj);//序列化物体 SerializedProperty it = tagManager.GetIterator();//序列化属性 while (it.NextVisible(true))//下一属性的可见性 { if (it.name == &quot;m_TagString&quot;) { Debug.Log(it.stringValue); it.stringValue = tag; tagManager.ApplyModifiedProperties(); } } } } static bool isHasTag(string tag) { for (int i = 0; i &lt; UnityEditorInternal.InternalEditorUtility.tags.Length; i++) { if (UnityEditorInternal.InternalEditorUtility.tags[i].Equals(tag)) return true; } return false; } #endregion</code> </p>
+<h2 id="关于enable-false"><a href="#关于enable-false" class="headerlink" title="关于enable=false"></a>关于enable=false</h2><p>When a Behaviour is disabled, it will still be on the object and you can even change its properties and call its methods, but the engine will no longer call its Update method.<br>When a Renderer is disabled, the object turns invisible.<br>When a Collider is disabled, it won’t cause any collision events to happen.<br>When an UI component is disabled, the player can’t interact with it anymore, but it will still be rendered, unless you also deactivate its renderer.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-强哥UI课"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-%E5%BC%BA%E5%93%A5UI%E8%AF%BE/"
+    >强哥UI课</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-%E5%BC%BA%E5%93%A5UI%E8%AF%BE/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.368Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="基础组件"><a href="#基础组件" class="headerlink" title="基础组件"></a>基础组件</h2><h3 id="Canvas组件"><a href="#Canvas组件" class="headerlink" title="Canvas组件"></a>Canvas组件</h3><p>Render Mode</p>
+<ul>
+<li><p>Screen Space - Overlay</p>
+</li>
+<li><p>Screen Space - Camera</p>
+</li>
+<li><p>World Space</p>
+</li>
+</ul>
+<p>Pixel Perfect 在要提高清晰度的时候才选择。 一般不推荐选择</p>
+<h3 id="Rect-Transform"><a href="#Rect-Transform" class="headerlink" title="Rect Transform"></a>Rect Transform</h3><h3 id="CanvasRenderer"><a href="#CanvasRenderer" class="headerlink" title="CanvasRenderer"></a>CanvasRenderer</h3><h3 id="EventSystem-amp-GraphicRaycaster"><a href="#EventSystem-amp-GraphicRaycaster" class="headerlink" title="EventSystem &amp; GraphicRaycaster"></a>EventSystem &amp; GraphicRaycaster</h3><p>找被点中的物体</p>
+<h3 id="Event-Trigger"><a href="#Event-Trigger" class="headerlink" title="Event Trigger"></a>Event Trigger</h3><p>这个是UGUI里面封装好的一个Component，里面预设了很多UGUI支持的UI事件，方便大家用来自定义一些消息响应，比如点击事件，也可以用来制作一些特殊的UI响应，例如长按事件</p>
+<h2 id="Lesson2"><a href="#Lesson2" class="headerlink" title="Lesson2"></a>Lesson2</h2><h3 id="分辨率适配"><a href="#分辨率适配" class="headerlink" title="分辨率适配"></a>分辨率适配</h3> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-序列化与反序列化"
   class="article article-type-post"
   itemscope
@@ -404,139 +537,6 @@ public SpawnManagerScriptableObject spawnManagerValues;
 <li><p>Save:用于在突发退出程序时，保存数据以备恢复时使用，但是会导致程序间断所以不建议调用。</p>
 </li>
 </ol>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-强哥UI课"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-%E5%BC%BA%E5%93%A5UI%E8%AF%BE/"
-    >强哥UI课</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-%E5%BC%BA%E5%93%A5UI%E8%AF%BE/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.368Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="基础组件"><a href="#基础组件" class="headerlink" title="基础组件"></a>基础组件</h2><h3 id="Canvas组件"><a href="#Canvas组件" class="headerlink" title="Canvas组件"></a>Canvas组件</h3><p>Render Mode</p>
-<ul>
-<li><p>Screen Space - Overlay</p>
-</li>
-<li><p>Screen Space - Camera</p>
-</li>
-<li><p>World Space</p>
-</li>
-</ul>
-<p>Pixel Perfect 在要提高清晰度的时候才选择。 一般不推荐选择</p>
-<h3 id="Rect-Transform"><a href="#Rect-Transform" class="headerlink" title="Rect Transform"></a>Rect Transform</h3><h3 id="CanvasRenderer"><a href="#CanvasRenderer" class="headerlink" title="CanvasRenderer"></a>CanvasRenderer</h3><h3 id="EventSystem-amp-GraphicRaycaster"><a href="#EventSystem-amp-GraphicRaycaster" class="headerlink" title="EventSystem &amp; GraphicRaycaster"></a>EventSystem &amp; GraphicRaycaster</h3><p>找被点中的物体</p>
-<h3 id="Event-Trigger"><a href="#Event-Trigger" class="headerlink" title="Event Trigger"></a>Event Trigger</h3><p>这个是UGUI里面封装好的一个Component，里面预设了很多UGUI支持的UI事件，方便大家用来自定义一些消息响应，比如点击事件，也可以用来制作一些特殊的UI响应，例如长按事件</p>
-<h2 id="Lesson2"><a href="#Lesson2" class="headerlink" title="Lesson2"></a>Lesson2</h2><h3 id="分辨率适配"><a href="#分辨率适配" class="headerlink" title="分辨率适配"></a>分辨率适配</h3> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-小知识点与小工具"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B8%8E%E5%B0%8F%E5%B7%A5%E5%85%B7/"
-    >小知识点与小工具</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B8%8E%E5%B0%8F%E5%B7%A5%E5%85%B7/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.368Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="Gizmos"><a href="#Gizmos" class="headerlink" title="Gizmos"></a>Gizmos</h2><p><strong>Gizmos</strong> 在编辑模式下Gizmos可以提供可视化的提示。它们只在Scene场景中显示不在Play模式下显示，但是你可以通过工具栏调整它们。</p>
-<p><strong>Gizmos公共类</strong> 允许你绘制图标，线条，和其他的东西。Gizmos在<code>OnDrawGizmos</code>方法中执行绘制，它被Unity编辑器自动调用。另一个可选的方法是<code>OnDrawGizmosSelected</code>，它只能被可选的对象调用。</p>
-<p>Demo: 绘制顶点的位置，利用OnDrawGizmos在每个顶点绘制一个小球。</p>
-<p><code>csharp private void OnDrawGizmos () { Gizmos.color = Color.black; for (int i = 0; i &lt; vertices.Length; i++) { Gizmos.DrawSphere(vertices[i], 0.1f); } }</code> </p>
-<h2 id="OnValidate"><a href="#OnValidate" class="headerlink" title="OnValidate"></a>OnValidate</h2><p>调用时机:</p>
-<ul>
-<li>脚本被加载时</li>
-<li>Inspector 中的任何值被修改时</li>
-</ul>
-<p>Cases：<br>设置循环值</p>
-<p><code>csharp using UnityEngine; using System.Collections; public class OnValidateExample : MonoBehaviour { public float objectRotation; void OnValidate() { // objectRotation objectRotation = objectRotation % 360; } }</code> </p>
-<p>需要设计人员输入 16 到 4096 之间 2的整数次幂时。<br>Unity提供了ClosestPowerOfTwo函数，方便我们取得最接近的值。同时我们使用RangeAttribute 属性来限定一下输入数值的区间，同时能更好的看出来处理后的值跟原始输入值的区别。</p>
-<p><code>csharp using UnityEngine; using System.Collections; public class OnValidateExample : MonoBehaviour { [RangeAttribute(16, 4096)] public int textureSize; void OnValidate() { // textureSize textureSize = Mathf.ClosestPowerOfTwo(textureSize); } }</code> </p>
-<p>使用场景 -需要“Nitro”车的速度比其他车的速度大至少20mph.</p>
-<p><code>csharp using UnityEngine; using System.Collections; public class OnValidateExample : MonoBehaviour { [RangeAttribute(10, 300)] [Tooltip(&quot;mph&quot;)] public int maxCarSpeed; [RangeAttribute(10, 300)] [Tooltip(&quot;mph&quot;)] public int maxNitroSpeed; const int minNitroSpeedExtra = 20; void OnValidate() { // speed check if (maxNitroSpeed &lt; maxCarSpeed + minNitroSpeedExtra) maxNitroSpeed = maxCarSpeed + minNitroSpeedExtra; } }</code> </p>
-<h2 id="动态添加tag"><a href="#动态添加tag" class="headerlink" title="动态添加tag"></a>动态添加tag</h2><p><code>csharp #region 动态添加tag static void AddTag(string tag, GameObject obj) { if (!isHasTag(tag)) { SerializedObject tagManager = new SerializedObject(obj);//序列化物体 SerializedProperty it = tagManager.GetIterator();//序列化属性 while (it.NextVisible(true))//下一属性的可见性 { if (it.name == &quot;m_TagString&quot;) { Debug.Log(it.stringValue); it.stringValue = tag; tagManager.ApplyModifiedProperties(); } } } } static bool isHasTag(string tag) { for (int i = 0; i &lt; UnityEditorInternal.InternalEditorUtility.tags.Length; i++) { if (UnityEditorInternal.InternalEditorUtility.tags[i].Equals(tag)) return true; } return false; } #endregion</code> </p>
-<h2 id="关于enable-false"><a href="#关于enable-false" class="headerlink" title="关于enable=false"></a>关于enable=false</h2><p>When a Behaviour is disabled, it will still be on the object and you can even change its properties and call its methods, but the engine will no longer call its Update method.<br>When a Renderer is disabled, the object turns invisible.<br>When a Collider is disabled, it won’t cause any collision events to happen.<br>When an UI component is disabled, the player can’t interact with it anymore, but it will still be rendered, unless you also deactivate its renderer.</p>
  
       <!-- reward -->
       

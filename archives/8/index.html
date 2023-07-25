@@ -765,6 +765,72 @@ return buffer;
 
     
     <article
+  id="post-Unity3D-Unity中Culling相关技术"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-Unity%E4%B8%ADCulling%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/"
+    >Unity中Culling相关技术</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-Unity%E4%B8%ADCulling%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.290Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Frustum-Culling"><a href="#Frustum-Culling" class="headerlink" title="Frustum Culling"></a>Frustum Culling</h2><p>剔除被其他物体遮挡的，摄像机不可见(但在视锥体内)的渲染物体。使用 Occlusion Culling 需要手动设置，并在 Occlusion Culling Window 中通过 Bake 计算剔除数据。<br><a href="https://docs.unity3d.com/Manual/OcclusionCulling.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/OcclusionCulling.html</a></p>
+<h3 id="Builtin管线"><a href="#Builtin管线" class="headerlink" title="Builtin管线"></a>Builtin管线</h3><p>视锥体剔除 - 视锥体剔除是引擎自己做的，在给GPU提交数据进行渲染前，会执行视锥体剔除，决定哪些可见哪些不可见。经过剔除之后，Renderer的isVisible值就表示相应物体的可见性，不过此时已经在这帧的Update之后了。在Update当中取IsVisible属性获取的实际上是上一帧的可见性。 至于视锥体剔除的实现方法我们不清楚，可能引擎底层会有一些优化，使用kd-tree进行空间划分等等。</p>
+<h3 id="SRP的Culling"><a href="#SRP的Culling" class="headerlink" title="SRP的Culling"></a>SRP的Culling</h3><ol>
+<li><p>SRP的Culling可以自己写</p>
+</li>
+<li><p>URP的管线相对比较固定，可定制化程度低，Culling不太好自己写</p>
+</li>
+</ol>
+<p>Occlusion Culling is different from Frustum Culling. Frustum Culling only disables the renderers for objects that are outside the camera’s viewing area but does not disable anything hidden from view by overdraw. Note that when you use Occlusion Culling you will still benefit from Frustum Culling.</p>
+<h2 id="Occlusion-Culling"><a href="#Occlusion-Culling" class="headerlink" title="Occlusion Culling"></a>Occlusion Culling</h2><p>在移动端使用的比较少，属于用 CPU时间换一定的CPU时间和一定的GPU时间的操作。使用方法是：预先烘焙遮挡剔除信息（对于一定的区域，哪些物体被遮挡），在游戏运行时，经过视锥体剔除之后，对于视锥体内的物体，相机到了一定的位置，会去取预先烘焙的信息，来判断哪些物体被遮挡，对相应的物体进行剔除，进而节省被遮挡的物体提交渲染进行、在GPU端进行绘制的时间。</p>
+<h2 id="Camera-layerCullDistance"><a href="#Camera-layerCullDistance" class="headerlink" title="Camera.layerCullDistance"></a>Camera.layerCullDistance</h2><p>For performance reasons, you might want to cull small objects earlier. For example, small rocks and debris could be made invisible at much smaller distance than large buildings. To do that, put small objects into a separate layer and set up per-layer cull distances using Camera.layerCullDistances script function.<br><a href="https://docs.unity3d.com/ScriptReference/Camera-layerCullDistances.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/Camera-layerCullDistances.html</a></p>
+<h2 id="CullingGroup-API"><a href="#CullingGroup-API" class="headerlink" title="CullingGroup API"></a>CullingGroup API</h2><p>CullingGroup offers a way to integrate your own systems into Unity’s culling and LOD pipeline.The CullingGroup will calculate visibility based on frustum culling and static occlusion culling only. It will not take dynamic objects into account as potential occluders.<br><a href="https://docs.unity3d.com/Manual/CullingGroupAPI.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/CullingGroupAPI.html</a></p>
+<p>Unity的CullingGroup API是纯逻辑的东西，不影响渲染。其使用方法是：在逻辑代码中定义CullingGroup，Group中加入一些球体(位置与半径，是逻辑上的球体，实际是不可见的)，并加入要检测的相机，渲染时，Unity会判断这些球体是否可见，进而判断CullingGroup的可见性。在渲染之后，可以在代码中获取该Group的可见性，进而据此控制一些逻辑。如果不用代码去取CullingGroup的信息，那么它就是没有用的。</p>
+<h2 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h2><p><a href="https://blog.csdn.net/kenight/article/details/82760667" target="_blank" rel="noopener">https://blog.csdn.net/kenight/article/details/82760667</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-Unity-C预处理指令"
   class="article article-type-post"
   itemscope
@@ -824,72 +890,6 @@ return buffer;
 <h2 id="Unity自带的一些宏定义"><a href="#Unity自带的一些宏定义" class="headerlink" title="Unity自带的一些宏定义"></a>Unity自带的一些宏定义</h2><p>UNITY_EDITOR Unity编辑器<br>UNITY_EDITOR_WIN Windows 操作系统.<br>UNITY_EDITOR_OSX macos操作系统<br>UNITY_STANDALONE_OSX 专门为macos（包括Universal, PPC，Intel architectures）平台的定义<br>UNITY_STANDALONE_WIN 专门为windows平台的定义<br>UNITY_STANDALONE_LINUX 专门为Linux平台的定义<br>UNITY_STANDALONE 独立平台 (Mac OS X, Windows or Linux).<br>UNITY_WII WII 游戏机平台<br>UNITY_IOS iOS系统平台<br>UNITY_IPHONE iPhone<br>UNITY_ANDROID android系统平台<br>UNITY_PS4 ps4平台<br>UNITY_SAMSUNGTV 三星TV平台<br>UNITY_XBOXONE Xbox One 平台<br>UNITY_TIZEN Tizen 平台<br>UNITY_TVOS Apple TV 平台<br>UNITY_WSA #define directive for Universal Windows Platform. Additionally, NETFX_CORE is defined when compiling C# files against .NET Core and using .NET scripting backend.<br>UNITY_WSA_10_0 #define directive for Universal Windows Platform. Additionally WINDOWS_UWP is defined when compiling C# files against .NET Core.<br>UNITY_WINRT UNITY_WSA.<br>UNITY_WINRT_10_0 UNITY_WSA_10_0<br>UNITY_WEBGL #define directive for WebGL.<br>UNITY_FACEBOOK faceBook平台(WebGL or Windows standalone).<br>UNITY_ADS 调用广告方法，版本 5.2 以后<br>UNITY_ANALYTICS 调用unity分析服务，版本5.2以后<br>UNITY_ASSERTIONS 控制指令的过程</p>
 <p>UNITY_5 unity5版本, 包含所有的5.x.y版本<br>UNITY_5_0 Unity5.0版本,包含所有的5.0.x版本<br>UNITY_5_0_1 Unity5.0.1版本</p>
 <h2 id="自定义宏定义"><a href="#自定义宏定义" class="headerlink" title="自定义宏定义"></a>自定义宏定义</h2><p>File - Build Settings - Player Settings - Other Settings<br>多个用分号隔开</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-Unity中Culling相关技术"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-Unity%E4%B8%ADCulling%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/"
-    >Unity中Culling相关技术</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-Unity%E4%B8%ADCulling%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.290Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="Frustum-Culling"><a href="#Frustum-Culling" class="headerlink" title="Frustum Culling"></a>Frustum Culling</h2><p>剔除被其他物体遮挡的，摄像机不可见(但在视锥体内)的渲染物体。使用 Occlusion Culling 需要手动设置，并在 Occlusion Culling Window 中通过 Bake 计算剔除数据。<br><a href="https://docs.unity3d.com/Manual/OcclusionCulling.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/OcclusionCulling.html</a></p>
-<h3 id="Builtin管线"><a href="#Builtin管线" class="headerlink" title="Builtin管线"></a>Builtin管线</h3><p>视锥体剔除 - 视锥体剔除是引擎自己做的，在给GPU提交数据进行渲染前，会执行视锥体剔除，决定哪些可见哪些不可见。经过剔除之后，Renderer的isVisible值就表示相应物体的可见性，不过此时已经在这帧的Update之后了。在Update当中取IsVisible属性获取的实际上是上一帧的可见性。 至于视锥体剔除的实现方法我们不清楚，可能引擎底层会有一些优化，使用kd-tree进行空间划分等等。</p>
-<h3 id="SRP的Culling"><a href="#SRP的Culling" class="headerlink" title="SRP的Culling"></a>SRP的Culling</h3><ol>
-<li><p>SRP的Culling可以自己写</p>
-</li>
-<li><p>URP的管线相对比较固定，可定制化程度低，Culling不太好自己写</p>
-</li>
-</ol>
-<p>Occlusion Culling is different from Frustum Culling. Frustum Culling only disables the renderers for objects that are outside the camera’s viewing area but does not disable anything hidden from view by overdraw. Note that when you use Occlusion Culling you will still benefit from Frustum Culling.</p>
-<h2 id="Occlusion-Culling"><a href="#Occlusion-Culling" class="headerlink" title="Occlusion Culling"></a>Occlusion Culling</h2><p>在移动端使用的比较少，属于用 CPU时间换一定的CPU时间和一定的GPU时间的操作。使用方法是：预先烘焙遮挡剔除信息（对于一定的区域，哪些物体被遮挡），在游戏运行时，经过视锥体剔除之后，对于视锥体内的物体，相机到了一定的位置，会去取预先烘焙的信息，来判断哪些物体被遮挡，对相应的物体进行剔除，进而节省被遮挡的物体提交渲染进行、在GPU端进行绘制的时间。</p>
-<h2 id="Camera-layerCullDistance"><a href="#Camera-layerCullDistance" class="headerlink" title="Camera.layerCullDistance"></a>Camera.layerCullDistance</h2><p>For performance reasons, you might want to cull small objects earlier. For example, small rocks and debris could be made invisible at much smaller distance than large buildings. To do that, put small objects into a separate layer and set up per-layer cull distances using Camera.layerCullDistances script function.<br><a href="https://docs.unity3d.com/ScriptReference/Camera-layerCullDistances.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/Camera-layerCullDistances.html</a></p>
-<h2 id="CullingGroup-API"><a href="#CullingGroup-API" class="headerlink" title="CullingGroup API"></a>CullingGroup API</h2><p>CullingGroup offers a way to integrate your own systems into Unity’s culling and LOD pipeline.The CullingGroup will calculate visibility based on frustum culling and static occlusion culling only. It will not take dynamic objects into account as potential occluders.<br><a href="https://docs.unity3d.com/Manual/CullingGroupAPI.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/CullingGroupAPI.html</a></p>
-<p>Unity的CullingGroup API是纯逻辑的东西，不影响渲染。其使用方法是：在逻辑代码中定义CullingGroup，Group中加入一些球体(位置与半径，是逻辑上的球体，实际是不可见的)，并加入要检测的相机，渲染时，Unity会判断这些球体是否可见，进而判断CullingGroup的可见性。在渲染之后，可以在代码中获取该Group的可见性，进而据此控制一些逻辑。如果不用代码去取CullingGroup的信息，那么它就是没有用的。</p>
-<h2 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h2><p><a href="https://blog.csdn.net/kenight/article/details/82760667" target="_blank" rel="noopener">https://blog.csdn.net/kenight/article/details/82760667</a></p>
  
       <!-- reward -->
       
@@ -1924,7 +1924,7 @@ colors.
 <p>一般是Match Height，保持Canvas的高度不变，背景图的宽度画的长一点，用来适配不用的屏幕。UI元素的锚点设置为四个角即可。</p>
 <p><img src="UGUI/1620900142626.png" alt="Alt text"></p>
 <h4 id="Expand-amp-Shrink"><a href="#Expand-amp-Shrink" class="headerlink" title="Expand &amp; Shrink"></a>Expand &amp; Shrink</h4><p>Expand - Expand the canvas area either horizontally or vertically, so the size of the canvas will never be smaller than the reference.<br>Shrink - Crop the canvas area either horizontally or vertically, so the size of the canvas will never be larger than the reference.</p>
-<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="&#x6d;&#97;&#x69;&#108;&#x74;&#x6f;&#x3a;&#x68;&#116;&#116;&#x70;&#115;&#x3a;&#x2f;&#47;&#x64;&#111;&#x63;&#x73;&#46;&#x75;&#x6e;&#x69;&#116;&#x79;&#x33;&#100;&#46;&#99;&#111;&#x6d;&#47;&#x50;&#97;&#99;&#107;&#97;&#x67;&#101;&#115;&#x2f;&#x63;&#x6f;&#109;&#46;&#117;&#110;&#105;&#x74;&#x79;&#46;&#x75;&#103;&#117;&#105;&#64;&#x31;&#46;&#x30;&#47;&#x6d;&#97;&#110;&#x75;&#x61;&#x6c;&#47;&#x63;&#x6c;&#97;&#115;&#x73;&#45;&#x43;&#x61;&#110;&#x76;&#97;&#115;&#x2e;&#x68;&#116;&#109;&#x6c;">&#x68;&#116;&#116;&#x70;&#115;&#x3a;&#x2f;&#47;&#x64;&#111;&#x63;&#x73;&#46;&#x75;&#x6e;&#x69;&#116;&#x79;&#x33;&#100;&#46;&#99;&#111;&#x6d;&#47;&#x50;&#97;&#99;&#107;&#97;&#x67;&#101;&#115;&#x2f;&#x63;&#x6f;&#109;&#46;&#117;&#110;&#105;&#x74;&#x79;&#46;&#x75;&#103;&#117;&#105;&#64;&#x31;&#46;&#x30;&#47;&#x6d;&#97;&#110;&#x75;&#x61;&#x6c;&#47;&#x63;&#x6c;&#97;&#115;&#x73;&#45;&#x43;&#x61;&#110;&#x76;&#97;&#115;&#x2e;&#x68;&#116;&#109;&#x6c;</a></p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="&#109;&#x61;&#105;&#x6c;&#x74;&#111;&#x3a;&#104;&#x74;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#x2f;&#x64;&#x6f;&#99;&#115;&#46;&#x75;&#x6e;&#x69;&#x74;&#121;&#x33;&#x64;&#x2e;&#x63;&#x6f;&#x6d;&#x2f;&#80;&#x61;&#x63;&#107;&#x61;&#x67;&#x65;&#115;&#x2f;&#x63;&#111;&#109;&#46;&#117;&#110;&#x69;&#116;&#121;&#46;&#x75;&#103;&#117;&#x69;&#64;&#x31;&#x2e;&#48;&#x2f;&#x6d;&#x61;&#110;&#117;&#97;&#x6c;&#47;&#99;&#108;&#97;&#x73;&#x73;&#45;&#67;&#97;&#110;&#118;&#x61;&#x73;&#x2e;&#104;&#x74;&#x6d;&#x6c;">&#104;&#x74;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#x2f;&#x64;&#x6f;&#99;&#115;&#46;&#x75;&#x6e;&#x69;&#x74;&#121;&#x33;&#x64;&#x2e;&#x63;&#x6f;&#x6d;&#x2f;&#80;&#x61;&#x63;&#107;&#x61;&#x67;&#x65;&#115;&#x2f;&#x63;&#111;&#109;&#46;&#117;&#110;&#x69;&#116;&#121;&#46;&#x75;&#103;&#117;&#x69;&#64;&#x31;&#x2e;&#48;&#x2f;&#x6d;&#x61;&#110;&#117;&#97;&#x6c;&#47;&#99;&#108;&#97;&#x73;&#x73;&#45;&#67;&#97;&#110;&#118;&#x61;&#x73;&#x2e;&#104;&#x74;&#x6d;&#x6c;</a></p>
  
       <!-- reward -->
       

@@ -334,181 +334,6 @@ taskkill /f /im unity.exe
 
     
     <article
-  id="post-Unity3D-CSharp调用Java-与Android交互"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-CSharp%E8%B0%83%E7%94%A8Java-%E4%B8%8EAndroid%E4%BA%A4%E4%BA%92/"
-    >CSharp调用Java&amp;与Android交互</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-CSharp%E8%B0%83%E7%94%A8Java-%E4%B8%8EAndroid%E4%BA%A4%E4%BA%92/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.239Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="Heading"><a href="#Heading" class="headerlink" title="Heading"></a>Heading</h2><p><a href="https://www.jb51.net/article/134135.htm" target="_blank" rel="noopener">https://www.jb51.net/article/134135.htm</a><br><a href="https://blog.csdn.net/m0_38096376/article/details/69567409" target="_blank" rel="noopener">https://blog.csdn.net/m0_38096376/article/details/69567409</a><br><a href="https://www.jianshu.com/p/b5e3cfcdf081" target="_blank" rel="noopener">https://www.jianshu.com/p/b5e3cfcdf081</a><br><a href="https://www.cnblogs.com/wufeng0927/p/5178216.html" target="_blank" rel="noopener">https://www.cnblogs.com/wufeng0927/p/5178216.html</a></p>
-<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><pre><code class="lang-csharp">
-using UnityEngine; 
-
-public class NewBehaviourScript : MonoBehaviour
-
-{ 
-
-float e = 0; 
-
-private void OnGUI()
-
-{ 
-
-GUILayout.Label(string.Format($&quot;&lt;size=80&gt;电池总容量{Power.capacity}毫安,电压{Power.voltage}伏&lt;/size&gt;&quot;)); 
-
-GUILayout.Label(string.Format($&quot;&lt;size=80&gt;实时电流{e}毫安,实时功率{(int)(e * Power.voltage)},满电量能玩{((Power.capacity /e).ToString(&quot;f2&quot;))}小时&lt;/size&gt;&quot;)); 
-
-} 
-
-float t = 0f; 
-
-private void Update()
-
-{ 
-
-if(Time.time - t &gt; 1f) 
-
-{ 
-
-t = Time.time; 
-
-e = Power.electricity; 
-
-} 
-
-} 
-
-} 
-
-public class Power
-
-{ 
-
-static public float electricity 
-
-{ 
-
-get { 
-
-#if UNITY_ANDROID
-
-//获取电流（微安），避免频繁获取，取一次大概2毫秒
-
-float electricity = (float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, PARAM_BATTERY); 
-
-//小于1W就认为它的单位是毫安，否则认为是微安
-
-return ToMA(electricity); 
-
-#else
-
-return -1f; 
-
-#endif
-
-} 
-
-} 
-
-//获取电压 伏
-
-static public float voltage { get; private set; } 
-
-//获取电池总容量 毫安
-
-static public int capacity { get; private set; } 
-
-//获取实时电流参数
-
-static object[] PARAM_BATTERY = new object[] { 2 }; //BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
-
-static AndroidJavaObject manager; 
-
-static Power()
-
-{ 
-
-#if UNITY_ANDROID
-
-AndroidJavaClass unityPlayer = new AndroidJavaClass(&quot;com.unity3d.player.UnityPlayer&quot;); 
-
-AndroidJavaObject currActivity = unityPlayer.GetStatic&lt;AndroidJavaObject&gt;(&quot;currentActivity&quot;); 
-
-manager = currActivity.Call&lt;AndroidJavaObject&gt;(&quot;getSystemService&quot;, new object[] { &quot;batterymanager&quot; }); 
-
-capacity = (int)(ToMA((float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, new object[] { 1 })) / ((float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, new object[] { 4 })/100f)); //BATTERY_PROPERTY_CHARGE_COUNTER 1 BATTERY_PROPERTY_CAPACITY 4
-
-AndroidJavaObject receive = currActivity.Call&lt;AndroidJavaObject&gt;(&quot;registerReceiver&quot;, new object[] { null,new AndroidJavaObject(&quot;android.content.IntentFilter&quot;, new object[] { &quot;android.intent.action.BATTERY_CHANGED&quot; }) }); 
-
-if (receive != null) 
-
-{ 
-
-voltage = (float)receive.Call&lt;int&gt;(&quot;getIntExtra&quot;, new object[] { &quot;voltage&quot;,0 })/1000f; //BatteryManager.EXTRA_VOLTAGE
-
-} 
-
-#endif
-
-} 
-
-static float ToMA(float maOrua)
-
-{ 
-
-return maOrua &lt; 10000 ? maOrua : maOrua / 1000f; 
-
-} 
-
-}
-</code></pre>
-<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.xuanyusong.com/archives/4753" target="_blank" rel="noopener">https://www.xuanyusong.com/archives/4753</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
   id="post-Unity3D-Camera-Screen"
   class="article article-type-post"
   itemscope
@@ -1320,6 +1145,181 @@ Debug.LogError(&quot;switchOrientation failed, can not find or add resoulution f
 <h4 id="Orthographic"><a href="#Orthographic" class="headerlink" title="Orthographic"></a>Orthographic</h4><p>较容易理解。size参数相当于Perspective模式下的FoV。</p>
 <p>摄像机高度 = 摄像机orthographicSize <em> 2<br>摄像机实际宽度 = 摄像机高度 </em> 屏幕宽高比<br>摄像机实际宽度 = 摄像机orthographicSize <em> 2 </em> 屏幕宽高比</p>
 <h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.cnblogs.com/unity-carry/p/9512662.html" target="_blank" rel="noopener">https://www.cnblogs.com/unity-carry/p/9512662.html</a><br><a href="https://www.jianshu.com/p/547ef7f4a313" target="_blank" rel="noopener">https://www.jianshu.com/p/547ef7f4a313</a><br><a href="https://www.jianshu.com/p/95cb4621206e" target="_blank" rel="noopener">https://www.jianshu.com/p/95cb4621206e</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-CSharp调用Java-与Android交互"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-CSharp%E8%B0%83%E7%94%A8Java-%E4%B8%8EAndroid%E4%BA%A4%E4%BA%92/"
+    >CSharp调用Java&amp;与Android交互</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-CSharp%E8%B0%83%E7%94%A8Java-%E4%B8%8EAndroid%E4%BA%A4%E4%BA%92/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.239Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Heading"><a href="#Heading" class="headerlink" title="Heading"></a>Heading</h2><p><a href="https://www.jb51.net/article/134135.htm" target="_blank" rel="noopener">https://www.jb51.net/article/134135.htm</a><br><a href="https://blog.csdn.net/m0_38096376/article/details/69567409" target="_blank" rel="noopener">https://blog.csdn.net/m0_38096376/article/details/69567409</a><br><a href="https://www.jianshu.com/p/b5e3cfcdf081" target="_blank" rel="noopener">https://www.jianshu.com/p/b5e3cfcdf081</a><br><a href="https://www.cnblogs.com/wufeng0927/p/5178216.html" target="_blank" rel="noopener">https://www.cnblogs.com/wufeng0927/p/5178216.html</a></p>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><pre><code class="lang-csharp">
+using UnityEngine; 
+
+public class NewBehaviourScript : MonoBehaviour
+
+{ 
+
+float e = 0; 
+
+private void OnGUI()
+
+{ 
+
+GUILayout.Label(string.Format($&quot;&lt;size=80&gt;电池总容量{Power.capacity}毫安,电压{Power.voltage}伏&lt;/size&gt;&quot;)); 
+
+GUILayout.Label(string.Format($&quot;&lt;size=80&gt;实时电流{e}毫安,实时功率{(int)(e * Power.voltage)},满电量能玩{((Power.capacity /e).ToString(&quot;f2&quot;))}小时&lt;/size&gt;&quot;)); 
+
+} 
+
+float t = 0f; 
+
+private void Update()
+
+{ 
+
+if(Time.time - t &gt; 1f) 
+
+{ 
+
+t = Time.time; 
+
+e = Power.electricity; 
+
+} 
+
+} 
+
+} 
+
+public class Power
+
+{ 
+
+static public float electricity 
+
+{ 
+
+get { 
+
+#if UNITY_ANDROID
+
+//获取电流（微安），避免频繁获取，取一次大概2毫秒
+
+float electricity = (float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, PARAM_BATTERY); 
+
+//小于1W就认为它的单位是毫安，否则认为是微安
+
+return ToMA(electricity); 
+
+#else
+
+return -1f; 
+
+#endif
+
+} 
+
+} 
+
+//获取电压 伏
+
+static public float voltage { get; private set; } 
+
+//获取电池总容量 毫安
+
+static public int capacity { get; private set; } 
+
+//获取实时电流参数
+
+static object[] PARAM_BATTERY = new object[] { 2 }; //BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
+
+static AndroidJavaObject manager; 
+
+static Power()
+
+{ 
+
+#if UNITY_ANDROID
+
+AndroidJavaClass unityPlayer = new AndroidJavaClass(&quot;com.unity3d.player.UnityPlayer&quot;); 
+
+AndroidJavaObject currActivity = unityPlayer.GetStatic&lt;AndroidJavaObject&gt;(&quot;currentActivity&quot;); 
+
+manager = currActivity.Call&lt;AndroidJavaObject&gt;(&quot;getSystemService&quot;, new object[] { &quot;batterymanager&quot; }); 
+
+capacity = (int)(ToMA((float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, new object[] { 1 })) / ((float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, new object[] { 4 })/100f)); //BATTERY_PROPERTY_CHARGE_COUNTER 1 BATTERY_PROPERTY_CAPACITY 4
+
+AndroidJavaObject receive = currActivity.Call&lt;AndroidJavaObject&gt;(&quot;registerReceiver&quot;, new object[] { null,new AndroidJavaObject(&quot;android.content.IntentFilter&quot;, new object[] { &quot;android.intent.action.BATTERY_CHANGED&quot; }) }); 
+
+if (receive != null) 
+
+{ 
+
+voltage = (float)receive.Call&lt;int&gt;(&quot;getIntExtra&quot;, new object[] { &quot;voltage&quot;,0 })/1000f; //BatteryManager.EXTRA_VOLTAGE
+
+} 
+
+#endif
+
+} 
+
+static float ToMA(float maOrua)
+
+{ 
+
+return maOrua &lt; 10000 ? maOrua : maOrua / 1000f; 
+
+} 
+
+}
+</code></pre>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.xuanyusong.com/archives/4753" target="_blank" rel="noopener">https://www.xuanyusong.com/archives/4753</a></p>
  
       <!-- reward -->
       
