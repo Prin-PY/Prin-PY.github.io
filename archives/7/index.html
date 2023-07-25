@@ -171,6 +171,87 @@
     
     
     <article
+  id="post-Unity3D-Windows与MacOS在U3D项目中的使用"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-Windows%E4%B8%8EMacOS%E5%9C%A8U3D%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8/"
+    >Windows与MacOS在U3D项目中的使用</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-Windows%E4%B8%8EMacOS%E5%9C%A8U3D%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.327Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Windows的优劣</p>
+<ol>
+<li><p>优势</p>
+<ol>
+<li><p>和美术协作比较方便</p>
+</li>
+<li><p>显卡性能也有保障</p>
+</li>
+<li><p>设备性价比高</p>
+</li>
+<li></li>
+</ol>
+</li>
+</ol>
+<p>MacOS的优劣</p>
+<ol>
+<li><p>优势</p>
+<ol>
+<li><p>出包或者做平台关联 api。 有时候要导出 xcode 项目，需要在 xcode 里写代码。</p>
+</li>
+<li><p>好看逼格高系统舒服</p>
+</li>
+</ol>
+</li>
+<li><p>设备成本较高。同等价位设备性能较差</p>
+</li>
+</ol>
+<p>主要使用windows 开发，mac 打包</p>
+<p>参考讨论：<a href="https://www.v2ex.com/t/670347" target="_blank" rel="noopener">https://www.v2ex.com/t/670347</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-YAML"
   class="article article-type-post"
   itemscope
@@ -411,65 +492,6 @@
 
     
     <article
-  id="post-Unity3D-Unity的架构"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-Unity%E7%9A%84%E6%9E%B6%E6%9E%84/"
-    >Unity的架构</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-Unity%E7%9A%84%E6%9E%B6%E6%9E%84/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.296Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="Unity"><a href="#Unity" class="headerlink" title="Unity"></a>Unity</h2><p>Unity当中渲染的部分是用C++执行的<br>Mono是Unity运行过程中的一部分，负责在特定的时间编译C#脚本，运行C#程序集。<br>所以，操作系统之上是基于C++的Unity程序，在Unity当中的一部分是Mono，Mono负责Unity当中与C#相关的部分。</p>
-<p>整个Unity程序的运行是基于一帧一帧的刷新来进行的。<br>如果在一帧当中，调用了一个耗时比较长的函数，整个程序就会卡在这一帧，直到这个函数调用结束。<br>在编辑器模式下，通过MenuItem调用一个函数，就是在一帧里面进行函数调用，这个函数耗时比较长，这一帧就会等待这个函数调用完再刷新。</p>
-<p>Unity当中有些程序是支持多线程的，比如烘培操作，烘培的时候，会在右下角开一个进度条，但是Game界面的程序还是会不断地一帧一帧刷新，不会阻塞，就是在多个线程下运行的结果。</p>
-<p>在Mono之上是整个C#环境，Unity在运行时，C#环境就一直在内存当中运行的。</p>
-<h2 id="关于异常"><a href="#关于异常" class="headerlink" title="关于异常"></a>关于异常</h2><p>在脚本运行的时候，抛出异常，会一层一层往上抛。<br>异常被try catch时，如果catch到，那么try当中的代码就会跳过。也就是说，被try的函数就会在异常出终止，进而从catch语句块之后的代码开始继续运行。</p>
-<p>如果自己写的程序不catch这个异常，那么这个异常会最终被Unity catch到，那么，Unity调用的我写的整个函数，就会终止掉。而实际上，整个C#的程序是没有终止的，Unity的C#程序还在内存当中，与我自己catch到异常没有本质的区别。而且，出异常的函数所分配的资源，如果不写代码释放掉，就没有其他好办法来释放了。因为这部分资源是在Unity的C#环境中的，只有重启整个Unity，才能强制释放。</p>
-<p>如果某个脚本索引了一个文件流，由于文件流没有被释放而造成文件被锁、无法重新打开，可以对这个脚本进行reimport，Why？</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
   id="post-Unity3D-Unity的渲染顺序"
   class="article article-type-post"
   itemscope
@@ -531,6 +553,65 @@
 </ul>
 <h2 id="实践建议"><a href="#实践建议" class="headerlink" title="实践建议"></a>实践建议</h2><h3 id="明确分层"><a href="#明确分层" class="headerlink" title="明确分层"></a>明确分层</h3><p>例如UI上的半透明（特效、面片）始终在3D场景之上，则一般分多个相机来绘制。<br>大片填充率的物件，例如地形，天空等，一般为提高深度命中，都会选择在延后批次绘制。<br>Draw character before the terrain.</p>
 <h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://zhuanlan.zhihu.com/p/55762351" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/55762351</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-Unity的架构"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-Unity%E7%9A%84%E6%9E%B6%E6%9E%84/"
+    >Unity的架构</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-Unity%E7%9A%84%E6%9E%B6%E6%9E%84/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.296Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Unity"><a href="#Unity" class="headerlink" title="Unity"></a>Unity</h2><p>Unity当中渲染的部分是用C++执行的<br>Mono是Unity运行过程中的一部分，负责在特定的时间编译C#脚本，运行C#程序集。<br>所以，操作系统之上是基于C++的Unity程序，在Unity当中的一部分是Mono，Mono负责Unity当中与C#相关的部分。</p>
+<p>整个Unity程序的运行是基于一帧一帧的刷新来进行的。<br>如果在一帧当中，调用了一个耗时比较长的函数，整个程序就会卡在这一帧，直到这个函数调用结束。<br>在编辑器模式下，通过MenuItem调用一个函数，就是在一帧里面进行函数调用，这个函数耗时比较长，这一帧就会等待这个函数调用完再刷新。</p>
+<p>Unity当中有些程序是支持多线程的，比如烘培操作，烘培的时候，会在右下角开一个进度条，但是Game界面的程序还是会不断地一帧一帧刷新，不会阻塞，就是在多个线程下运行的结果。</p>
+<p>在Mono之上是整个C#环境，Unity在运行时，C#环境就一直在内存当中运行的。</p>
+<h2 id="关于异常"><a href="#关于异常" class="headerlink" title="关于异常"></a>关于异常</h2><p>在脚本运行的时候，抛出异常，会一层一层往上抛。<br>异常被try catch时，如果catch到，那么try当中的代码就会跳过。也就是说，被try的函数就会在异常出终止，进而从catch语句块之后的代码开始继续运行。</p>
+<p>如果自己写的程序不catch这个异常，那么这个异常会最终被Unity catch到，那么，Unity调用的我写的整个函数，就会终止掉。而实际上，整个C#的程序是没有终止的，Unity的C#程序还在内存当中，与我自己catch到异常没有本质的区别。而且，出异常的函数所分配的资源，如果不写代码释放掉，就没有其他好办法来释放了。因为这部分资源是在Unity的C#环境中的，只有重启整个Unity，才能强制释放。</p>
+<p>如果某个脚本索引了一个文件流，由于文件流没有被释放而造成文件被锁、无法重新打开，可以对这个脚本进行reimport，Why？</p>
  
       <!-- reward -->
       
@@ -1240,59 +1321,6 @@ CancelInvoke(&quot;UnloadLastLevel&quot;);
 
     
     <article
-  id="post-Unity3D-Unity大气散射"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-Unity%E5%A4%A7%E6%B0%94%E6%95%A3%E5%B0%84/"
-    >Unity大气散射</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-Unity%E5%A4%A7%E6%B0%94%E6%95%A3%E5%B0%84/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.294Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="USky使用方法"><a href="#USky使用方法" class="headerlink" title="USky使用方法"></a>USky使用方法</h2><p>建立USky空物体</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
   id="post-Unity3D-Unity控制程序停止运行"
   class="article article-type-post"
   itemscope
@@ -1357,7 +1385,7 @@ Application.Quit();
 
     
     <article
-  id="post-Unity3D-Unity中的路径获取"
+  id="post-Unity3D-Unity大气散射"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -1368,8 +1396,8 @@ Application.Quit();
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-Unity%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84%E8%8E%B7%E5%8F%96/"
-    >Unity中的路径获取</a> 
+  <a class="article-title" href="/2023/07/25/Unity3D-Unity%E5%A4%A7%E6%B0%94%E6%95%A3%E5%B0%84/"
+    >Unity大气散射</a> 
 </h2>
  
 
@@ -1377,8 +1405,8 @@ Application.Quit();
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-Unity%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84%E8%8E%B7%E5%8F%96/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.293Z" itemprop="datePublished">2023-07-25</time>
+      <a href="/2023/07/25/Unity3D-Unity%E5%A4%A7%E6%B0%94%E6%95%A3%E5%B0%84/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.294Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1388,132 +1416,7 @@ Application.Quit();
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="AssetDatabase"><a href="#AssetDatabase" class="headerlink" title="AssetDatabase"></a>AssetDatabase</h2><h3 id="获取选中资源"><a href="#获取选中资源" class="headerlink" title="获取选中资源"></a>获取选中资源</h3><pre><code class="lang-csharp">
-[MenuItem(&quot;Tools/GetSelectPaths&quot;)] 
-
-public static void Execute()
-
-{ 
-
-string[] strs = Selection.assetGUIDs; 
-
-var curPath = System.IO.Directory.GetCurrentDirectory();//获取当前根目录
-
-foreach (var item in strs) 
-
-{ 
-
-string path = AssetDatabase.GUIDToAssetPath(item); 
-
-Debug.Log(curPath+&quot;/&quot;+path); 
-
-} 
-
-}
-</code></pre>
-<h3 id="Active-Deactive选中物体"><a href="#Active-Deactive选中物体" class="headerlink" title="Active/Deactive选中物体"></a>Active/Deactive选中物体</h3><pre><code class="lang-csharp">
-[MenuItem(&quot;Example/Toggle Active of Selected %i&quot;)] 
-
-static void DoToggle()
-
-{ 
-
-Object[] activeGOs = Selection.GetFiltered( 
-
-typeof(GameObject), 
-
-SelectionMode.Editable | SelectionMode.TopLevel); 
-
-foreach (GameObject obj in activeGOs) 
-
-{ 
-
-obj.SetActive(!obj.activeSelf); 
-
-} 
-
-}
-</code></pre>
-<h3 id="遍历所有文件"><a href="#遍历所有文件" class="headerlink" title="遍历所有文件"></a>遍历所有文件</h3><pre><code class="lang-csharp">
-private readonly string configJsonPath = AssetDatabase.GetAllAssetPaths() 
-
-.FirstOrDefault(p =&gt; p.EndsWith(&quot;uwascan_ruleconfig.json&quot;));
-</code></pre>
-<h2 id="Application"><a href="#Application" class="headerlink" title="Application"></a>Application</h2><p>获取路径：”………………../Assets”</p>
-<pre><code class="lang-csharp">
-string path = Application.dataPath;
-</code></pre>
-<h3 id="遍历所有文件夹-待学习"><a href="#遍历所有文件夹-待学习" class="headerlink" title="遍历所有文件夹 (待学习)"></a>遍历所有文件夹 (待学习)</h3><pre><code class="lang-csharp">
-//遍历所选文件夹，查找该文件夹以及子文件夹中 后缀为 .prefab的文件路径
-
-using UnityEngine; 
-
-using System.Collections; 
-
-using System.Collections.Generic; 
-
-using UnityEditor; 
-
-using System.IO; 
-
-public class CameraMove : MonoBehaviour { 
-
-// 在菜单来创建 选项 ， 点击该选项执行搜索代码
-
-[MenuItem(&quot;Tools/遍历项目所有文件夹&quot;)] 
-
-static void CheckSceneSetting()
-
-{ 
-
-List&lt;string&gt; dirs = new List&lt;string&gt;(); 
-
-GetDirs(Application.dataPath, ref dirs); 
-
-} 
-
-//参数1 为要查找的总路径， 参数2 保存路径
-
-private static void GetDirs(string dirPath, ref List&lt;string&gt; dirs)
-
-{ 
-
-foreach (string path in Directory.GetFiles(dirPath)) 
-
-{ 
-
-//获取所有文件夹中包含后缀为 .prefab 的路径
-
-if (System.IO.Path.GetExtension(path) == &quot;.prefab&quot;) 
-
-{ 
-
-dirs.Add(path.Substring(path.IndexOf(&quot;Assets&quot;))); 
-
-Debug.Log(path.Substring(path.IndexOf(&quot;Assets&quot;))); 
-
-} 
-
-} 
-
-if (Directory.GetDirectories(dirPath).Length &gt; 0) //遍历所有文件夹
-
-{ 
-
-foreach (string path in Directory.GetDirectories(dirPath)) 
-
-{ 
-
-GetDirs(path, ref dirs); 
-
-} 
-
-} 
-
-} 
-
-}
-</code></pre>
+  <h2 id="USky使用方法"><a href="#USky使用方法" class="headerlink" title="USky使用方法"></a>USky使用方法</h2><p>建立USky空物体</p>
  
       <!-- reward -->
       

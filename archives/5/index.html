@@ -171,6 +171,489 @@
     
     
     <article
+  id="post-Unity3D-资源与内存-加载、卸载、Destroy"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-%E8%B5%84%E6%BA%90%E4%B8%8E%E5%86%85%E5%AD%98-%E5%8A%A0%E8%BD%BD%E3%80%81%E5%8D%B8%E8%BD%BD%E3%80%81Destroy/"
+    >资源与内存(加载、卸载、Destroy)</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-%E8%B5%84%E6%BA%90%E4%B8%8E%E5%86%85%E5%AD%98-%E5%8A%A0%E8%BD%BD%E3%80%81%E5%8D%B8%E8%BD%BD%E3%80%81Destroy/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.369Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Unity文件，文件引用，meta详解"><a href="#Unity文件，文件引用，meta详解" class="headerlink" title="Unity文件，文件引用，meta详解"></a>Unity文件，文件引用，meta详解</h2><h3 id="Assets目录下常见的文件类型"><a href="#Assets目录下常见的文件类型" class="headerlink" title="Assets目录下常见的文件类型"></a>Assets目录下常见的文件类型</h3><h4 id="资源文件-ImportedAsset"><a href="#资源文件-ImportedAsset" class="headerlink" title="资源文件(ImportedAsset)"></a>资源文件(ImportedAsset)</h4><p>创建好的，并且不再修改的文件：FBX文件，贴图文件，音频文件，视频文件，动画文件<br>导入时进行转化，每一个类型都对应一个AssetImporter<br>点击这样的资源，在Inspector面板会出现设置界面</p>
+<h4 id="代码文件"><a href="#代码文件" class="headerlink" title="代码文件"></a>代码文件</h4><p>代码文件包括所有的代码文件，代码库文件，shader文件等，在导入时，unity会进行一次编译。</p>
+<h4 id="序列化文件-Native-Asset"><a href="#序列化文件-Native-Asset" class="headerlink" title="序列化文件(Native Asset)"></a>序列化文件(Native Asset)</h4><p>序列化文件通常是指unity能够序列化的文件，一般是unity自身的一些类型。比如prefab(预制体)，unity3d(场景)文件，asset(ScriptableObject)文件.mat文件(材质球)，这些文件能够在运行时直接反序列化为对应类的一个实例。</p>
+<h4 id="文本文档"><a href="#文本文档" class="headerlink" title="文本文档"></a>文本文档</h4><p>不是序列化文件，但是unity可以识别为TextAsset。<br>很像资源文件，但是又不需要资源文件那样进行设置和转化。<br>如txt、xml文件等等</p>
+<h4 id="非序列化文件"><a href="#非序列化文件" class="headerlink" title="非序列化文件"></a>非序列化文件</h4><p>非序列文件是Unity无法识别的文件，比如文件夹</p>
+<h4 id="Meta文件"><a href="#Meta文件" class="headerlink" title="Meta文件"></a>Meta文件</h4><p>meta文件在unity中的作用非常关键，它有2个作用</p>
+<ul>
+<li><p>定义在它同目录下，同名的非meta文件的唯一ID：GUID。而对于unity的序列化文件来说，引用的对象用的就是这个GUID。所以一旦meta中的GUID变更了，就要注意，它很可能引起一场引用丢失的灾难</p>
+</li>
+<li><p>存储资源文件的ImportSetting数据。在上文中资源文件是有ImportSetting数据的，这个数据正数存储在meta文件中。ImportSetting中专门有存储Assetbundle相关的数据。这些数据帮助编辑器去搜集所有需要打包的文件并分门别类。所以每一次修改配置都会修改meta文件。</p>
+</li>
+</ul>
+<h3 id="Meta文件详解——Unity-GUID-LocalID系统"><a href="#Meta文件详解——Unity-GUID-LocalID系统" class="headerlink" title="Meta文件详解——Unity GUID/LocalID系统"></a>Meta文件详解——Unity GUID/LocalID系统</h3><p>meta文件——文本文档，YAML格式写的（序列化文件都是用这个格式写）</p>
+<h4 id="GUID"><a href="#GUID" class="headerlink" title="GUID"></a>GUID</h4><p>guid代表该文件，无论什么类型（甚至是文件夹）。<br>通过GUID就可以找到工程中的这个文件，无论它在项目的什么位置。<br>在编辑器中使用AssetDatabase.GUIDToAssetPath和AssetDatabase.AssetPathToGUID进行互转。</p>
+<h4 id="ImportSetting数据"><a href="#ImportSetting数据" class="headerlink" title="ImportSetting数据"></a>ImportSetting数据</h4><p>根据不同的文件类型，它的数据是不同的ImportSetting数据（Inspector面板设置），比如上面的NativeFormatImporter，ModelImporter，AudioImporter等等。把一个文件和这个文件的meta文件从一个Unity工程复制到另一个Unity工程中，它的配置是不会变的。（将fbx和它的meta文件拷贝到另一个工程，不需要重新裁剪动画）</p>
+<h4 id="FileID（LocalID）"><a href="#FileID（LocalID）" class="headerlink" title="FileID（LocalID）"></a>FileID（LocalID）</h4><p>如果是一个图集，下面有若干个图片，那么就需要另外一个ID来表示，这就是LocalID（meta文件名为: FileID。）</p>
+<ul>
+<li><p>对于资源文件，非序列化文件，由于一般不会去更改源文件，所以FileID存储在meta文件中。</p>
+</li>
+<li><p>对于序列化文件，自身数据里面会存储自身的FileID，也会记录所有子文件的FileID</p>
+</li>
+</ul>
+<blockquote>
+<p>所以在每次svn提交时如果发现有meta文件变更，一定要打开看一下。看看这个guid是否被更改。理论上是不需要更改的。</p>
+</blockquote>
+<h3 id="序列化文件详解——Unity文件引用系统"><a href="#序列化文件详解——Unity文件引用系统" class="headerlink" title="序列化文件详解——Unity文件引用系统"></a>序列化文件详解——Unity文件引用系统</h3><p>用sublime打开一个Scene文件(.unity)，<br>大概的数据：</p>
+<ul>
+<li><p>OcclusionCullingSettings裁剪数据（菜单Window-&gt;Occlusion面板中的数据）</p>
+</li>
+<li><p>RenderSettings（菜单Window-&gt;Lighting-&gt;Settings面板中的部分数据）</p>
+</li>
+<li><p>LightmapSettings（菜单Window-&gt;Lighting-&gt;Settings面板中的其他部分数据）</p>
+</li>
+<li><p>NavMeshSettings（菜单Window-&gt;Navigation面板中的数据）</p>
+</li>
+<li><p>之后就是场景中的GameObject的数据</p>
+</li>
+</ul>
+<h4 id="GameObject数据"><a href="#GameObject数据" class="headerlink" title="GameObject数据"></a>GameObject数据</h4><p>Name就是Main Camera<br>某个物体上有4个组件，每个组件有一个FileID，然后在需要引用时，使用这些FileID即可。实例化一个这样的GameObject时，只要依照次序，依次创建物体，组件，初始化数据并进行引用绑定即可在场景中生成一个实例。</p>
+<blockquote>
+<p>在Inspector面板中的右上角点击，然后选择Debug转成Debug模式下的Inspector面板。<br> 在Hierarchy面板中选中Main Camera可以看到如图所示，所有的组件的LocalIdentfierInFile的值就是刚刚在Sublime中看到的数据</p>
+</blockquote>
+<ul>
+<li><p><strong>InstanceID</strong> 是unity中一个实例的ID。</p>
+</li>
+<li><p>每一个Unity实例都会有一个InstanceID。在运行时，用UnityEngine.Object的GetInstanceID获取（《Unity编辑器下和运行时的加载过程》）</p>
+</li>
+</ul>
+<h4 id="组件数据"><a href="#组件数据" class="headerlink" title="组件数据"></a>组件数据</h4><p>在GameObject之后就是组件数据。可以结合Unity中这个组件的面板来了解每一个数据的意义。</p>
+<blockquote>
+<p>组件FlareLayer，在YAML里面只是一个Behaviour（所有Behaviour组件都看不到类型名字），怎么样才能知道他是一个FlareLayer？<br> FileID左边我们看到一个124。每一个unity类型都有一个对应的数字。<br> 参考：<a href="https://docs.unity3d.com/Manual/ClassIDReference.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/ClassIDReference.html</a></p>
+</blockquote>
+<p>任何一个文件都可以通过GUID找到，然后通过FileID找到它内部的子文件。所以这样就能识别出这个具体是什么类了。</p>
+<h4 id="Prefab数据"><a href="#Prefab数据" class="headerlink" title="Prefab数据"></a>Prefab数据</h4><p>在YAML的最下面有一个数据是Prefab数据，保存了最重要的几个数据：<br>Modification：每个组件的修改数据列表，但凡修改的数据，都会在这里体现。记录了：哪个资源（GUID）的哪个组件(FileID)的哪个成员(PropertyPath)的值(value)发生了改变。<br>ParentPrefab：表示是哪一个Prefab。</p>
+<p><img src="资源与内存\(加载、卸载、Destroy\" alt="Alt text"><br>_files/289969-20180402204239871-1854753914.png)</p>
+<h2 id="资源导入"><a href="#资源导入" class="headerlink" title="资源导入"></a>资源导入</h2><p>Unity automatically imports assets and manages various kinds of additional data about them for you, such as what import settings should be used to import the asset, and where the asset is used throughout your project. </p>
+<h3 id="What-happens-when-Unity-imports-an-Asset"><a href="#What-happens-when-Unity-imports-an-Asset" class="headerlink" title="What happens when Unity imports an Asset?"></a>What happens when Unity imports an Asset?</h3><ol>
+<li>A Unique ID is assigned<br>This ID is used internally by Unity to refer to the asset which means the asset can be moved or renamed without references to the asset breaking.</li>
+</ol>
+<blockquote>
+<p>the editor frequently checks the contents of the Assets folder against the list of assets it already knows about.</p>
+</blockquote>
+<ol>
+<li>A .meta file is created</li>
+</ol>
+<blockquote>
+<p>If an asset loses its meta file (for example, if you moved or renamed the asset outside of Unity, without moving/renaming the corresponding .meta file), any reference to that asset will be broken. Unity would generate a new .meta file for the moved/renamed asset as if it were a brand new asset, and delete the old “orphaned” .meta file.</p>
+</blockquote>
+<ol>
+<li>The source asset is processed<br>Unity reads and processes any files that you add to the Assets folder, converting the contents of the file to internal game-ready versions of the data. The actual asset files remain unmodified, and the processed and converted versions of the data are stored in the project’s <strong>Library</strong> folder.</li>
+</ol>
+<blockquote>
+<p>the Photoshop file format is convenient to work with and can be saved directly into your Assets folder, but hardware such as mobile devices and PC graphics cards can’t accept that format directly to render as textures. All the data for Unity’s internal representation of your assets is stored in the Library folder which can be thought of as similar to a cache folder. As a user, you should never have to alter the Library folder manually and attempting to do so may affect the functioning of the project in the Unity editor. However, it is always safe to delete the Library folder (while the project is not open in Unity) as all its data is generated from what is stored in the Assets and ProjectSettings folders. This also means that the Library folder should not be included in version control. </p>
+<p>Sometimes multiple assets are created from an import</p>
+<ul>
+<li><p>A 3D file, such as an FBX, defines Materials and/or contains embedded Textures.</p>
+</li>
+<li><p>An image file imported as multiple sprites.</p>
+</li>
+<li><p>A 3D file contains multiple animation timelines, or has multiple separate clips defined within its animation import settings.</p>
+</li>
+</ul>
+</blockquote>
+<h3 id="The-import-settings-can-alter-the-processing-of-the-asset"><a href="#The-import-settings-can-alter-the-processing-of-the-asset" class="headerlink" title="The import settings can alter the processing of the asset"></a>The import settings can alter the processing of the asset</h3><p>As well as the unique ID assigned to the asset, the meta files contain values for all the import settings you see in the inspector when you have an asset selected in your project window. For a texture, this includes settings such as the Texture Type, Wrap Mode, Filter Mode and Aniso Level.</p>
+<p>If you change the import settings for an asset, those changed settings are stored in the .meta file accompanying the asset. The asset will be re-imported according to your new settings, and the corresponding imported “game-ready” data will be updated in the project’s Library folder.</p>
+<h2 id="AssetDatabase"><a href="#AssetDatabase" class="headerlink" title="AssetDatabase"></a>AssetDatabase</h2><p>AssetDatabase is an API which allows you to access the assets contained in your project. Among other things, it provides methods to find and load assets and also to create, delete and modify them. The Unity Editor uses the AssetDatabase internally to keep track of asset files and maintain the linkage between assets and objects that reference them.</p>
+<h3 id="Importing-an-Asset"><a href="#Importing-an-Asset" class="headerlink" title="Importing an Asset"></a>Importing an Asset</h3><h3 id="Loading-an-Asset"><a href="#Loading-an-Asset" class="headerlink" title="Loading an Asset"></a>Loading an Asset</h3><h3 id="File-Operations-using-the-AssetDatabase"><a href="#File-Operations-using-the-AssetDatabase" class="headerlink" title="File Operations using the AssetDatabase"></a>File Operations using the AssetDatabase</h3><h3 id="Using-AssetDatabase-Refresh"><a href="#Using-AssetDatabase-Refresh" class="headerlink" title="Using AssetDatabase.Refresh"></a>Using AssetDatabase.Refresh</h3><p>When you have finished modifying assets, you should call AssetDatabase.Refresh to commit your changes to the database and make them visible in the project.</p>
+<h3 id="CreateAssets-amp-FindAssets-amp-ScriptableObject"><a href="#CreateAssets-amp-FindAssets-amp-ScriptableObject" class="headerlink" title="CreateAssets &amp; FindAssets &amp; ScriptableObject"></a>CreateAssets &amp; FindAssets &amp; ScriptableObject</h3><ol>
+<li><p>对于ScriptableObject，使用CreateInstance来创建Asset实例对象<br><code>testI = (ScriptObj)ScriptableObject.CreateInstance(typeof(ScriptObj));</code></p>
+</li>
+<li><p>对于其他资源类型，使用new来创建对象</p>
+</li>
+<li><p>然后调用 <code>AssetDatabase.CreateAsset</code>函数，将实例对象作为资源存储在Assets路径当中。</p>
+</li>
+<li><p>最后使用<code>AssetDatabase.FindAssets</code>获取相应资源的GUID</p>
+</li>
+<li><p>由 <code>AssetDatabase.GUIDToAssetPath</code> 获取相应资源的路径。</p>
+</li>
+</ol>
+<pre><code class="lang-csharp">
+// This script file has two CS classes. The first is a simple Unity ScriptableObject script.
+
+// The class it defines is used by the Example class below.
+
+// (This is a single Unity script file. You could split this file into a ScriptObj.cs and an
+
+// Example.cs file which is more structured.)
+
+using UnityEngine; 
+
+using UnityEditor; 
+
+public class ScriptObj : ScriptableObject
+
+{ 
+
+public void Awake()
+
+{ 
+
+Debug.Log(&quot;ScriptObj created&quot;); 
+
+} 
+
+} 
+
+// Use ScriptObj to show how AssetDabase.FindAssets can be used
+
+public class Example
+
+{ 
+
+static ScriptObj testI; 
+
+static ScriptObj testJ; 
+
+static ScriptObj testK; 
+
+[MenuItem(&quot;Examples/FindAssets Example two&quot;)] 
+
+static void ExampleScript()
+
+{ 
+
+CreateAssets(); 
+
+NamesExample(); 
+
+LabelsExample(); 
+
+TypesExample(); 
+
+} 
+
+static void CreateAssets()
+
+{ 
+
+testI = (ScriptObj)ScriptableObject.CreateInstance(typeof(ScriptObj)); 
+
+AssetDatabase.CreateAsset(testI, &quot;Assets/AssetFolder/testI.asset&quot;); 
+
+testJ = (ScriptObj)ScriptableObject.CreateInstance(typeof(ScriptObj)); 
+
+AssetDatabase.CreateAsset(testJ, &quot;Assets/AssetFolder/testJ.asset&quot;); 
+
+// create an asset in a sub-folder and with a name which contains a space
+
+testK = (ScriptObj)ScriptableObject.CreateInstance(typeof(ScriptObj)); 
+
+AssetDatabase.CreateAsset(testK, &quot;Assets/AssetFolder/SpecialFolder/testK example.asset&quot;); 
+
+// an asset with a material will be used later
+
+Material material = new Material(Shader.Find(&quot;Standard&quot;)); 
+
+AssetDatabase.CreateAsset(material, &quot;Assets/AssetFolder/SpecialFolder/MyMaterial.mat&quot;); 
+
+} 
+
+static void NamesExample()
+
+{ 
+
+Debug.Log(&quot;*** FINDING ASSETS BY NAME ***&quot;); 
+
+string[] results; 
+
+results = AssetDatabase.FindAssets(&quot;testI&quot;); 
+
+foreach (string guid in results) 
+
+{ 
+
+Debug.Log(&quot;testI: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
+
+} 
+
+results = AssetDatabase.FindAssets(&quot;testJ&quot;); 
+
+foreach (string guid in results) 
+
+{ 
+
+Debug.Log(&quot;testJ: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
+
+} 
+
+results = AssetDatabase.FindAssets(&quot;testK example&quot;); 
+
+foreach (string guid in results) 
+
+{ 
+
+Debug.Log(&quot;testK example: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
+
+} 
+
+Debug.Log(&quot;*** More complex asset search ***&quot;); 
+
+// find all assets that contain test (which is all assets)
+
+results = AssetDatabase.FindAssets(&quot;test&quot;); 
+
+foreach (string guid in results) 
+
+{ 
+
+Debug.Log(&quot;name:test - &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
+
+} 
+
+} 
+
+static void LabelsExample()
+
+{ 
+
+Debug.Log(&quot;*** FINDING ASSETS BY LABELS ***&quot;); 
+
+string[] setLabels; 
+
+setLabels = new string[] {&quot;wrapper&quot;}; 
+
+AssetDatabase.SetLabels(testI, setLabels); 
+
+setLabels = new string[] {&quot;bottle&quot;, &quot;banana&quot;, &quot;carrot&quot;}; 
+
+AssetDatabase.SetLabels(testJ, setLabels); 
+
+setLabels = new string[] {&quot;swappable&quot;, &quot;helmet&quot;}; 
+
+AssetDatabase.SetLabels(testK, setLabels); 
+
+// label searching:
+
+// testI has wrapper, testK has swappable, so both have &#39;app&#39;
+
+// testJ has bottle, so have a label searched as &#39;bot&#39;
+
+string[] getGuids = AssetDatabase.FindAssets(&quot;l:app l:bot&quot;); 
+
+foreach (string guid in getGuids) 
+
+{ 
+
+Debug.Log(&quot;label lookup: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
+
+} 
+
+} 
+
+static void TypesExample()
+
+{ 
+
+Debug.Log(&quot;*** FINDING ASSETS BY TYPE ***&quot;); 
+
+string[] guids; 
+
+// search for a ScriptObject called ScriptObj
+
+guids = AssetDatabase.FindAssets(&quot;t:ScriptObj&quot;); 
+
+foreach (string guid in guids) 
+
+{ 
+
+Debug.Log(&quot;ScriptObj: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
+
+} 
+
+guids = AssetDatabase.FindAssets(&quot;t:ScriptObj l:helmet&quot;); 
+
+foreach (string guid in guids) 
+
+{ 
+
+Debug.Log(&quot;ScriptObj+bottle: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
+
+} 
+
+} 
+
+}
+</code></pre>
+<h2 id="AssetBundle"><a href="#AssetBundle" class="headerlink" title="AssetBundle"></a>AssetBundle</h2><p><a href="https://blog.csdn.net/qq_35361471/article/details/82854560" target="_blank" rel="noopener">https://blog.csdn.net/qq_35361471/article/details/82854560</a></p>
+<h2 id="资源卸载（Unload-amp-Destroy）"><a href="#资源卸载（Unload-amp-Destroy）" class="headerlink" title="资源卸载（Unload &amp; Destroy）"></a>资源卸载（Unload &amp; Destroy）</h2><h3 id="Destroy"><a href="#Destroy" class="headerlink" title="Destroy"></a>Destroy</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>UNITY Destroy()和DestroyImadiate()都不会立即释放对象内存<br>DestroyImadiate是立即将物体从场景hierachy中移除，并标记为 “null”，注意 是带引号的null。这是UNITY内部的一个处理技巧。关于这个技巧有很争议。<br>Destroy要等到帧末才会将物体从场景层级中移除并标记为”null”。</p>
+<p>不管如何，二者都只是UNITY引擎层面的标记与处理，但在.NET底层，对象的内存都没有释放，只有手动GC.Collect()或等待NET去GC时才会释放掉对象内存。<br>如果该对象在其他地方还有引用的话，GC也无法将对象的内存释放。</p>
+<h4 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h4><p>（1）obj并不会立即销毁，而是需要等待下一个Update更新，所以还是可以被print出来；<br>（2）DestroyImmediate立即对对像进行销毁，print出来是null；<br>（3）Destroy销毁场景中的物体，但内存中还存在，当令它需要销毁时，只是给一个标识。而内存中它依然是存在的，只有当内存不够，或一段时间没有再次被引用时（或者更多合理的条件满足），机制才会将它销毁并释放内存；<br>（4）这样做的目的就是为了避免频繁对内存的读写操作。回收器会定时清理一次内存中引用计数为0的对象，很可能你的要销毁的对象在其他地方还有引用而你自己不清楚，直接销毁可能导致其他地方空引用错误；<br>（5）建议使用平常Destroy函数，而不是DestroyImmediate函数；</p>
+<h4 id="作用对象"><a href="#作用对象" class="headerlink" title="作用对象"></a>作用对象</h4><p>GameObject、Component这样的在内存当中的实例，可以直接销毁，销毁掉后对硬盘上的资源是没有影响的。<br>Load进来的资源文件（Texture等）不可以使用DestroyImmediate(obj)直接销毁。如果使用DestroyImmediate(obj, true)接口，可以销毁。对于序列化文件等Unity可以直接识别和接管的文件，相应的资源文件会销毁掉，而对于Texture这样的资源，Unity无法识别资源原始的图片，只能识别导入后加入Library中的文件，则会销毁Library中相应的资源，并断掉对该资源的引用（路径上就找不到该资源了）。而对于图片，由于原始文件没有被销毁，重新打开项目后，该图片会重新被Import进来。</p>
+<p>总之，Destroy接口本身是不应该用来销毁资源的。</p>
+<p>如果在游戏当中把资源Destroy掉，下次打开游戏，这个资源就没有了，加载不到了。</p>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>测试代码如下：点ADD按钮不断创建对象，点DEL按钮清除所有对象，通过观察进程内存数值来察看对象内存是否释放。</p>
+<pre><code class="lang-csharp">
+using System.Collections; 
+
+using System.Collections.Generic; 
+
+using System.Diagnostics; 
+
+using UnityEngine; 
+
+using UnityEngine.UI; 
+
+public class MyGo : MonoBehaviour
+
+{ 
+
+byte[] data = new byte[83000]; 
+
+} 
+
+public class testad : MonoBehaviour { 
+
+Transform objs; 
+
+Text txt; 
+
+Process proc; 
+
+void Start () { 
+
+var btnadd = transform.Find(&quot;btnAdd&quot;).GetComponent&lt;Button&gt;(); 
+
+btnadd.onClick.AddListener(OnClckAdd); 
+
+var btndel = transform.Find(&quot;btnDel&quot;).GetComponent&lt;Button&gt;(); 
+
+btndel.onClick.AddListener(OnClckDel); 
+
+objs = transform.Find(&quot;objs&quot;); 
+
+txt = transform.Find(&quot;Text&quot;).GetComponent&lt;Text&gt;(); 
+
+proc = Process.GetCurrentProcess(); 
+
+} 
+
+void OnClckAdd()
+
+{ 
+
+for (int i = 0; i &lt; 20; ++i) 
+
+{ 
+
+var go = new GameObject(); 
+
+go.AddComponent&lt;MyGo&gt;(); 
+
+go.transform.SetParent(objs); 
+
+} 
+
+} 
+
+void OnClckDel()
+
+{ 
+
+for (int i = objs.childCount - 1; i &gt;= 0; i--) 
+
+{ 
+
+GameObject.DestroyImmediate(objs.GetChild(i).gameObject); 
+
+} 
+
+System.GC.Collect(); 
+
+} 
+
+// Update is called once per frame
+
+float timer = 0; 
+
+void Update () 
+
+{ 
+
+if (timer &gt; 0.5f) 
+
+{ 
+
+timer = 0; 
+
+txt.text = ((int)(proc.WorkingSet64 / 1024)).ToString(); 
+
+} 
+
+timer += Time.deltaTime; 
+
+} 
+
+}
+</code></pre>
+<h4 id="Resources-UnloadUnusedAssets"><a href="#Resources-UnloadUnusedAssets" class="headerlink" title="Resources.UnloadUnusedAssets"></a>Resources.UnloadUnusedAssets</h4><p>运行中卸载，可能是在帧末尾卸载</p>
+<h4 id="Resources-UnloadAsset"><a href="#Resources-UnloadAsset" class="headerlink" title="Resources.UnloadAsset()"></a>Resources.UnloadAsset()</h4><p>对于场景当中的特定资源，如果相机照射到他或者在脚本中有对资源的引用的话就无法卸载。<br>如果相机没有看到他，并且没有被引用到，那么该资源会在内存当中被卸载。而若下次引用到他，或者相机照射到他，那么该资源会被重新加载到内存当中。</p>
+<h4 id="EditorUtility-UnloadUnusedAssets"><a href="#EditorUtility-UnloadUnusedAssets" class="headerlink" title="EditorUtility.UnloadUnusedAssets"></a>EditorUtility.UnloadUnusedAssets</h4><p>编辑器下的卸载资源接口。</p>
+<h2 id="资源卸载与内存管理问题的处理经验"><a href="#资源卸载与内存管理问题的处理经验" class="headerlink" title="资源卸载与内存管理问题的处理经验"></a>资源卸载与内存管理问题的处理经验</h2><ol>
+<li><p>Editor中的脚本对物体的引用无法用Memory Profiler检测到，因为Editor脚本对MemoryProfiler是不可见的。</p>
+</li>
+<li><p>只要脚本中有对Texture等资源实例的引用，那么相应的资源就无法卸载掉。</p>
+</li>
+<li><p>EditorUtility.UnloadUnusedAssets确实可以卸载没有被引用的资源对象，但是不会一调用就立即卸载掉，可能稍等一会儿才会卸载掉。所以，在这个函数调用过后立即检测内存，是看不出来卸载的效果的，过一小段时间后，再打印内存，就可以看到卸载的效果。根据对内存的监控可以判断：刚刚调用Unload资源函数的时候，内存不会立即释放，在下次加载资源的时候，会进行内存释放操作。</p>
+</li>
+<li><p>把加载进内存的对象直接Destroy掉，就不会占用内存，不需要调用Unload函数也可以。 如果把对资源的引用设置为null，不调用unload函数的话，资源会留在内存当中，只有调用unload之后，资源才会被卸载</p>
+</li>
+</ol>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.cnblogs.com/CodeGize/p/8697227.html" target="_blank" rel="noopener">https://www.cnblogs.com/CodeGize/p/8697227.html</a><br><a href="https://www.cnblogs.com/timeObjserver/p/7575035.html" target="_blank" rel="noopener">https://www.cnblogs.com/timeObjserver/p/7575035.html</a><br><a href="https://docs.unity3d.com/2017.2/Documentation/Manual/BehindtheScenes.html" target="_blank" rel="noopener">https://docs.unity3d.com/2017.2/Documentation/Manual/BehindtheScenes.html</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-小知识点与小工具"
   class="article article-type-post"
   itemscope
@@ -220,70 +703,6 @@
 <h2 id="动态添加tag"><a href="#动态添加tag" class="headerlink" title="动态添加tag"></a>动态添加tag</h2><p><code>csharp #region 动态添加tag static void AddTag(string tag, GameObject obj) { if (!isHasTag(tag)) { SerializedObject tagManager = new SerializedObject(obj);//序列化物体 SerializedProperty it = tagManager.GetIterator();//序列化属性 while (it.NextVisible(true))//下一属性的可见性 { if (it.name == &quot;m_TagString&quot;) { Debug.Log(it.stringValue); it.stringValue = tag; tagManager.ApplyModifiedProperties(); } } } } static bool isHasTag(string tag) { for (int i = 0; i &lt; UnityEditorInternal.InternalEditorUtility.tags.Length; i++) { if (UnityEditorInternal.InternalEditorUtility.tags[i].Equals(tag)) return true; } return false; } #endregion</code> </p>
 <h2 id="关于enable-false"><a href="#关于enable-false" class="headerlink" title="关于enable=false"></a>关于enable=false</h2><p>When a Behaviour is disabled, it will still be on the object and you can even change its properties and call its methods, but the engine will no longer call its Update method.<br>When a Renderer is disabled, the object turns invisible.<br>When a Collider is disabled, it won’t cause any collision events to happen.<br>When an UI component is disabled, the player can’t interact with it anymore, but it will still be rendered, unless you also deactivate its renderer.</p>
  
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-强哥UI课"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-%E5%BC%BA%E5%93%A5UI%E8%AF%BE/"
-    >强哥UI课</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-%E5%BC%BA%E5%93%A5UI%E8%AF%BE/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.368Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="基础组件"><a href="#基础组件" class="headerlink" title="基础组件"></a>基础组件</h2><h3 id="Canvas组件"><a href="#Canvas组件" class="headerlink" title="Canvas组件"></a>Canvas组件</h3><p>Render Mode</p>
-<ul>
-<li><p>Screen Space - Overlay</p>
-</li>
-<li><p>Screen Space - Camera</p>
-</li>
-<li><p>World Space</p>
-</li>
-</ul>
-<p>Pixel Perfect 在要提高清晰度的时候才选择。 一般不推荐选择</p>
-<h3 id="Rect-Transform"><a href="#Rect-Transform" class="headerlink" title="Rect Transform"></a>Rect Transform</h3><h3 id="CanvasRenderer"><a href="#CanvasRenderer" class="headerlink" title="CanvasRenderer"></a>CanvasRenderer</h3><h3 id="EventSystem-amp-GraphicRaycaster"><a href="#EventSystem-amp-GraphicRaycaster" class="headerlink" title="EventSystem &amp; GraphicRaycaster"></a>EventSystem &amp; GraphicRaycaster</h3><p>找被点中的物体</p>
-<h3 id="Event-Trigger"><a href="#Event-Trigger" class="headerlink" title="Event Trigger"></a>Event Trigger</h3><p>这个是UGUI里面封装好的一个Component，里面预设了很多UGUI支持的UI事件，方便大家用来自定义一些消息响应，比如点击事件，也可以用来制作一些特殊的UI响应，例如长按事件</p>
-<h2 id="Lesson2"><a href="#Lesson2" class="headerlink" title="Lesson2"></a>Lesson2</h2><h3 id="分辨率适配"><a href="#分辨率适配" class="headerlink" title="分辨率适配"></a>分辨率适配</h3> 
       <!-- reward -->
       
     </div>
@@ -538,6 +957,70 @@ public SpawnManagerScriptableObject spawnManagerValues;
 </li>
 </ol>
  
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-强哥UI课"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-%E5%BC%BA%E5%93%A5UI%E8%AF%BE/"
+    >强哥UI课</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-%E5%BC%BA%E5%93%A5UI%E8%AF%BE/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.368Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="基础组件"><a href="#基础组件" class="headerlink" title="基础组件"></a>基础组件</h2><h3 id="Canvas组件"><a href="#Canvas组件" class="headerlink" title="Canvas组件"></a>Canvas组件</h3><p>Render Mode</p>
+<ul>
+<li><p>Screen Space - Overlay</p>
+</li>
+<li><p>Screen Space - Camera</p>
+</li>
+<li><p>World Space</p>
+</li>
+</ul>
+<p>Pixel Perfect 在要提高清晰度的时候才选择。 一般不推荐选择</p>
+<h3 id="Rect-Transform"><a href="#Rect-Transform" class="headerlink" title="Rect Transform"></a>Rect Transform</h3><h3 id="CanvasRenderer"><a href="#CanvasRenderer" class="headerlink" title="CanvasRenderer"></a>CanvasRenderer</h3><h3 id="EventSystem-amp-GraphicRaycaster"><a href="#EventSystem-amp-GraphicRaycaster" class="headerlink" title="EventSystem &amp; GraphicRaycaster"></a>EventSystem &amp; GraphicRaycaster</h3><p>找被点中的物体</p>
+<h3 id="Event-Trigger"><a href="#Event-Trigger" class="headerlink" title="Event Trigger"></a>Event Trigger</h3><p>这个是UGUI里面封装好的一个Component，里面预设了很多UGUI支持的UI事件，方便大家用来自定义一些消息响应，比如点击事件，也可以用来制作一些特殊的UI响应，例如长按事件</p>
+<h2 id="Lesson2"><a href="#Lesson2" class="headerlink" title="Lesson2"></a>Lesson2</h2><h3 id="分辨率适配"><a href="#分辨率适配" class="headerlink" title="分辨率适配"></a>分辨率适配</h3> 
       <!-- reward -->
       
     </div>
@@ -948,74 +1431,6 @@ Graphics.Blit(source, destination);
 
     
     <article
-  id="post-Unity3D-【转载】RenderTexture及其用途"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91RenderTexture%E5%8F%8A%E5%85%B6%E7%94%A8%E9%80%94/"
-    >【转载】RenderTexture及其用途</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91RenderTexture%E5%8F%8A%E5%85%B6%E7%94%A8%E9%80%94/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.357Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <pre><code>* 转自：https://www.jianshu.com/p/fa73c0f6762d
-</code></pre><h2 id="什么是RenderTexture"><a href="#什么是RenderTexture" class="headerlink" title="什么是RenderTexture?"></a>什么是RenderTexture?</h2><p>RenderTexture是unity定义的一种特殊的Texture类型,它是连接着一个FrameBufferObject的存在于GPU端的Texture(Server-Side Texture),从上面对RenderTexture的解释我们了解到要先知道Texture和FrameBufferObject是什么</p>
-<h2 id="从Texture到FrameBuffer"><a href="#从Texture到FrameBuffer" class="headerlink" title="从Texture到FrameBuffer"></a>从Texture到FrameBuffer</h2><p>纹理是如何被渲染到屏幕上的 ,起初纹理存在硬盘(RAM)里,它被cpu解压缩(数据在cpu端它就只是二进制数据),如果想要显示它,那么数据将会被发送给(上传到,cpu和gpu之间的通信可以理解成client和server之间的通信)GPU,gpu将它放在显存(VARM)中,显存中有一块内存区域叫做RenderBuffer(渲染缓存),RenderBuffer只是数据缓存,它还不能用作Texture渲染,尽管它现在已经是一个texture了,在这里 texture等待着被渲染,当要渲染这个Texture时,会生成一个FrameBuffer(帧缓存),当这个帧缓存被添加到默认的帧缓存物体上(FrameBufferObject)时,它就会被绘制到屏幕上.FrameBuffer指向的是显存中RenderBuffer的地址,简单的来说,RenderBuffer需要附加在FrameBuffer上,它才能是五颜六色的图片,否则它只是显存上的一堆数据,</p>
-<h2 id="FrameBufferObject"><a href="#FrameBufferObject" class="headerlink" title="FrameBufferObject"></a>FrameBufferObject</h2><p>FrameBufferObject是一个集合,集合了FrameBuffer,通过快速刷新Framebuffer实现动态效果,最典型的FBO就是Unity的Main Camera,它是默认的FBO,是gpu里渲染结果的目的地.但是现代gpu通常可以创建很多其他的FBO(Unity中可以创建多个Camera)，这些FBO不连接窗口区域，这种我们创建的FBO的存在目的就是允许我们将渲染结果保存在gpu的一块存储区域，待之后使用,这种用法叫做离屏渲染，这是一个非常有用的东西。Camera 输出的FBO,可以嵌在另一个FBO中,Unity中使用RenderTexture来接收FBO(可视化FBO),Game窗口是一个特殊的RenderTexture,它允许多个FBO叠加渲染,当Camera的RenderTarget都设置为null时表示输出到game窗口(没有摄像机的RenderTaget为null会显示没有摄像机进行渲染),设置不为null表示输出到某个RT.</p>
-<h2 id="如何使用FrameBufferObject"><a href="#如何使用FrameBufferObject" class="headerlink" title="如何使用FrameBufferObject?"></a>如何使用FrameBufferObject?</h2><p>1.将这个FBO上的结果传回CPU这边的贴图，在gles中的实现一般是ReadPixels（）这样的函数，这个函数是将当前设为可读的FBO拷贝到cpu这边的一个存储buffer，没错如果当前设为可读的FBO是那个默认FBO，那这个函数就是在截屏，如果是你自己创建的FBO，那就把刚刚绘制到上面的结果从gpu存储拿回内存。</p>
-<ol>
-<li>将这个FBO上的结果拷贝到一个gpu上的texture，在gles中的实现一般是CopyTexImage2D（），它一般是将可读的FBO的一部分拷贝到存在于gpu上的一个texture对象中，直接考到server-sider就意味着可以马上被gpu渲染使用</li>
-</ol>
-<p>3.将这个fbo直接关联一个gpu上的texture对象，这样就等于在绘制时就直接绘制到这个texure上，这样也省去了拷贝时间，gles中一般是使用FramebufferTexture2D（）这样的接口。</p>
-<h2 id="unity是如何使用FBO的"><a href="#unity是如何使用FBO的" class="headerlink" title="unity是如何使用FBO的?"></a>unity是如何使用FBO的?</h2><p>Unity通过上面说的第三个方法将FBO输出到RenderTexture,在unity里要使用这个FBO,只能基于这个RenderTexture(目前我知道的是这样,可能有我不知道的用法).</p>
-<p>在Unity固定渲染管线中(Unity2019.3以后 自定义渲染管线脱离预览版,新的通用渲染管线Camera设置发生了改变,如果依然使用固定渲染管线则以下通用),通过Camera组件来使用FBO,多摄像机使用下,根据ClearFlags来决定渲染内容:</p>
-<p>需要强调的是Clear操作, 多Camera下,DepthOnly 和Don’t Clear实际上都使Clear操作失效了 ,</p>
-<h2 id="RenderTexture的用途"><a href="#RenderTexture的用途" class="headerlink" title="RenderTexture的用途?"></a>RenderTexture的用途?</h2><p>1.屏幕后处理,3d游戏最基本的后处理是抗锯齿,从Unity的FrameDebugger(可以看到所有FrameBuffer,不管它们属于哪个FBO)中可以看到抗锯齿的操作在OverlayUI之前,所以各位做2d游戏的可以选择把抗锯齿关掉,其他的后处理如bloom,HDR等都是操作屏幕这个默认的RenderTexture,配合上相关效果的Material </p>
-<p>2.在Scene中直接将RT作为Texture传给其他材质球,操作是调用Material.SetTexture 为该RT,即可实现在另一个表面渲染另一个Camera的内容.可以制作后视镜功能</p>
-<p>3.copy回cpu端的内存:基本操作是在当前帧渲染完毕后(协程中, yield return new WaitForEndOfFrame()),设置RenderTexture.active为目标RenderTexture(因为当前帧已渲染过,所以该RenderTexture不会被渲染).Texture.ReadPixels保存到显存.Texture.GetRawTextureData()读回cpu内存,可以保存到硬盘或者通过互联网通信(在unity中实现的截屏,录屏,实时共享屏幕).</p>
-<p>以上2,3都属于离屏渲染的应用.</p>
-<h2 id="转自：https-www-jianshu-com-p-fa73c0f6762d"><a href="#转自：https-www-jianshu-com-p-fa73c0f6762d" class="headerlink" title="转自：https://www.jianshu.com/p/fa73c0f6762d"></a>转自：<a href="https://www.jianshu.com/p/fa73c0f6762d" target="_blank" rel="noopener">https://www.jianshu.com/p/fa73c0f6762d</a></h2> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
   id="post-Unity3D-一些属性"
   class="article article-type-post"
   itemscope
@@ -1091,7 +1506,7 @@ Debug.Log(&quot;Up and running&quot;);
 
     
     <article
-  id="post-Unity3D-从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协"
+  id="post-Unity3D-【转载】RenderTexture及其用途"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -1102,8 +1517,8 @@ Debug.Log(&quot;Up and running&quot;);
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-%E4%BB%8EEnumerator%E5%88%B0StartCoroutine%E5%BA%95%E5%B1%82%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E5%AE%B9%E5%99%A8%E7%9A%84%E6%A6%82%E5%BF%B5%E6%9E%9A%E4%B8%BE%E5%99%A8%E4%B8%8E%E4%BB%A3%E7%A0%81%E7%9A%84%E5%8D%8F/"
-    >从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协</a> 
+  <a class="article-title" href="/2023/07/25/Unity3D-%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91RenderTexture%E5%8F%8A%E5%85%B6%E7%94%A8%E9%80%94/"
+    >【转载】RenderTexture及其用途</a> 
 </h2>
  
 
@@ -1111,7 +1526,7 @@ Debug.Log(&quot;Up and running&quot;);
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-%E4%BB%8EEnumerator%E5%88%B0StartCoroutine%E5%BA%95%E5%B1%82%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E5%AE%B9%E5%99%A8%E7%9A%84%E6%A6%82%E5%BF%B5%E6%9E%9A%E4%B8%BE%E5%99%A8%E4%B8%8E%E4%BB%A3%E7%A0%81%E7%9A%84%E5%8D%8F/" class="article-date">
+      <a href="/2023/07/25/Unity3D-%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91RenderTexture%E5%8F%8A%E5%85%B6%E7%94%A8%E9%80%94/" class="article-date">
   <time datetime="2023-07-25T12:56:23.357Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
@@ -1122,543 +1537,23 @@ Debug.Log(&quot;Up and running&quot;);
       
     <div class="article-entry" itemprop="articleBody">
        
-  <p>程、异步执行究竟有什么关系？</p>
-<p>程、异步执行究竟有什么关系？</p>
-<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><pre><code class="lang-csharp">
-yield return &lt;expression&gt;; 
-
-yield break;
-</code></pre>
-<p>如果你在语句中使用 yield 上下文关键字，则意味着它在其中出现的方法、运算符或 get 访问器是迭代器，向编译器指示它所在的方法是迭代器块。 </p>
-<p>使用 yield return 语句可一次返回一个元素。可通过使用 foreach 语句或 LINQ 查询来使用从迭代器方法返回的序列。 foreach 循环的每次迭代都会调用迭代器方法。 迭代器方法运行到 yield return 语句时，会返回一个 expression，并保留当前在代码中的位置。 下次调用迭代器函数时，将从该位置重新开始执行。</p>
-<p>在 yield return 语句中，将计算 expression 并将结果以值的形式返回给枚举器对象；expression 必须可以隐式转换为 yield 类型的迭代器。</p>
-<p>可以使用 yield break 语句来终止迭代。</p>
-<p>实现原理 - 编辑器遇到上面的情况会将生成一些类来保存yield return的所有调用都一一做分支处理（状态机分支），下次对IEnumerator.moveNext时会从上次的状态开始（如：迭代到第几个）</p>
-<h2 id="迭代器模式的实现与Enumerator"><a href="#迭代器模式的实现与Enumerator" class="headerlink" title="迭代器模式的实现与Enumerator"></a>迭代器模式的实现与Enumerator</h2><h3 id="foreach的原理"><a href="#foreach的原理" class="headerlink" title="foreach的原理"></a>foreach的原理</h3><p>在 C# 中，foreach 其实是一个语法糖，在编译成 IL 代码时，foreach 会变成基于迭代器 IEnumerator 的调用方式。</p>
-<p>foreach编译成的IL代码如下：</p>
-<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615789031828.png" alt="Alt text"></p>
-<p>以下两段代码效果相同：</p>
-<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615789060736.png" alt="Alt text"></p>
-<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615789081096.png" alt="Alt text"></p>
-<h3 id="迭代器模式的实现"><a href="#迭代器模式的实现" class="headerlink" title="迭代器模式的实现"></a>迭代器模式的实现</h3><p>有许多种方法可以把对象堆起来成为一个集合，你可以把它们放进数组、链表、树、散列表等等不同的数据结构中，每一种对象的组织方式都有它的优点和适合的使用场景。<br>迭代器模式使我们在遍历集合时，不需要清楚集合的内部实现方式。不同集合存储方式的细节不同，但遍历方式的统一的。</p>
-<blockquote>
-<p>设计思想原则：隐藏细节，开放接口</p>
-</blockquote>
-<p>遍历集合时，处理好三件事即可：</p>
-<ul>
-<li><p>能够以某种顺序一个一个访问集合中的元素</p>
-</li>
-<li><p>能够获得当前元素的值</p>
-</li>
-<li><p>能够重新回到集合的开头</p>
-</li>
-</ul>
-<p>为此，IEnumerator接口分别定义了三个方法：MoveNext, get_Current, Reset</p>
-<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615789423446.png" alt="Alt text"></p>
-<p>.NET 系统库提供的 List、ArrayList、Dictionary 等集合都实现了 Enumerator。以List为例看看具体的实现：<br><code>List&lt;T&gt;</code>实现了<code>IEnumerable&lt;T&gt;</code>和<code>IEnumerable</code>接口，这两个接口也就定义了<code>GetEnumerator</code>方法：</p>
-<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615790017077.png" alt="Alt text"></p>
-<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615790081591.png" alt="Alt text"></p>
-<p>而<code>Enumerator</code>是List类中的一个结构体类型，该结构体实现了<code>IEnumerator</code>接口。</p>
-<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615790157682.png" alt="Alt text"></p>
-<p>当对<code>List&lt;T&gt;</code>调用GetEnumerator()方法时，返回的的<code>List&lt;T&gt;.Enumerator</code>类的一个对象。</p>
-<blockquote>
-<p>使用迭代器进行遍历时，不能进行Remove和Add操作，因为这两个操作会导致元素整体移动，导致当前Index指向的元素位置偏移，遍历结果错误。</p>
-</blockquote>
-<h3 id="自己实现一个List"><a href="#自己实现一个List" class="headerlink" title="自己实现一个List"></a>自己实现一个List</h3><pre><code class="lang-csharp">
-using System.Collections; 
-
-using System; 
-
-public class MyList&lt;T&gt; : IEnumerable
-
-{ 
-
-private static readonly T[] _emptyArray = new T[0]; 
-
-private const int _defaultCapacity = 4; 
-
-private T[] _items; 
-
-private int _size; 
-
-private int _version; 
-
-private Func&lt;T, bool&gt; _filterFunc; 
-
-public int Count =&gt; _size; 
-
-IEnumerator IEnumerable.GetEnumerator() 
-
-{ 
-
-return GetEnumerator(); 
-
-} 
-
-public MyList()
-
-{ 
-
-this._items = _emptyArray; 
-
-} 
-
-/// &lt;param name=&quot;func&quot;&gt;&lt;/param&gt;
-
-public MyList(Func&lt;T, bool&gt; func)
-
-{ 
-
-this._items = _emptyArray; 
-
-_filterFunc = func; 
-
-} 
-
-public IEnumerator GetEnumerator()
-
-{ 
-
-return new Enumerator(this); 
-
-} 
-
-public void Add(T item)
-
-{ 
-
-if (this._size == this._items.Length) 
-
-this.EnsureCapacity(this._size + 1); 
-
-this._items[this._size++] = item; 
-
-++this._version; 
-
-} 
-
-/// &lt;summary&gt;
-
-/// 扩容机制
-
-/// &lt;/summary&gt;
-
-/// &lt;param name=&quot;min&quot;&gt;&lt;/param&gt;
-
-private void EnsureCapacity(int min)
-
-{ 
-
-if (this._items.Length &gt;= min) 
-
-return; 
-
-int num = this._items.Length == 0 ? 4 : this._items.Length * 2; 
-
-if ((uint)num &gt; 2146435071U) 
-
-num = 2146435071; 
-
-if (num &lt; min) 
-
-num = min; 
-
-this.Capacity = num; 
-
-} 
-
-public int Capacity 
-
-{ 
-
-get =&gt; this._items.Length; 
-
-set //有点子监听的感觉
-
-{ 
-
-if (value == this._items.Length) 
-
-return; 
-
-if (value &gt; 0) 
-
-{ 
-
-T[] objArray = new T[value]; 
-
-if (this._size &gt; 0) //扩容真正实现在这里
-
-Array.Copy((Array)this._items, 0, (Array)objArray, 0, this._size); 
-
-this._items = objArray; 
-
-} 
-
-else
-
-this._items = _emptyArray; 
-
-} 
-
-} 
-
-/// &lt;summary&gt;
-
-/// 迭代器定义
-
-/// &lt;/summary&gt;
-
-public struct Enumerator : IEnumerator 
-
-{ 
-
-private MyList&lt;T&gt; _list; 
-
-private int _index; 
-
-private int _version; 
-
-private T current; 
-
-internal Enumerator(MyList&lt;T&gt; list)
-
-{ 
-
-this._list = list; 
-
-this._index = 0; 
-
-this._version = list._version; 
-
-this.current = default(T); 
-
-} 
-
-public bool MoveNext()
-
-{ 
-
-if (this._version != _list._version || (uint)this._index &gt;= (uint)_list._size) 
-
-return this.MoveNextRare(); 
-
-this.current = _list._items[this._index]; 
-
-++this._index; 
-
-//当不满足过滤条件时，foreach遍历Current返回为空
-
-if (_list._filterFunc != null &amp;&amp; !_list._filterFunc(this.current)) 
-
-this.current = default(T); 
-
-return true; 
-
-} 
-
-private bool MoveNextRare()
-
-{ 
-
-this._index = this._list._size + 1; 
-
-this.current = default(T); 
-
-return false; 
-
-} 
-
-public object Current =&gt; this.current; 
-
-public void Reset()
-
-{ 
-
-_index = 0; 
-
-current = default(T); 
-
-} 
-
-} 
-
-}
-</code></pre>
-<h2 id="Enumerator与yield-return"><a href="#Enumerator与yield-return" class="headerlink" title="Enumerator与yield return"></a>Enumerator与yield return</h2><p>You use a yield return statement to <strong>return each element one at a time</strong>.</p>
-<p>When a yield return statement is reached in the iterator method, <strong>expression is returned</strong> , and <strong>the current location in code is retained</strong>. Execution is restarted <strong>from that location the next time</strong> that the iterator function is called.</p>
-<pre><code class="lang-csharp">
-public static void TestGetVs()
-
-{ 
-
-IEnumerator&lt;int&gt; enumerator = GetVs(); 
-
-while(enumerator.MoveNext()) 
-
-{ 
-
-int current = enumerator.Current; 
-
-Debug.Log(current); 
-
-} 
-
-} 
-
-public static IEnumerator&lt;int&gt; GetVs()
-
-{ 
-
-//for (int i = 0; i &lt; 3; i++)
-
-//{
-
-// yield return i;
-
-//}
-
-yield return 3; 
-
-yield return 4; 
-
-yield return 5; 
-
-}
-</code></pre>
-<p>底层原理：<br>如果写了一个函数，返回值类型为IEnumerator，方法体中有yield return，那么编译器会为这个方法自动定义一个类型，这个类型实现IEnumerator接口。</p>
-<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615794880255.png" alt="Alt text"></p>
-<p>这个类型有两个字段：</p>
-<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615794868354.png" alt="Alt text"></p>
-<p>state保存当前执行到的位置，current为当前的返回值。</p>
-<p>使用foreach对这个方法的返回值进行遍历，实质上就是对这个迭代器进行遍历。每次调用MoveNext()，从state指向的位置开始执行，直到遇到下一个yield return，将返回的结果存到current当中，保存当前位置到state中。MoveNext函数的IL语言形式如下：</p>
-<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615795022810.png" alt="Alt text"></p>
-<p>总结：使用IEnumerator与yield return的方式，可以实现有多个返回值的方法，对多个返回值进行遍历，每访问一个值，执行一段代码，不需要先计算出所有的值，再进行遍历。其本质是把函数(例子当中为GetVs)的代码放到Enumerator类型的MoveNext当中，用state进行控制，每调用一次，执行不同的段落。</p>
-<h2 id="Unity3D协程"><a href="#Unity3D协程" class="headerlink" title="Unity3D协程"></a>Unity3D协程</h2><p>Ref: <a href="https://www.cnblogs.com/Roz-001/p/11205700.html" target="_blank" rel="noopener">https://www.cnblogs.com/Roz-001/p/11205700.html</a></p>
-<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615796287192.png" alt="Alt text"></p>
-<p>以上代码，实质上是调用Test2Sceonds方法，返回一个Enumerator对象，然后传递给StartCoroutine方法。</p>
-<p>StartCoroutine是在Native层实现的。从行为上来看，当StartCoroutine后，Unity会每一帧执行一次MoveNext。</p>
-<p>如果yield return 返回的对象为WaitForSecond等，Unity会据此判断下一次调用MoveNext是什么时候。如以上代码，Unity会在2秒后，再次调用MoveNext。</p>
-<h3 id="本质是什么"><a href="#本质是什么" class="headerlink" title="本质是什么"></a>本质是什么</h3><p>协程是一种异步执行代码的方式，是一种假的多线程。本质上，是 <strong>将一件任务，分到多个帧中去执行</strong> 。</p>
-<p>多线程（并发）与迭代器、枚举器、容器是毫不相干的两个概念，Unity为什么就把这两个概念联系到一起了呢？为什么实现协程要用到枚举类型？这种实现方案，本质上是用了Enumerator的什么特性呢？这是笔者一直困惑的。</p>
-<p>如果一个技术A，要用到技术B，那么A的需求，一定与B的特性是有共同点的，否则A不会用到B。那么我们从这个角度去思考上述问题。</p>
-<ul>
-<li><p>协程，本质是异步执行，把一个任务（一段代码），分多帧去执行。</p>
-</li>
-<li><p>.NET当中的Enumerator与yield return的机制，恰好本质上是把一段代码拆分为多个段落（部分），每次调用MoveNext，执行一段逻辑，获取一个返回值。</p>
-</li>
-</ul>
-<p>那么，两个技术自然就关联到了一起——Unity对Enumerator的MoveNext进行调用，就实现了将一个任务分多次去执行的需求。每一帧调用一次MoveNext，就实现了每一帧执行一部分任务。而Native层还对yield return返回的类型进行了判断，根据返回类型的不同 ，控制下一次调用MoveNext的时机，例如，如果返回值是new WaitForSeconds(2)，那么Unity会在2秒后调用下一个MoveNext，并获取返回值。如果返回值是UnityWebRequest.SendWebRequest，那么Unity会在相应的请求执行完后，继续执行后面的部分。</p>
-<h3 id="yield-return-的一些特殊含义"><a href="#yield-return-的一些特殊含义" class="headerlink" title="yield return 的一些特殊含义"></a>yield return 的一些特殊含义</h3><pre><code class="lang-csharp">
-//程序在下一帧中从当前位置继续执行
-
-yield return 0; 
-
-//程序在下一帧中从当前位置继续执行
-
-yield return null; 
-
-//程序等待N秒后从当前位置继续执行
-
-yield return new WaitForSeconds(N); 
-
-//在所有的渲染以及GUI程序执行完成后从当前位置继续执行
-
-yield new WaitForEndOfFrame(); 
-
-//所有脚本中的FixedUpdate()函数都被执行后从当前位置继续执行
-
-yield new WaitForFixedUpdate(); 
-
-//等待一个网络请求完成后从当前位置继续执行
-
-yield return WWW; 
-
-//等待一个xxx的协程执行完成后从当前位置继续执行
-
-yield return StartCoroutine(xxx); 
-
-//如果使用yield break语句，将会导致协程的执行条件不被满足，不会从当前的位置继续执行程序，而是直接从当前位置跳出函数体，回到函数的根部
-
-yield break; 
-
-yield return IEnumerator自己定义实现类，等待到自定义的时间或事件结束。
-</code></pre>
-<h3 id="一些Demo"><a href="#一些Demo" class="headerlink" title="一些Demo"></a>一些Demo</h3><pre><code class="lang-csharp">
-//下面定义了一个协程函数，注意必须使用IEnumerator作为返还值才能成为协程函数。 
-
-IEnumerator Test() 
-
-{ 
-
-for(int i = 0; i&lt;1000 ; ++i) 
-
-{ 
-
-ans += i; yield return 0;//挂起，下一帧再来从这个位置继续执行。 
-
-} 
-
-j+=2; 
-
-yield return 0;//挂起，下一帧再来从这个位置继续执行。 ++j; 
-
-yield return 0;//挂起，下一帧再来从这个位置继续执行。
-
-}
-</code></pre>
-<p>Demo1:</p>
-<pre><code class="lang-csharp">
-//3s后执行Debug.Log
-
-IEnumerator Test()
-
-{ 
-
-for(float timer = 0.0f; timer &lt; 3.0f ; timer += Time.DeltaTime){ 
-
-yield return 0;//挂起，下一帧再来从这个位置继续执行。
-
-} 
-
-Debug.Log(&quot;启动协程3s后&quot;); 
-
-}
-</code></pre>
-<p>Demo2:</p>
-<pre><code class="lang-csharp">
-IEnumerator TestWaitForSeconds()
-
-{ 
-
-//3s后执行Debug.Log;
-
-yield return new WaitForSeconds(3.0f); 
-
-Debug.Log(&quot;启动协程3s后&quot;); 
-
-}
-</code></pre>
-<h3 id="AssetBundle异步加载"><a href="#AssetBundle异步加载" class="headerlink" title="AssetBundle异步加载"></a>AssetBundle异步加载</h3><pre><code class="lang-csharp">
-/// &lt;summary&gt;
-
-/// 从文件进行异步加载
-
-/// &lt;/summary&gt;
-
-/// &lt;param name=&quot;abFullPath&quot;&gt;ab包的绝对路径&lt;/param&gt;
-
-/// &lt;param name=&quot;finishCallBack&quot;&gt;完成加载回调，返回加载的AssetBundle&lt;/param&gt;
-
-/// &lt;param name=&quot;updateCallBack&quot;&gt;加载过程中的更新回调，返回加载进度&lt;/param&gt;
-
-/// &lt;returns&gt;&lt;/returns&gt;
-
-IEnumerator LoadABFileAsync(string abFullPath,Action&lt;AssetBundle&gt; finishCallBack, Action&lt;float&gt; updateCallBack=null)
-
-{ 
-
-AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(abFullPath); 
-
-while (!request.isDone) 
-
-{ 
-
-if(updateCallBack != null) 
-
-{ 
-
-updateCallBack(request.progress); 
-
-} 
-
-yield return null; 
-
-} 
-
-yield return request; 
-
-if(finishCallBack!=null) 
-
-finishCallBack(request.assetBundle); 
-
-} 
-
-private void Start()
-
-{ 
-
-assetPath = Application.dataPath + &quot;/../MyAssetBundles/&quot;; 
-
-StartCoroutine(LoadABFileAsync(assetPath + assetBundleName, OnFinish, OnUpdate)); 
-
-} 
-
-private void OnUpdate(float obj)
-
-{ 
-
-Debug.Log(obj); 
-
-} 
-
-private void OnFinish(AssetBundle obj)
-
-{ 
-
-Instantiate(obj.LoadAsset(loadPrefabName)); 
-
-obj.Unload(false); 
-
-}
-</code></pre>
-<h3 id="UnityWebRequest"><a href="#UnityWebRequest" class="headerlink" title="UnityWebRequest"></a>UnityWebRequest</h3><pre><code class="lang-csharp">
-using UnityEngine; 
-
-using UnityEngine.Networking; 
-
-using System.Collections; 
-
-public class TestWebRequest : MonoBehaviour { 
-
-void Start() { 
-
-StartCoroutine(GetText()); 
-
-} 
-
-IEnumerator GetText() { 
-
-UnityWebRequest www = new UnityWebRequest(&quot;http://www.my-server.com&quot;); 
-
-www.downloadHandler = new DownloadHandlerBuffer(); 
-
-yield return www.SendWebRequest(); 
-
-if (www.result != UnityWebRequest.Result.Success) { 
-
-Debug.Log(www.error); 
-
-} 
-
-else { 
-
-// Show results as text
-
-Debug.Log(www.downloadHandler.text); 
-
-// Or retrieve results as binary data
-
-byte[] results = www.downloadHandler.data; 
-
-} 
-
-} 
-
-}
-</code></pre>
-<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref:"></a>Ref:</h2><p><a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/keywords/yield" target="_blank" rel="noopener">https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/keywords/yield</a></p>
- 
+  <pre><code>* 转自：https://www.jianshu.com/p/fa73c0f6762d
+</code></pre><h2 id="什么是RenderTexture"><a href="#什么是RenderTexture" class="headerlink" title="什么是RenderTexture?"></a>什么是RenderTexture?</h2><p>RenderTexture是unity定义的一种特殊的Texture类型,它是连接着一个FrameBufferObject的存在于GPU端的Texture(Server-Side Texture),从上面对RenderTexture的解释我们了解到要先知道Texture和FrameBufferObject是什么</p>
+<h2 id="从Texture到FrameBuffer"><a href="#从Texture到FrameBuffer" class="headerlink" title="从Texture到FrameBuffer"></a>从Texture到FrameBuffer</h2><p>纹理是如何被渲染到屏幕上的 ,起初纹理存在硬盘(RAM)里,它被cpu解压缩(数据在cpu端它就只是二进制数据),如果想要显示它,那么数据将会被发送给(上传到,cpu和gpu之间的通信可以理解成client和server之间的通信)GPU,gpu将它放在显存(VARM)中,显存中有一块内存区域叫做RenderBuffer(渲染缓存),RenderBuffer只是数据缓存,它还不能用作Texture渲染,尽管它现在已经是一个texture了,在这里 texture等待着被渲染,当要渲染这个Texture时,会生成一个FrameBuffer(帧缓存),当这个帧缓存被添加到默认的帧缓存物体上(FrameBufferObject)时,它就会被绘制到屏幕上.FrameBuffer指向的是显存中RenderBuffer的地址,简单的来说,RenderBuffer需要附加在FrameBuffer上,它才能是五颜六色的图片,否则它只是显存上的一堆数据,</p>
+<h2 id="FrameBufferObject"><a href="#FrameBufferObject" class="headerlink" title="FrameBufferObject"></a>FrameBufferObject</h2><p>FrameBufferObject是一个集合,集合了FrameBuffer,通过快速刷新Framebuffer实现动态效果,最典型的FBO就是Unity的Main Camera,它是默认的FBO,是gpu里渲染结果的目的地.但是现代gpu通常可以创建很多其他的FBO(Unity中可以创建多个Camera)，这些FBO不连接窗口区域，这种我们创建的FBO的存在目的就是允许我们将渲染结果保存在gpu的一块存储区域，待之后使用,这种用法叫做离屏渲染，这是一个非常有用的东西。Camera 输出的FBO,可以嵌在另一个FBO中,Unity中使用RenderTexture来接收FBO(可视化FBO),Game窗口是一个特殊的RenderTexture,它允许多个FBO叠加渲染,当Camera的RenderTarget都设置为null时表示输出到game窗口(没有摄像机的RenderTaget为null会显示没有摄像机进行渲染),设置不为null表示输出到某个RT.</p>
+<h2 id="如何使用FrameBufferObject"><a href="#如何使用FrameBufferObject" class="headerlink" title="如何使用FrameBufferObject?"></a>如何使用FrameBufferObject?</h2><p>1.将这个FBO上的结果传回CPU这边的贴图，在gles中的实现一般是ReadPixels（）这样的函数，这个函数是将当前设为可读的FBO拷贝到cpu这边的一个存储buffer，没错如果当前设为可读的FBO是那个默认FBO，那这个函数就是在截屏，如果是你自己创建的FBO，那就把刚刚绘制到上面的结果从gpu存储拿回内存。</p>
+<ol>
+<li>将这个FBO上的结果拷贝到一个gpu上的texture，在gles中的实现一般是CopyTexImage2D（），它一般是将可读的FBO的一部分拷贝到存在于gpu上的一个texture对象中，直接考到server-sider就意味着可以马上被gpu渲染使用</li>
+</ol>
+<p>3.将这个fbo直接关联一个gpu上的texture对象，这样就等于在绘制时就直接绘制到这个texure上，这样也省去了拷贝时间，gles中一般是使用FramebufferTexture2D（）这样的接口。</p>
+<h2 id="unity是如何使用FBO的"><a href="#unity是如何使用FBO的" class="headerlink" title="unity是如何使用FBO的?"></a>unity是如何使用FBO的?</h2><p>Unity通过上面说的第三个方法将FBO输出到RenderTexture,在unity里要使用这个FBO,只能基于这个RenderTexture(目前我知道的是这样,可能有我不知道的用法).</p>
+<p>在Unity固定渲染管线中(Unity2019.3以后 自定义渲染管线脱离预览版,新的通用渲染管线Camera设置发生了改变,如果依然使用固定渲染管线则以下通用),通过Camera组件来使用FBO,多摄像机使用下,根据ClearFlags来决定渲染内容:</p>
+<p>需要强调的是Clear操作, 多Camera下,DepthOnly 和Don’t Clear实际上都使Clear操作失效了 ,</p>
+<h2 id="RenderTexture的用途"><a href="#RenderTexture的用途" class="headerlink" title="RenderTexture的用途?"></a>RenderTexture的用途?</h2><p>1.屏幕后处理,3d游戏最基本的后处理是抗锯齿,从Unity的FrameDebugger(可以看到所有FrameBuffer,不管它们属于哪个FBO)中可以看到抗锯齿的操作在OverlayUI之前,所以各位做2d游戏的可以选择把抗锯齿关掉,其他的后处理如bloom,HDR等都是操作屏幕这个默认的RenderTexture,配合上相关效果的Material </p>
+<p>2.在Scene中直接将RT作为Texture传给其他材质球,操作是调用Material.SetTexture 为该RT,即可实现在另一个表面渲染另一个Camera的内容.可以制作后视镜功能</p>
+<p>3.copy回cpu端的内存:基本操作是在当前帧渲染完毕后(协程中, yield return new WaitForEndOfFrame()),设置RenderTexture.active为目标RenderTexture(因为当前帧已渲染过,所以该RenderTexture不会被渲染).Texture.ReadPixels保存到显存.Texture.GetRawTextureData()读回cpu内存,可以保存到硬盘或者通过互联网通信(在unity中实现的截屏,录屏,实时共享屏幕).</p>
+<p>以上2,3都属于离屏渲染的应用.</p>
+<h2 id="转自：https-www-jianshu-com-p-fa73c0f6762d"><a href="#转自：https-www-jianshu-com-p-fa73c0f6762d" class="headerlink" title="转自：https://www.jianshu.com/p/fa73c0f6762d"></a>转自：<a href="https://www.jianshu.com/p/fa73c0f6762d" target="_blank" rel="noopener">https://www.jianshu.com/p/fa73c0f6762d</a></h2> 
       <!-- reward -->
       
     </div>

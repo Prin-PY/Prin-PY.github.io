@@ -171,6 +171,160 @@
     
     
     <article
+  id="post-Unity3D-U3D资源优化（零碎）知识点汇总"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-U3D%E8%B5%84%E6%BA%90%E4%BC%98%E5%8C%96%EF%BC%88%E9%9B%B6%E7%A2%8E%EF%BC%89%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"
+    >U3D资源优化（零碎）知识点汇总</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-U3D%E8%B5%84%E6%BA%90%E4%BC%98%E5%8C%96%EF%BC%88%E9%9B%B6%E7%A2%8E%EF%BC%89%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.277Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Audio"><a href="#Audio" class="headerlink" title="Audio"></a>Audio</h2><h3 id="ImportSettings"><a href="#ImportSettings" class="headerlink" title="ImportSettings"></a>ImportSettings</h3><p>Force To Mono：将多声道音频混合为单声道，一般手机使用单声道足够满足需求<br>Load In Background：When this option is enabled, the loading of the clip will happen at a delayed time on a separate thread, without blocking the main thread. 分线程加载， 不阻塞主线程<br>Ambisonic：是否环绕声</p>
+<p>Load Type：加载方式</p>
+<p><strong>Decompress On Load</strong> ：在音频 <strong>加载后马上解压缩</strong> 。对 <strong>较小的压缩声音</strong> 使用此选项可以避免动态解压缩的性能开销，不过在加载时解压缩Vorbis编码的声音将使用大约十倍于内存的内存（对于ADPCM编码约为3.5倍），因此请勿对大文件使用此选项。<br><strong>Compressed In Memory</strong> ：将声音压缩在内存中并在 <strong>播放时解压缩</strong> 。 此选项具有轻微的性能开销（特别是对于Ogg / Vorbis压缩文件），因此仅将其 <strong>用于加载时解压缩将使用大量内存的较大的文件</strong> 。 解压缩发生在 <strong>混音器线程</strong> 上，可以在探查器窗口的音频窗格中的”DSP CPU(Digital Signal Processor)”部分进行监视。<br><strong>Streaming</strong> ： <strong>动态解码</strong> 声音。 此方法使用 <strong>最少量的内存来缓冲从磁盘中逐步读取并在运行中解码的压缩数据</strong> 。 解压缩发生在单独的流线程上，可以在Profiler窗口的音频窗格的”Streaming CPU”部分中监视其CPU使用情况。 即使没有加载任何音频数据，Streaming的剪辑也有大约200KB的消耗。</p>
+<p>Preload Audio Data：预加载</p>
+<p>Compression Format<br>PCM：此选项以 <strong>更大的文件</strong> 大小为代价提供 <strong>更高的质量</strong> ，并且最适 <strong>合非常短的声音</strong> 效果。<br>ADPCM：这种格式对于 <strong>包含大量噪音</strong> 且 <strong>需要大量播放</strong> 的声音非常有用，例如脚步声，撞击声，武器。 <strong>压缩比</strong> 是PCM的 <strong>3.5倍</strong> ，而且 <strong>CPU使用率</strong> 远 <strong>低</strong> 于MP3 / Vorbis格式，这使其成为上述类别声音的首选。<br>Vorbis/MP3：压缩为较小的文件，但与PCM音频相比 <strong>质量稍低</strong> 。 <strong>压缩量</strong> 可通过”质量”滑块进行 <strong>配置</strong> 。 此格式最适合 <strong>中等长度</strong> 的音效和音乐。</p>
+<p>Sample Rate Setting： 采样率设置<br>Preserve Sample Rate: 保留采样率<br>Optimize Sample Rate：此设置根据分析的最高频率内容自动优化采样率。<br>Override Sample Rate：此设置允许手动覆盖采样率，因此可以有效地避免采样内容丢失。</p>
+<blockquote>
+<p>要关注:<br> OriginalSize:磁盘大小<br> ImportedSize:内存大小<br> Ratio:ImportedSize占OriginalSize比例</p>
+</blockquote>
+<h3 id="设置建议"><a href="#设置建议" class="headerlink" title="设置建议"></a>设置建议</h3><ol>
+<li><p>建议都勾选ForceToMono：将多声道音频混合为单声道</p>
+</li>
+<li><p>在iOS上请使用MP3格式，在Android上使用Vorbis</p>
+</li>
+<li><p>场景等长音效使用Streaming + Vorbis/MP3</p>
+</li>
+<li><p>技能等短音效使用DecompressOnLoad + ADPCM</p>
+</li>
+<li><p>采样率选择手动控制到22050左右</p>
+</li>
+<li><p>短音频可选格式aifff或wav，长音频可选格式mp3或ogg</p>
+</li>
+</ol>
+<h3 id="导入后处理脚本"><a href="#导入后处理脚本" class="headerlink" title="导入后处理脚本"></a>导入后处理脚本</h3><pre><code class="lang-csharp">
+using System; 
+
+using UnityEngine; 
+
+using System.Collections; 
+
+using UnityEditor; 
+
+public class MyAudioProcessor : AssetPostprocessor
+
+{ 
+
+public void OnPreprocessAudio()
+
+{ 
+
+if (!assetPath.StartsWith(&quot;Assets/MyAudio&quot;)) return; 
+
+AudioImporter audioImporter = (AudioImporter)assetImporter; 
+
+audioImporter.forceToMono = true; 
+
+//Android设置
+
+AudioImporterSampleSettings androidSettings = new AudioImporterSampleSettings(); 
+
+androidSettings.loadType = AudioClipLoadType.DecompressOnLoad; //长音效用Streaming，短的用DecompressOnLoad
+
+androidSettings.compressionFormat = AudioCompressionFormat.Vorbis; //Android用Vorbis
+
+androidSettings.quality = 100; 
+
+androidSettings.sampleRateSetting = AudioSampleRateSetting.OverrideSampleRate; //采样率控制到22050左右
+
+androidSettings.sampleRateOverride = 22050; 
+
+audioImporter.SetOverrideSampleSettings(&quot;Android&quot;, androidSettings); 
+
+//iOS设置
+
+AudioImporterSampleSettings iOSSettings = new AudioImporterSampleSettings(); 
+
+iOSSettings.loadType = AudioClipLoadType.DecompressOnLoad; //长音效用Streaming，短的用DecompressOnLoad
+
+iOSSettings.compressionFormat = AudioCompressionFormat.MP3; //iOS用MP3
+
+iOSSettings.quality = 100; 
+
+iOSSettings.sampleRateSetting = AudioSampleRateSetting.OverrideSampleRate; //采样率控制到22050左右
+
+iOSSettings.sampleRateOverride = 22050; 
+
+audioImporter.SetOverrideSampleSettings(&quot;iOS&quot;, iOSSettings); 
+
+} 
+
+}
+</code></pre>
+<blockquote>
+<p>Ref:<br> <a href="https://blog.csdn.net/LeoHiJack/article/details/95228708" target="_blank" rel="noopener">https://blog.csdn.net/LeoHiJack/article/details/95228708</a><br> <a href="https://blog.csdn.net/u013244147/article/details/104548393" target="_blank" rel="noopener">https://blog.csdn.net/u013244147/article/details/104548393</a><br> <a href="https://zhuanlan.zhihu.com/p/27438828" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/27438828</a></p>
+</blockquote>
+<h2 id="Cull-Transparent-Mesh"><a href="#Cull-Transparent-Mesh" class="headerlink" title="Cull Transparent Mesh"></a>Cull Transparent Mesh</h2><p>Unity2018.2加入的新功能：Image对应的CanvasRenderer组件上可以勾选Cull Transparent Mesh</p>
+<blockquote>
+<p>官方描述：Indicates whether geometry emitted by this renderer can be ignored when the vertex color alpha is close to zero for every vertex of the mesh.</p>
+</blockquote>
+<p>若Image的Color属性的Alpha值接近于0，则该Image是看不见的，如果对其进行渲染，则会造成不必要的渲染性能开销。<br>如果在Image对应的CanvasRenderer开启Cull Transparent Mesh，则Unity进行渲染时会对该Image的Color的Alpha值进行检测，若该值接近于0，就忽略该Image，不进行绘制，节约性能。</p>
+<p><img src="U3D资源优化（零碎）知识点汇总/2.png" alt="Alt text"></p>
+<p><img src="U3D资源优化（零碎）知识点汇总/1.png" alt="Alt text"></p>
+<p>如上图，第二张图Image组件的Alpha值为0，由FrameDebugger可见，Unity没有对该Image进行绘制。</p>
+<p>更具体的，可见讨论：<br>I assume this culling test has a cost, which is why it’s not enabled by default/done automatically.</p>
+<p>实现上：<br>this checkbox toggles a shader feature to cull pixels in the fragment shader with very low alpha value.</p>
+<p>Docs would seem to indicate this uses the vertex colour alpha at the vertex stage:</p>
+<p><a href="https://docs.unity3d.com/ScriptReference/CanvasRenderer-cullTransparentMesh.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/CanvasRenderer-cullTransparentMesh.html</a></p>
+<p>But e.g:</p>
+<p><a href="https://github.com/TwoTailsGames/Un...er/DefaultResourcesExtra/UI/UI-Default.shader" target="_blank" rel="noopener">https://github.com/TwoTailsGames/Un…er/DefaultResourcesExtra/UI/UI-Default.shader</a></p>
+<blockquote>
+<p>Ref:<br> <a href="https://twitter.com/dmitriy_focus/status/1166706421389496321?lang=en" target="_blank" rel="noopener">https://twitter.com/dmitriy_focus/status/1166706421389496321?lang=en</a><br> <a href="https://docs.unity3d.com/ScriptReference/CanvasRenderer-cullTransparentMesh.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/CanvasRenderer-cullTransparentMesh.html</a><br> <a href="https://forum.unity.com/threads/practical-effect-of-cull-transparent-mesh.746711/" target="_blank" rel="noopener">https://forum.unity.com/threads/practical-effect-of-cull-transparent-mesh.746711/</a></p>
+</blockquote>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-Skinned-Mesh-Renderer"
   class="article article-type-post"
   itemscope
@@ -2737,63 +2891,6 @@ return Vector3.zero;
 </div>
 <h2 id="Refs"><a href="#Refs" class="headerlink" title="Refs"></a>Refs</h2><p><a href="https://www.cnblogs.com/zhanghaipeng-Unity3D/p/4714973.html" target="_blank" rel="noopener">https://www.cnblogs.com/zhanghaipeng-Unity3D/p/4714973.html</a><br><a href="https://blog.csdn.net/qq_29579137/article/details/77369734" target="_blank" rel="noopener">https://blog.csdn.net/qq_29579137/article/details/77369734</a><br><a href="https://www.bbsmax.com/A/QV5ZQvObJy/" target="_blank" rel="noopener">https://www.bbsmax.com/A/QV5ZQvObJy/</a><br><a href="https://blog.csdn.net/nanggong/article/details/54728823" target="_blank" rel="noopener">https://blog.csdn.net/nanggong/article/details/54728823</a><br><a href="https://answer.uwa4d.com/question/5a8f77970b827e2c0bfdcfaf" target="_blank" rel="noopener">https://answer.uwa4d.com/question/5a8f77970b827e2c0bfdcfaf</a></p>
 <p><a href="http://www.luzexi.com/2018/08/03/Unity3D%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E4%B9%8B%E8%BF%9B%E9%98%B6%E4%B8%BB%E7%A8%8B-3D%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%8A%A8%E7%94%BB2" target="_blank" rel="noopener">http://www.luzexi.com/2018/08/03/Unity3D%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E4%B9%8B%E8%BF%9B%E9%98%B6%E4%B8%BB%E7%A8%8B-3D%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%8A%A8%E7%94%BB2</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-LUA相关"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-LUA%E7%9B%B8%E5%85%B3/"
-    >LUA相关</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-LUA%E7%9B%B8%E5%85%B3/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.253Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="相关网站"><a href="#相关网站" class="headerlink" title="相关网站"></a>相关网站</h2><ul>
-<li><p><a href="https://github.com/mpeterv/luacheck" target="_blank" rel="noopener">https://github.com/mpeterv/luacheck</a></p>
-</li>
-<li></li>
-</ul>
  
       <!-- reward -->
       

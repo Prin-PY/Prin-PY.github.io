@@ -171,6 +171,59 @@
     
     
     <article
+  id="post-Unity3D-Collider"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-Collider/"
+    >Collider</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-Collider/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.242Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="MeshCollider"><a href="#MeshCollider" class="headerlink" title="MeshCollider"></a>MeshCollider</h1><p>网格碰撞体 (Mesh Collider) 采用网格资源 (Mesh Asset) 并基于该网格构建其碰撞体 (Collider)。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-BatchMode"
   class="article article-type-post"
   itemscope
@@ -313,6 +366,181 @@ taskkill /f /im unity.exe
 <p>-executeMethod(ClassName.MethodName) 调用Unity编辑器某个类型中的某个方法</p>
 <p>一旦Unity启动，项目打开，并且执行了可选的Asset Server更新之后，执行静态方法。这可以用于执行持续集成，执行单元测试，构建或准备数据等任务。要从命令行进程返回错误，请抛出异常，导致Unity退出代码1，或者使用非零返回代码调用EditorApplication.Exit。要传递参数，将它们添加到命令行并使用函数检索它们System.Environment.GetCommandLineArgs。要使用-executeMethod，您需要将封闭的脚本放在编辑器文件夹中。要执行的方法必须定义为static。</p>
 <p>Ref: <a href="https://blog.csdn.net/qq_29579137/article/details/76598929" target="_blank" rel="noopener">https://blog.csdn.net/qq_29579137/article/details/76598929</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-CSharp调用Java-与Android交互"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-CSharp%E8%B0%83%E7%94%A8Java-%E4%B8%8EAndroid%E4%BA%A4%E4%BA%92/"
+    >CSharp调用Java&amp;与Android交互</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-CSharp%E8%B0%83%E7%94%A8Java-%E4%B8%8EAndroid%E4%BA%A4%E4%BA%92/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.239Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Heading"><a href="#Heading" class="headerlink" title="Heading"></a>Heading</h2><p><a href="https://www.jb51.net/article/134135.htm" target="_blank" rel="noopener">https://www.jb51.net/article/134135.htm</a><br><a href="https://blog.csdn.net/m0_38096376/article/details/69567409" target="_blank" rel="noopener">https://blog.csdn.net/m0_38096376/article/details/69567409</a><br><a href="https://www.jianshu.com/p/b5e3cfcdf081" target="_blank" rel="noopener">https://www.jianshu.com/p/b5e3cfcdf081</a><br><a href="https://www.cnblogs.com/wufeng0927/p/5178216.html" target="_blank" rel="noopener">https://www.cnblogs.com/wufeng0927/p/5178216.html</a></p>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><pre><code class="lang-csharp">
+using UnityEngine; 
+
+public class NewBehaviourScript : MonoBehaviour
+
+{ 
+
+float e = 0; 
+
+private void OnGUI()
+
+{ 
+
+GUILayout.Label(string.Format($&quot;&lt;size=80&gt;电池总容量{Power.capacity}毫安,电压{Power.voltage}伏&lt;/size&gt;&quot;)); 
+
+GUILayout.Label(string.Format($&quot;&lt;size=80&gt;实时电流{e}毫安,实时功率{(int)(e * Power.voltage)},满电量能玩{((Power.capacity /e).ToString(&quot;f2&quot;))}小时&lt;/size&gt;&quot;)); 
+
+} 
+
+float t = 0f; 
+
+private void Update()
+
+{ 
+
+if(Time.time - t &gt; 1f) 
+
+{ 
+
+t = Time.time; 
+
+e = Power.electricity; 
+
+} 
+
+} 
+
+} 
+
+public class Power
+
+{ 
+
+static public float electricity 
+
+{ 
+
+get { 
+
+#if UNITY_ANDROID
+
+//获取电流（微安），避免频繁获取，取一次大概2毫秒
+
+float electricity = (float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, PARAM_BATTERY); 
+
+//小于1W就认为它的单位是毫安，否则认为是微安
+
+return ToMA(electricity); 
+
+#else
+
+return -1f; 
+
+#endif
+
+} 
+
+} 
+
+//获取电压 伏
+
+static public float voltage { get; private set; } 
+
+//获取电池总容量 毫安
+
+static public int capacity { get; private set; } 
+
+//获取实时电流参数
+
+static object[] PARAM_BATTERY = new object[] { 2 }; //BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
+
+static AndroidJavaObject manager; 
+
+static Power()
+
+{ 
+
+#if UNITY_ANDROID
+
+AndroidJavaClass unityPlayer = new AndroidJavaClass(&quot;com.unity3d.player.UnityPlayer&quot;); 
+
+AndroidJavaObject currActivity = unityPlayer.GetStatic&lt;AndroidJavaObject&gt;(&quot;currentActivity&quot;); 
+
+manager = currActivity.Call&lt;AndroidJavaObject&gt;(&quot;getSystemService&quot;, new object[] { &quot;batterymanager&quot; }); 
+
+capacity = (int)(ToMA((float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, new object[] { 1 })) / ((float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, new object[] { 4 })/100f)); //BATTERY_PROPERTY_CHARGE_COUNTER 1 BATTERY_PROPERTY_CAPACITY 4
+
+AndroidJavaObject receive = currActivity.Call&lt;AndroidJavaObject&gt;(&quot;registerReceiver&quot;, new object[] { null,new AndroidJavaObject(&quot;android.content.IntentFilter&quot;, new object[] { &quot;android.intent.action.BATTERY_CHANGED&quot; }) }); 
+
+if (receive != null) 
+
+{ 
+
+voltage = (float)receive.Call&lt;int&gt;(&quot;getIntExtra&quot;, new object[] { &quot;voltage&quot;,0 })/1000f; //BatteryManager.EXTRA_VOLTAGE
+
+} 
+
+#endif
+
+} 
+
+static float ToMA(float maOrua)
+
+{ 
+
+return maOrua &lt; 10000 ? maOrua : maOrua / 1000f; 
+
+} 
+
+}
+</code></pre>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.xuanyusong.com/archives/4753" target="_blank" rel="noopener">https://www.xuanyusong.com/archives/4753</a></p>
  
       <!-- reward -->
       
@@ -1145,181 +1373,6 @@ Debug.LogError(&quot;switchOrientation failed, can not find or add resoulution f
 <h4 id="Orthographic"><a href="#Orthographic" class="headerlink" title="Orthographic"></a>Orthographic</h4><p>较容易理解。size参数相当于Perspective模式下的FoV。</p>
 <p>摄像机高度 = 摄像机orthographicSize <em> 2<br>摄像机实际宽度 = 摄像机高度 </em> 屏幕宽高比<br>摄像机实际宽度 = 摄像机orthographicSize <em> 2 </em> 屏幕宽高比</p>
 <h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.cnblogs.com/unity-carry/p/9512662.html" target="_blank" rel="noopener">https://www.cnblogs.com/unity-carry/p/9512662.html</a><br><a href="https://www.jianshu.com/p/547ef7f4a313" target="_blank" rel="noopener">https://www.jianshu.com/p/547ef7f4a313</a><br><a href="https://www.jianshu.com/p/95cb4621206e" target="_blank" rel="noopener">https://www.jianshu.com/p/95cb4621206e</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-CSharp调用Java-与Android交互"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-CSharp%E8%B0%83%E7%94%A8Java-%E4%B8%8EAndroid%E4%BA%A4%E4%BA%92/"
-    >CSharp调用Java&amp;与Android交互</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-CSharp%E8%B0%83%E7%94%A8Java-%E4%B8%8EAndroid%E4%BA%A4%E4%BA%92/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.239Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="Heading"><a href="#Heading" class="headerlink" title="Heading"></a>Heading</h2><p><a href="https://www.jb51.net/article/134135.htm" target="_blank" rel="noopener">https://www.jb51.net/article/134135.htm</a><br><a href="https://blog.csdn.net/m0_38096376/article/details/69567409" target="_blank" rel="noopener">https://blog.csdn.net/m0_38096376/article/details/69567409</a><br><a href="https://www.jianshu.com/p/b5e3cfcdf081" target="_blank" rel="noopener">https://www.jianshu.com/p/b5e3cfcdf081</a><br><a href="https://www.cnblogs.com/wufeng0927/p/5178216.html" target="_blank" rel="noopener">https://www.cnblogs.com/wufeng0927/p/5178216.html</a></p>
-<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><pre><code class="lang-csharp">
-using UnityEngine; 
-
-public class NewBehaviourScript : MonoBehaviour
-
-{ 
-
-float e = 0; 
-
-private void OnGUI()
-
-{ 
-
-GUILayout.Label(string.Format($&quot;&lt;size=80&gt;电池总容量{Power.capacity}毫安,电压{Power.voltage}伏&lt;/size&gt;&quot;)); 
-
-GUILayout.Label(string.Format($&quot;&lt;size=80&gt;实时电流{e}毫安,实时功率{(int)(e * Power.voltage)},满电量能玩{((Power.capacity /e).ToString(&quot;f2&quot;))}小时&lt;/size&gt;&quot;)); 
-
-} 
-
-float t = 0f; 
-
-private void Update()
-
-{ 
-
-if(Time.time - t &gt; 1f) 
-
-{ 
-
-t = Time.time; 
-
-e = Power.electricity; 
-
-} 
-
-} 
-
-} 
-
-public class Power
-
-{ 
-
-static public float electricity 
-
-{ 
-
-get { 
-
-#if UNITY_ANDROID
-
-//获取电流（微安），避免频繁获取，取一次大概2毫秒
-
-float electricity = (float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, PARAM_BATTERY); 
-
-//小于1W就认为它的单位是毫安，否则认为是微安
-
-return ToMA(electricity); 
-
-#else
-
-return -1f; 
-
-#endif
-
-} 
-
-} 
-
-//获取电压 伏
-
-static public float voltage { get; private set; } 
-
-//获取电池总容量 毫安
-
-static public int capacity { get; private set; } 
-
-//获取实时电流参数
-
-static object[] PARAM_BATTERY = new object[] { 2 }; //BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
-
-static AndroidJavaObject manager; 
-
-static Power()
-
-{ 
-
-#if UNITY_ANDROID
-
-AndroidJavaClass unityPlayer = new AndroidJavaClass(&quot;com.unity3d.player.UnityPlayer&quot;); 
-
-AndroidJavaObject currActivity = unityPlayer.GetStatic&lt;AndroidJavaObject&gt;(&quot;currentActivity&quot;); 
-
-manager = currActivity.Call&lt;AndroidJavaObject&gt;(&quot;getSystemService&quot;, new object[] { &quot;batterymanager&quot; }); 
-
-capacity = (int)(ToMA((float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, new object[] { 1 })) / ((float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, new object[] { 4 })/100f)); //BATTERY_PROPERTY_CHARGE_COUNTER 1 BATTERY_PROPERTY_CAPACITY 4
-
-AndroidJavaObject receive = currActivity.Call&lt;AndroidJavaObject&gt;(&quot;registerReceiver&quot;, new object[] { null,new AndroidJavaObject(&quot;android.content.IntentFilter&quot;, new object[] { &quot;android.intent.action.BATTERY_CHANGED&quot; }) }); 
-
-if (receive != null) 
-
-{ 
-
-voltage = (float)receive.Call&lt;int&gt;(&quot;getIntExtra&quot;, new object[] { &quot;voltage&quot;,0 })/1000f; //BatteryManager.EXTRA_VOLTAGE
-
-} 
-
-#endif
-
-} 
-
-static float ToMA(float maOrua)
-
-{ 
-
-return maOrua &lt; 10000 ? maOrua : maOrua / 1000f; 
-
-} 
-
-}
-</code></pre>
-<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.xuanyusong.com/archives/4753" target="_blank" rel="noopener">https://www.xuanyusong.com/archives/4753</a></p>
  
       <!-- reward -->
       
@@ -2631,259 +2684,6 @@ Material:
 <p><strong>More to come</strong></p>
 <p>I fear that I’ve spent too much time here teasing future blog posts. We have a lot to say, and it simply won’t all fit in one post. Next time, we’ll dig into the code generated by il2cpp.exe to see how your project actually looks to the C++ compiler.</p>
 <p><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;470.5&#39; height=&#39;470.5&#39; viewBox=&#39;0 0 470.5 470.5&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’599’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’600’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3cpath d=’M271.5 154.2v-40.5c0-6.1 0.3-10.8 0.8-14.1 0.6-3.3 1.9-6.6 3.9-9.9 2-3.2 5.2-5.5 9.7-6.7 4.5-1.2 10.4-1.9 17.9-1.9h40.5V0h-64.8c-37.5 0-64.4 8.9-80.8 26.7 -16.4 17.8-24.6 44-24.6 78.7v48.8h-48.5v81.1h48.5v235.3h97.4V235.3h64.8l8.6-81.1H271.5z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’601’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a><a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F&amp;text=An+introduction+to+IL2CPP+internals&amp;via=unity3d" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;450&#39; height=&#39;450&#39; viewBox=&#39;0 0 450 450&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’603’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’604’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3cpath d=’M450 85.7c-17.7 7.6-35.4 12.4-53.1 14.3 20-12 33.5-28.9 40.5-50.8 -18.3 10.8-37.8 18.3-58.5 22.3 -18.3-19.4-40.7-29.1-67.4-29.1 -25.5 0-47.2 9-65.2 27 -18 18-27 39.7-27 65.2 0 6.9 0.8 13.9 2.3 21.1 -37.7-1.9-73-11.4-106.1-28.4C82.5 110.2 54.4 87.5 31.4 59.1c-8.4 14.3-12.6 29.8-12.6 46.5 0 15.8 3.7 30.5 11.1 44 7.4 13.5 17.4 24.5 30 32.8 -14.8-0.6-28.7-4.5-41.7-11.7v1.1c0 22.3 7 41.8 21 58.7 14 16.8 31.6 27.5 53 31.8 -8 2.1-16.1 3.1-24.3 3.1 -5.3 0-11.1-0.5-17.4-1.4 5.9 18.5 16.8 33.6 32.5 45.5 15.8 11.9 33.7 18 53.7 18.4 -33.5 26.3-71.7 39.4-114.5 39.4 -8.2 0-15.6-0.4-22.3-1.1 42.8 27.6 90 41.4 141.6 41.4 32.7 0 63.5-5.2 92.2-15.6 28.7-10.4 53.3-24.3 73.7-41.7 20.4-17.4 37.9-37.4 52.7-60.1 14.8-22.7 25.7-46.3 33-70.9 7.2-24.7 10.8-49.3 10.8-74.1 0-5.3-0.1-9.3-0.3-12C421.8 120.2 437.2 104.3 450 85.7z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’605’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F&amp;title=An+introduction+to+IL2CPP+internals&amp;summary=Almost+a+year+ago+now%2C+we+started+to+talk+about+the+future+of+scripting+in+Unity.+The+new+IL2CPP+scripting+backend+promised+to+bring+a+highly-performant%2C+highly-portable+virtual+machine+to+Unity.+In+January%2C+we+shipped+our+first+platform+using+IL2CPP%2C+iOS+64-bit.+The+Unity+5+release+brought+another+platform%2C+WebGL.+Thanks+to+the+input+from+%5B%26hellip%3B%5D&amp;source=Unity3d+Blog" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;438.5&#39; height=&#39;438.5&#39; viewBox=&#39;0 0 438.5 438.5&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’607’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’608’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3crect x=’5.4’ y=’145.9’ width=’94.2’ height=’282.9’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’609’ class=’js-evernote-checked’%3e%3c/rect%3e %3cpath d=’M408.8 171.7c-19.8-21.6-46-32.4-78.5-32.4 -12 0-22.9 1.5-32.7 4.4 -9.8 3-18.1 7.1-24.8 12.4 -6.8 5.3-12.1 10.3-16.1 14.8 -3.8 4.3-7.5 9.4-11.1 15.1v-40.2h-93.9l0.3 13.7c0.2 9.1 0.3 37.3 0.3 84.5 0 47.2-0.2 108.8-0.6 184.7h93.9V270.9c0-9.7 1-17.4 3.1-23.1 4-9.7 10-17.8 18.1-24.4 8.1-6.6 18.1-9.9 30.1-9.9 16.4 0 28.4 5.7 36.1 17 7.7 11.3 11.6 27 11.6 47V428.8h93.9V266.7C438.5 225 428.6 193.3 408.8 171.7zM53.1 9.7c-15.8 0-28.6 4.6-38.4 13.8C4.9 32.8 0 44.4 0 58.5c0 13.9 4.8 25.5 14.3 34.8 9.5 9.3 22.1 14 37.7 14h0.6c16 0 28.9-4.7 38.7-14 9.8-9.3 14.6-20.9 14.4-34.8 -0.2-14.1-5-25.7-14.6-35C81.6 14.3 68.9 9.7 53.1 9.7z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’610’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-Animation优化"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-Animation%E4%BC%98%E5%8C%96/"
-    >Animation优化</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-Animation%E4%BC%98%E5%8C%96/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.212Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p><strong>标签：</strong>|  <em>优化</em>  </p>
-<h2 id="优化方案"><a href="#优化方案" class="headerlink" title="优化方案"></a>优化方案</h2><ol>
-<li><p>Rig-&gt;Animation Type:改为Generic</p>
-</li>
-<li><p>Animations-&gt;Anim.Compression:Optimal</p>
-</li>
-<li><p>其他高级方式</p>
-</li>
-</ol>
-<h2 id="曲线数据存储与压缩"><a href="#曲线数据存储与压缩" class="headerlink" title="曲线数据存储与压缩"></a>曲线数据存储与压缩</h2><h3 id="存储方式"><a href="#存储方式" class="headerlink" title="存储方式"></a>存储方式</h3><h4 id="Stream-流"><a href="#Stream-流" class="headerlink" title="Stream(流)"></a>Stream(流)</h4><p>Use the “stream” method of storing data (values with time and tangent data for curved interpolation).<br>（保留时间和切线数据进行 <strong>曲线插值</strong> ）<br>This data occupies significantly <strong>more memory</strong> than the “dense” method.</p>
-<blockquote>
-<p>Streaming curves are very fast to decompress in the average use case.</p>
-</blockquote>
-<h4 id="Dense-密集的"><a href="#Dense-密集的" class="headerlink" title="Dense(密集的)"></a>Dense(密集的)</h4><p>Optimize animation curves using the “dense” method of storing data (discrete values which are interpolated between linearly).<br>（离散数值之间的 <strong>线性差值</strong> ）<br>不含有切线数据，使用较少内存<br>This method uses less significantly less memory than the “stream” method.<br>与“流”方法相比，此方法使用的内存要少得多。</p>
-<h4 id="Constant"><a href="#Constant" class="headerlink" title="Constant"></a>Constant</h4><p>Curves are optimised as constant (unchanging) values.<br>Unity selects this automatically if your animation files contain curves with unchanging values.</p>
-<h3 id="Compression方式"><a href="#Compression方式" class="headerlink" title="Compression方式"></a>Compression方式</h3><p>Unity引擎对导入的Clip提供三种压缩格式，Off、KeyframeReduction和Optimal。其中Off表示不压缩，Keyframe Reduction表示使用关键帧进行处理，Optimal则表示Unity引擎会根据动画曲线的特点来自动选择一个最优的压缩方式。</p>
-<h4 id="Off"><a href="#Off" class="headerlink" title="Off"></a>Off</h4><p>存储方式：Stream</p>
-<p>不压缩，官方不推荐</p>
-<blockquote>
-<p>Unity文档: This means that Unity doesn’t reduce keyframe count on import. Disabling animation compression leads to the highest precision animations, but slower performance and bigger file and runtime memory size. It is generally not advisable to use this option - if you need higher precision animation, you should enable keyframe reduction and lower allowed Animation Compression Error values instead.</p>
-</blockquote>
-<h4 id="Keyframe-Reduction"><a href="#Keyframe-Reduction" class="headerlink" title="Keyframe Reduction"></a>Keyframe Reduction</h4><p>存储方式：Stream<br>压缩方式：关键帧缩减算法</p>
-<h5 id="Keyframe-Reduction算法"><a href="#Keyframe-Reduction算法" class="headerlink" title="Keyframe Reduction算法"></a>Keyframe Reduction算法</h5><p>Basically key frame reduction will simply <strong>go through all key frames in your animation, and evaluate the animation curves with and without that key, and if the difference is smaller then some defined delta, the key is removed.</strong></p>
-<p><strong>error tolerance(误差宽容度，容错值)</strong> 或者称为 <strong>error threshold(误差阈值)</strong><br>值越小动画的精度越高，如果默认值的表现效果不过好，可以通过减小容错值来调。</p>
-<ul>
-<li><p>Rotation Error 角度值</p>
-</li>
-<li><p>Position Error 百分比值</p>
-</li>
-<li><p>Scale Error 百分比值</p>
-</li>
-</ul>
-<p>Unity compares the original curve to what the curve looks like after removing a specific keyframe and applies this test：<br>OriginalValue - ReducedValue &gt; OriginalValue * percentageOfError<br>Unity removes a keyframe if the delta between the original value and the reduced value is less than the original value multiplied by the error tolerance percentage.</p>
-<h4 id="Optimal"><a href="#Optimal" class="headerlink" title="Optimal"></a>Optimal</h4><p>存储方式：(Unity官方)Unity will use a heuristic algorithm to determine whether it is best to use the <strong>dense</strong> or <strong>stream</strong> method to store the data for each curve.<br>(笔者推测，可能对于unchanging的值做优化处理，使用constant方式存储)<br>压缩方式：Unity decide how to compress, either by <strong>keyframe reduction</strong> or by using <strong>dense format</strong>.</p>
-<p>If a track is very short or very noisy (which could happen with motion capture clips or baked simulations), the key reduction algorithm might not give appreciable gains and it is possible that a dense curve might end up having a smaller memory footprint than a streaming curve. </p>
-<blockquote>
-<p>Unity官方：<br> If your animation clips are imported with “Anim Compression” set to “Optimal” in the Animation import reference, Unity will use a heuristic（启发式的） algorithm to determine whether it is best to use the <strong>dense</strong> or <strong>stream</strong> method to <strong>store the data for each curve</strong>.</p>
-</blockquote>
-<h3 id="UWA性能对比实验"><a href="#UWA性能对比实验" class="headerlink" title="UWA性能对比实验"></a>UWA性能对比实验</h3><p><a href="https://blog.uwa4d.com/archives/Loading_AnimationClip.html" target="_blank" rel="noopener">https://blog.uwa4d.com/archives/Loading_AnimationClip.html</a></p>
-<ol>
-<li><p>Optimal压缩方式确实可以提升资源的加载效率，无论是在高端机、中端机还是低端机上；</p>
-</li>
-<li><p>硬件设备性能越好，其加载效率越高。但随着设备的提升，Keyframe Reduction和Optimal的加载效率提升已不十分明显；</p>
-</li>
-<li><p>Optimal压缩方式可能会降低动画的视觉质量，因此，是否最终选择Optimal压缩模式，还需根据最终视觉效果的接受程度来决定。</p>
-</li>
-</ol>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>从性能的角度来看，Optimal的方式内存占用是最低的，是我们最推荐的方案，但是可能会降低动画的视觉质量。Off是不压缩，Unity官方都不推荐的。Keyframe Reduction内存稍高于Optimal，在内存性能和效果上算是折中的方案，用户手动设置Keyframe Reduction问题不大。</p>
-<h2 id="优化方法"><a href="#优化方法" class="headerlink" title="优化方法"></a>优化方法</h2><h3 id="1-去掉AnimationClip中的无效曲线：例如ScaleCurve"><a href="#1-去掉AnimationClip中的无效曲线：例如ScaleCurve" class="headerlink" title="1. 去掉AnimationClip中的无效曲线：例如ScaleCurve"></a>1. 去掉AnimationClip中的无效曲线：例如ScaleCurve</h3><pre><code class="lang-csharp">
-using UnityEngine; 
-
-using UnityEditor; 
-
-using System.Collections.Generic; 
-
-public class RemoveCurve : AssetPostprocessor
-
-{ 
-
-void OnPostprocessModel(GameObject g)
-
-{ 
-
-Apply(g); 
-
-} 
-
-void Apply(GameObject g)
-
-{ 
-
-List&lt;AnimationClip&gt; animationClipList = new List&lt;AnimationClip&gt;(AnimationUtility.GetAnimationClips(g)); 
-
-if (animationClipList.Count == 0) 
-
-{ 
-
-AnimationClip[] objectList = UnityEngine.Object.FindObjectsOfType(typeof(AnimationClip)) as AnimationClip[]; 
-
-animationClipList.AddRange(objectList); 
-
-} 
-
-foreach (AnimationClip theAnimation in animationClipList) 
-
-{ 
-
-foreach (EditorCurveBinding theCurveBinding in AnimationUtility.GetCurveBindings(theAnimation)) 
-
-{ 
-
-string name = theCurveBinding.propertyName.ToLower(); 
-
-if (name.Contains(&quot;scale&quot;)) 
-
-{ 
-
-AnimationUtility.SetEditorCurve(theAnimation, theCurveBinding, null); 
-
-} 
-
-} 
-
-} 
-
-} 
-
-}
-</code></pre>
-<h3 id="2-压缩AnimationClip文件float的精度"><a href="#2-压缩AnimationClip文件float的精度" class="headerlink" title="2. 压缩AnimationClip文件float的精度"></a>2. 压缩AnimationClip文件float的精度</h3><pre><code class="lang-csharp">
-public static bool CompressAnimationClip(Object o)
-
-{ 
-
-string animationPath = AssetDatabase.GetAssetPath(o); 
-
-try
-
-{ 
-
-//AnimationClip clip = GameObject.Instantiate(o) as AnimationClip;
-
-AnimationClip clip = o as AnimationClip; 
-
-AnimationClipCurveData[] curves = null; 
-
-curves = AnimationUtility.GetAllCurves(clip); 
-
-Keyframe key; 
-
-Keyframe[] keyFrames; 
-
-for (int ii = 0; ii &lt; curves.Length; ++ii) 
-
-{ 
-
-AnimationClipCurveData curveDate = curves[ii]; 
-
-if (curveDate.curve == null || curveDate.curve.keys == null) 
-
-{ 
-
-//Debug.LogWarning(string.Format(&quot;AnimationClipCurveData {0} don&#39;t have curve; Animation name {1} &quot;, curveDate, animationPath));
-
-continue; 
-
-} 
-
-keyFrames = curveDate.curve.keys; 
-
-for (int i = 0; i &lt; keyFrames.Length; i++) 
-
-{ 
-
-key = keyFrames[i]; 
-
-key.value = float.Parse(key.value.ToString(&quot;f3&quot;)); 
-
-key.inTangent = float.Parse(key.inTangent.ToString(&quot;f3&quot;)); 
-
-key.outTangent = float.Parse(key.outTangent.ToString(&quot;f3&quot;)); 
-
-keyFrames[i] = key; 
-
-} 
-
-curveDate.curve.keys = keyFrames; 
-
-clip.SetCurve(curveDate.path, curveDate.type, curveDate.propertyName, curveDate.curve); 
-
-} 
-
-//AssetDatabase.CreateAsset(clip, animationPath);
-
-Debug.Log(string.Format(&quot; CompressAnimationClip {0} Success !!!&quot;, animationPath)); 
-
-return true; 
-
-} 
-
-catch(Exception e) 
-
-{ 
-
-Debug.LogError(string.Format(&quot;CompressAnimationClip Failed !!! animationPath : {0} error: {1}&quot;, animationPath, e)); 
-
-return false; 
-
-} 
-
-}
-</code></pre>
-<h2 id="其他内容"><a href="#其他内容" class="headerlink" title="其他内容"></a>其他内容</h2><h3 id="optimize-gameobject"><a href="#optimize-gameobject" class="headerlink" title="optimize gameobject"></a>optimize gameobject</h3><p>针对Mecinam新版动画系统的优化选项，默认情况下会将动画网格下的所有骨骼结点隐藏，但是，你可以通过“Extra Transform to Expose”查看你想通过脚本获取的骨骼结点，这样既可以提升该角色的动画模块性能，又可以达到获取某个关键结点的需求。不过这种方式获得的骨骼节点是只读的，如果想要对其中的属性进行改变比如换装，就不可以开启这个选项。</p>
-<h3 id="multithreaded-rendering"><a href="#multithreaded-rendering" class="headerlink" title="multithreaded rendering"></a>multithreaded rendering</h3><p>多线程渲染，将主线程的一部分渲染工作移到另一个线程里执行，Android平台下才有的优化渲染设置，但是对半透明物体支持不好，项目中需要进行测试来决定开不开启。</p>
-<h3 id="Animation-Type"><a href="#Animation-Type" class="headerlink" title="Animation Type"></a>Animation Type</h3><p>Legacy Generic Humaniod<br>Legacy 老版动画系统<br>Generic 适合非人型动画<br>Humaniod 适合人型动画，可以动画重定向<br>cpu耗时 Generic &lt; Humanoid<br>Humanoid更省内存</p>
-<h3 id="Apply-Root-Motion"><a href="#Apply-Root-Motion" class="headerlink" title="Apply Root Motion"></a>Apply Root Motion</h3><p>增加CPU计算量，不建议开启。如果要开启，建议勾上optimize gameobject。</p>
-<h3 id="AnimationBlend"><a href="#AnimationBlend" class="headerlink" title="AnimationBlend"></a>AnimationBlend</h3><p>指的是混合树，多层动画，动画状态过渡三个方面。<br>会增加ProcessAnimations的开销<br>避免频繁blend<br>替换不必要的blend tree和layers</p>
-<h3 id="Bake-Mesh"><a href="#Bake-Mesh" class="headerlink" title="Bake Mesh"></a>Bake Mesh</h3><p>将Skinned Mesh转换为普通的Mesh，运行时从网格中获取对应的网格数据进行渲染。<br>缺点：需要记录Mesh信息，占用大量内存。</p>
-<h3 id="GPU-Skinning"><a href="#GPU-Skinning" class="headerlink" title="GPU Skinning"></a>GPU Skinning</h3><p>用GPU计算网格，<br>优点：<br>减少SkinnedMesh.Render的CPU耗时<br>骨骼结点信息通过纹理来存储，数据量较Bake Mesh会大幅降低<br>缺点：<br>增加GPU消耗，<br>要求DIrectX 11或者Opengl ES 3.0</p>
-<h3 id="简化骨骼名字"><a href="#简化骨骼名字" class="headerlink" title="简化骨骼名字"></a>简化骨骼名字</h3><p>unity的动画数据存储的时候按每个骨骼节点的轨道拆分存储的，每个骨骼存储的是从根节点到这个骨骼节点的hierarchy路径，字符串的，骨骼多了之后这部分字符串不少。如果把所有骨骼名字都简化，这里可以省不少内存 </p>
-<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="http://nfrechette.github.io/2017/01/30/anim_compression_unity5/" target="_blank" rel="noopener">http://nfrechette.github.io/2017/01/30/anim_compression_unity5/</a><br><a href="http://www.manew.com/thread-103127-1-1.html" target="_blank" rel="noopener">http://www.manew.com/thread-103127-1-1.html</a><br><a href="https://blog.csdn.net/alexander_xfl/article/details/66975570" target="_blank" rel="noopener">https://blog.csdn.net/alexander_xfl/article/details/66975570</a><br><a href="https://blog.csdn.net/j756915370/article/details/79415841" target="_blank" rel="noopener">https://blog.csdn.net/j756915370/article/details/79415841</a><br><a href="https://blog.uwa4d.com/archives/Loading_AnimationClip.html" target="_blank" rel="noopener">https://blog.uwa4d.com/archives/Loading_AnimationClip.html</a><br><a href="http://www.360doc.com/content/17/0424/15/6432946_648246543.shtml" target="_blank" rel="noopener">http://www.360doc.com/content/17/0424/15/6432946_648246543.shtml</a></p>
  
       <!-- reward -->
       

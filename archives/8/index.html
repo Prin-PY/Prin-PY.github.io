@@ -171,6 +171,184 @@
     
     
     <article
+  id="post-Unity3D-Unity中的路径获取"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-Unity%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84%E8%8E%B7%E5%8F%96/"
+    >Unity中的路径获取</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-Unity%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84%E8%8E%B7%E5%8F%96/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.293Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="AssetDatabase"><a href="#AssetDatabase" class="headerlink" title="AssetDatabase"></a>AssetDatabase</h2><h3 id="获取选中资源"><a href="#获取选中资源" class="headerlink" title="获取选中资源"></a>获取选中资源</h3><pre><code class="lang-csharp">
+[MenuItem(&quot;Tools/GetSelectPaths&quot;)] 
+
+public static void Execute()
+
+{ 
+
+string[] strs = Selection.assetGUIDs; 
+
+var curPath = System.IO.Directory.GetCurrentDirectory();//获取当前根目录
+
+foreach (var item in strs) 
+
+{ 
+
+string path = AssetDatabase.GUIDToAssetPath(item); 
+
+Debug.Log(curPath+&quot;/&quot;+path); 
+
+} 
+
+}
+</code></pre>
+<h3 id="Active-Deactive选中物体"><a href="#Active-Deactive选中物体" class="headerlink" title="Active/Deactive选中物体"></a>Active/Deactive选中物体</h3><pre><code class="lang-csharp">
+[MenuItem(&quot;Example/Toggle Active of Selected %i&quot;)] 
+
+static void DoToggle()
+
+{ 
+
+Object[] activeGOs = Selection.GetFiltered( 
+
+typeof(GameObject), 
+
+SelectionMode.Editable | SelectionMode.TopLevel); 
+
+foreach (GameObject obj in activeGOs) 
+
+{ 
+
+obj.SetActive(!obj.activeSelf); 
+
+} 
+
+}
+</code></pre>
+<h3 id="遍历所有文件"><a href="#遍历所有文件" class="headerlink" title="遍历所有文件"></a>遍历所有文件</h3><pre><code class="lang-csharp">
+private readonly string configJsonPath = AssetDatabase.GetAllAssetPaths() 
+
+.FirstOrDefault(p =&gt; p.EndsWith(&quot;uwascan_ruleconfig.json&quot;));
+</code></pre>
+<h2 id="Application"><a href="#Application" class="headerlink" title="Application"></a>Application</h2><p>获取路径：”………………../Assets”</p>
+<pre><code class="lang-csharp">
+string path = Application.dataPath;
+</code></pre>
+<h3 id="遍历所有文件夹-待学习"><a href="#遍历所有文件夹-待学习" class="headerlink" title="遍历所有文件夹 (待学习)"></a>遍历所有文件夹 (待学习)</h3><pre><code class="lang-csharp">
+//遍历所选文件夹，查找该文件夹以及子文件夹中 后缀为 .prefab的文件路径
+
+using UnityEngine; 
+
+using System.Collections; 
+
+using System.Collections.Generic; 
+
+using UnityEditor; 
+
+using System.IO; 
+
+public class CameraMove : MonoBehaviour { 
+
+// 在菜单来创建 选项 ， 点击该选项执行搜索代码
+
+[MenuItem(&quot;Tools/遍历项目所有文件夹&quot;)] 
+
+static void CheckSceneSetting()
+
+{ 
+
+List&lt;string&gt; dirs = new List&lt;string&gt;(); 
+
+GetDirs(Application.dataPath, ref dirs); 
+
+} 
+
+//参数1 为要查找的总路径， 参数2 保存路径
+
+private static void GetDirs(string dirPath, ref List&lt;string&gt; dirs)
+
+{ 
+
+foreach (string path in Directory.GetFiles(dirPath)) 
+
+{ 
+
+//获取所有文件夹中包含后缀为 .prefab 的路径
+
+if (System.IO.Path.GetExtension(path) == &quot;.prefab&quot;) 
+
+{ 
+
+dirs.Add(path.Substring(path.IndexOf(&quot;Assets&quot;))); 
+
+Debug.Log(path.Substring(path.IndexOf(&quot;Assets&quot;))); 
+
+} 
+
+} 
+
+if (Directory.GetDirectories(dirPath).Length &gt; 0) //遍历所有文件夹
+
+{ 
+
+foreach (string path in Directory.GetDirectories(dirPath)) 
+
+{ 
+
+GetDirs(path, ref dirs); 
+
+} 
+
+} 
+
+} 
+
+}
+</code></pre>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-Unity中的Texture相关知识-To-Update"
   class="article article-type-post"
   itemscope
@@ -765,72 +943,6 @@ return buffer;
 
     
     <article
-  id="post-Unity3D-Unity中Culling相关技术"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-Unity%E4%B8%ADCulling%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/"
-    >Unity中Culling相关技术</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-Unity%E4%B8%ADCulling%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.290Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="Frustum-Culling"><a href="#Frustum-Culling" class="headerlink" title="Frustum Culling"></a>Frustum Culling</h2><p>剔除被其他物体遮挡的，摄像机不可见(但在视锥体内)的渲染物体。使用 Occlusion Culling 需要手动设置，并在 Occlusion Culling Window 中通过 Bake 计算剔除数据。<br><a href="https://docs.unity3d.com/Manual/OcclusionCulling.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/OcclusionCulling.html</a></p>
-<h3 id="Builtin管线"><a href="#Builtin管线" class="headerlink" title="Builtin管线"></a>Builtin管线</h3><p>视锥体剔除 - 视锥体剔除是引擎自己做的，在给GPU提交数据进行渲染前，会执行视锥体剔除，决定哪些可见哪些不可见。经过剔除之后，Renderer的isVisible值就表示相应物体的可见性，不过此时已经在这帧的Update之后了。在Update当中取IsVisible属性获取的实际上是上一帧的可见性。 至于视锥体剔除的实现方法我们不清楚，可能引擎底层会有一些优化，使用kd-tree进行空间划分等等。</p>
-<h3 id="SRP的Culling"><a href="#SRP的Culling" class="headerlink" title="SRP的Culling"></a>SRP的Culling</h3><ol>
-<li><p>SRP的Culling可以自己写</p>
-</li>
-<li><p>URP的管线相对比较固定，可定制化程度低，Culling不太好自己写</p>
-</li>
-</ol>
-<p>Occlusion Culling is different from Frustum Culling. Frustum Culling only disables the renderers for objects that are outside the camera’s viewing area but does not disable anything hidden from view by overdraw. Note that when you use Occlusion Culling you will still benefit from Frustum Culling.</p>
-<h2 id="Occlusion-Culling"><a href="#Occlusion-Culling" class="headerlink" title="Occlusion Culling"></a>Occlusion Culling</h2><p>在移动端使用的比较少，属于用 CPU时间换一定的CPU时间和一定的GPU时间的操作。使用方法是：预先烘焙遮挡剔除信息（对于一定的区域，哪些物体被遮挡），在游戏运行时，经过视锥体剔除之后，对于视锥体内的物体，相机到了一定的位置，会去取预先烘焙的信息，来判断哪些物体被遮挡，对相应的物体进行剔除，进而节省被遮挡的物体提交渲染进行、在GPU端进行绘制的时间。</p>
-<h2 id="Camera-layerCullDistance"><a href="#Camera-layerCullDistance" class="headerlink" title="Camera.layerCullDistance"></a>Camera.layerCullDistance</h2><p>For performance reasons, you might want to cull small objects earlier. For example, small rocks and debris could be made invisible at much smaller distance than large buildings. To do that, put small objects into a separate layer and set up per-layer cull distances using Camera.layerCullDistances script function.<br><a href="https://docs.unity3d.com/ScriptReference/Camera-layerCullDistances.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/Camera-layerCullDistances.html</a></p>
-<h2 id="CullingGroup-API"><a href="#CullingGroup-API" class="headerlink" title="CullingGroup API"></a>CullingGroup API</h2><p>CullingGroup offers a way to integrate your own systems into Unity’s culling and LOD pipeline.The CullingGroup will calculate visibility based on frustum culling and static occlusion culling only. It will not take dynamic objects into account as potential occluders.<br><a href="https://docs.unity3d.com/Manual/CullingGroupAPI.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/CullingGroupAPI.html</a></p>
-<p>Unity的CullingGroup API是纯逻辑的东西，不影响渲染。其使用方法是：在逻辑代码中定义CullingGroup，Group中加入一些球体(位置与半径，是逻辑上的球体，实际是不可见的)，并加入要检测的相机，渲染时，Unity会判断这些球体是否可见，进而判断CullingGroup的可见性。在渲染之后，可以在代码中获取该Group的可见性，进而据此控制一些逻辑。如果不用代码去取CullingGroup的信息，那么它就是没有用的。</p>
-<h2 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h2><p><a href="https://blog.csdn.net/kenight/article/details/82760667" target="_blank" rel="noopener">https://blog.csdn.net/kenight/article/details/82760667</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
   id="post-Unity3D-Unity-C预处理指令"
   class="article article-type-post"
   itemscope
@@ -890,6 +1002,72 @@ return buffer;
 <h2 id="Unity自带的一些宏定义"><a href="#Unity自带的一些宏定义" class="headerlink" title="Unity自带的一些宏定义"></a>Unity自带的一些宏定义</h2><p>UNITY_EDITOR Unity编辑器<br>UNITY_EDITOR_WIN Windows 操作系统.<br>UNITY_EDITOR_OSX macos操作系统<br>UNITY_STANDALONE_OSX 专门为macos（包括Universal, PPC，Intel architectures）平台的定义<br>UNITY_STANDALONE_WIN 专门为windows平台的定义<br>UNITY_STANDALONE_LINUX 专门为Linux平台的定义<br>UNITY_STANDALONE 独立平台 (Mac OS X, Windows or Linux).<br>UNITY_WII WII 游戏机平台<br>UNITY_IOS iOS系统平台<br>UNITY_IPHONE iPhone<br>UNITY_ANDROID android系统平台<br>UNITY_PS4 ps4平台<br>UNITY_SAMSUNGTV 三星TV平台<br>UNITY_XBOXONE Xbox One 平台<br>UNITY_TIZEN Tizen 平台<br>UNITY_TVOS Apple TV 平台<br>UNITY_WSA #define directive for Universal Windows Platform. Additionally, NETFX_CORE is defined when compiling C# files against .NET Core and using .NET scripting backend.<br>UNITY_WSA_10_0 #define directive for Universal Windows Platform. Additionally WINDOWS_UWP is defined when compiling C# files against .NET Core.<br>UNITY_WINRT UNITY_WSA.<br>UNITY_WINRT_10_0 UNITY_WSA_10_0<br>UNITY_WEBGL #define directive for WebGL.<br>UNITY_FACEBOOK faceBook平台(WebGL or Windows standalone).<br>UNITY_ADS 调用广告方法，版本 5.2 以后<br>UNITY_ANALYTICS 调用unity分析服务，版本5.2以后<br>UNITY_ASSERTIONS 控制指令的过程</p>
 <p>UNITY_5 unity5版本, 包含所有的5.x.y版本<br>UNITY_5_0 Unity5.0版本,包含所有的5.0.x版本<br>UNITY_5_0_1 Unity5.0.1版本</p>
 <h2 id="自定义宏定义"><a href="#自定义宏定义" class="headerlink" title="自定义宏定义"></a>自定义宏定义</h2><p>File - Build Settings - Player Settings - Other Settings<br>多个用分号隔开</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-Unity中Culling相关技术"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-Unity%E4%B8%ADCulling%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/"
+    >Unity中Culling相关技术</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-Unity%E4%B8%ADCulling%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.290Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Frustum-Culling"><a href="#Frustum-Culling" class="headerlink" title="Frustum Culling"></a>Frustum Culling</h2><p>剔除被其他物体遮挡的，摄像机不可见(但在视锥体内)的渲染物体。使用 Occlusion Culling 需要手动设置，并在 Occlusion Culling Window 中通过 Bake 计算剔除数据。<br><a href="https://docs.unity3d.com/Manual/OcclusionCulling.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/OcclusionCulling.html</a></p>
+<h3 id="Builtin管线"><a href="#Builtin管线" class="headerlink" title="Builtin管线"></a>Builtin管线</h3><p>视锥体剔除 - 视锥体剔除是引擎自己做的，在给GPU提交数据进行渲染前，会执行视锥体剔除，决定哪些可见哪些不可见。经过剔除之后，Renderer的isVisible值就表示相应物体的可见性，不过此时已经在这帧的Update之后了。在Update当中取IsVisible属性获取的实际上是上一帧的可见性。 至于视锥体剔除的实现方法我们不清楚，可能引擎底层会有一些优化，使用kd-tree进行空间划分等等。</p>
+<h3 id="SRP的Culling"><a href="#SRP的Culling" class="headerlink" title="SRP的Culling"></a>SRP的Culling</h3><ol>
+<li><p>SRP的Culling可以自己写</p>
+</li>
+<li><p>URP的管线相对比较固定，可定制化程度低，Culling不太好自己写</p>
+</li>
+</ol>
+<p>Occlusion Culling is different from Frustum Culling. Frustum Culling only disables the renderers for objects that are outside the camera’s viewing area but does not disable anything hidden from view by overdraw. Note that when you use Occlusion Culling you will still benefit from Frustum Culling.</p>
+<h2 id="Occlusion-Culling"><a href="#Occlusion-Culling" class="headerlink" title="Occlusion Culling"></a>Occlusion Culling</h2><p>在移动端使用的比较少，属于用 CPU时间换一定的CPU时间和一定的GPU时间的操作。使用方法是：预先烘焙遮挡剔除信息（对于一定的区域，哪些物体被遮挡），在游戏运行时，经过视锥体剔除之后，对于视锥体内的物体，相机到了一定的位置，会去取预先烘焙的信息，来判断哪些物体被遮挡，对相应的物体进行剔除，进而节省被遮挡的物体提交渲染进行、在GPU端进行绘制的时间。</p>
+<h2 id="Camera-layerCullDistance"><a href="#Camera-layerCullDistance" class="headerlink" title="Camera.layerCullDistance"></a>Camera.layerCullDistance</h2><p>For performance reasons, you might want to cull small objects earlier. For example, small rocks and debris could be made invisible at much smaller distance than large buildings. To do that, put small objects into a separate layer and set up per-layer cull distances using Camera.layerCullDistances script function.<br><a href="https://docs.unity3d.com/ScriptReference/Camera-layerCullDistances.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/Camera-layerCullDistances.html</a></p>
+<h2 id="CullingGroup-API"><a href="#CullingGroup-API" class="headerlink" title="CullingGroup API"></a>CullingGroup API</h2><p>CullingGroup offers a way to integrate your own systems into Unity’s culling and LOD pipeline.The CullingGroup will calculate visibility based on frustum culling and static occlusion culling only. It will not take dynamic objects into account as potential occluders.<br><a href="https://docs.unity3d.com/Manual/CullingGroupAPI.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/CullingGroupAPI.html</a></p>
+<p>Unity的CullingGroup API是纯逻辑的东西，不影响渲染。其使用方法是：在逻辑代码中定义CullingGroup，Group中加入一些球体(位置与半径，是逻辑上的球体，实际是不可见的)，并加入要检测的相机，渲染时，Unity会判断这些球体是否可见，进而判断CullingGroup的可见性。在渲染之后，可以在代码中获取该Group的可见性，进而据此控制一些逻辑。如果不用代码去取CullingGroup的信息，那么它就是没有用的。</p>
+<h2 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h2><p><a href="https://blog.csdn.net/kenight/article/details/82760667" target="_blank" rel="noopener">https://blog.csdn.net/kenight/article/details/82760667</a></p>
  
       <!-- reward -->
       
@@ -1924,7 +2102,7 @@ colors.
 <p>一般是Match Height，保持Canvas的高度不变，背景图的宽度画的长一点，用来适配不用的屏幕。UI元素的锚点设置为四个角即可。</p>
 <p><img src="UGUI/1620900142626.png" alt="Alt text"></p>
 <h4 id="Expand-amp-Shrink"><a href="#Expand-amp-Shrink" class="headerlink" title="Expand &amp; Shrink"></a>Expand &amp; Shrink</h4><p>Expand - Expand the canvas area either horizontally or vertically, so the size of the canvas will never be smaller than the reference.<br>Shrink - Crop the canvas area either horizontally or vertically, so the size of the canvas will never be larger than the reference.</p>
-<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="&#109;&#x61;&#105;&#x6c;&#x74;&#111;&#x3a;&#104;&#x74;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#x2f;&#x64;&#x6f;&#99;&#115;&#46;&#x75;&#x6e;&#x69;&#x74;&#121;&#x33;&#x64;&#x2e;&#x63;&#x6f;&#x6d;&#x2f;&#80;&#x61;&#x63;&#107;&#x61;&#x67;&#x65;&#115;&#x2f;&#x63;&#111;&#109;&#46;&#117;&#110;&#x69;&#116;&#121;&#46;&#x75;&#103;&#117;&#x69;&#64;&#x31;&#x2e;&#48;&#x2f;&#x6d;&#x61;&#110;&#117;&#97;&#x6c;&#47;&#99;&#108;&#97;&#x73;&#x73;&#45;&#67;&#97;&#110;&#118;&#x61;&#x73;&#x2e;&#104;&#x74;&#x6d;&#x6c;">&#104;&#x74;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#x2f;&#x64;&#x6f;&#99;&#115;&#46;&#x75;&#x6e;&#x69;&#x74;&#121;&#x33;&#x64;&#x2e;&#x63;&#x6f;&#x6d;&#x2f;&#80;&#x61;&#x63;&#107;&#x61;&#x67;&#x65;&#115;&#x2f;&#x63;&#111;&#109;&#46;&#117;&#110;&#x69;&#116;&#121;&#46;&#x75;&#103;&#117;&#x69;&#64;&#x31;&#x2e;&#48;&#x2f;&#x6d;&#x61;&#110;&#117;&#97;&#x6c;&#47;&#99;&#108;&#97;&#x73;&#x73;&#45;&#67;&#97;&#110;&#118;&#x61;&#x73;&#x2e;&#104;&#x74;&#x6d;&#x6c;</a></p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="&#109;&#97;&#x69;&#108;&#x74;&#111;&#x3a;&#x68;&#116;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#x2f;&#100;&#111;&#x63;&#x73;&#x2e;&#117;&#x6e;&#105;&#x74;&#x79;&#51;&#x64;&#x2e;&#99;&#111;&#109;&#x2f;&#80;&#x61;&#x63;&#107;&#97;&#103;&#x65;&#115;&#x2f;&#x63;&#x6f;&#109;&#46;&#x75;&#x6e;&#105;&#x74;&#121;&#x2e;&#117;&#x67;&#x75;&#105;&#x40;&#49;&#x2e;&#48;&#x2f;&#109;&#97;&#x6e;&#x75;&#97;&#x6c;&#47;&#99;&#x6c;&#x61;&#115;&#x73;&#x2d;&#67;&#x61;&#x6e;&#118;&#x61;&#115;&#x2e;&#104;&#116;&#109;&#x6c;">&#x68;&#116;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#x2f;&#100;&#111;&#x63;&#x73;&#x2e;&#117;&#x6e;&#105;&#x74;&#x79;&#51;&#x64;&#x2e;&#99;&#111;&#109;&#x2f;&#80;&#x61;&#x63;&#107;&#97;&#103;&#x65;&#115;&#x2f;&#x63;&#x6f;&#109;&#46;&#x75;&#x6e;&#105;&#x74;&#121;&#x2e;&#117;&#x67;&#x75;&#105;&#x40;&#49;&#x2e;&#48;&#x2f;&#109;&#97;&#x6e;&#x75;&#97;&#x6c;&#47;&#99;&#x6c;&#x61;&#115;&#x73;&#x2d;&#67;&#x61;&#x6e;&#118;&#x61;&#115;&#x2e;&#104;&#116;&#109;&#x6c;</a></p>
  
       <!-- reward -->
       
@@ -1978,160 +2156,6 @@ colors.
     <div class="article-entry" itemprop="articleBody">
        
    
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-U3D资源优化（零碎）知识点汇总"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-U3D%E8%B5%84%E6%BA%90%E4%BC%98%E5%8C%96%EF%BC%88%E9%9B%B6%E7%A2%8E%EF%BC%89%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"
-    >U3D资源优化（零碎）知识点汇总</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-U3D%E8%B5%84%E6%BA%90%E4%BC%98%E5%8C%96%EF%BC%88%E9%9B%B6%E7%A2%8E%EF%BC%89%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.277Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="Audio"><a href="#Audio" class="headerlink" title="Audio"></a>Audio</h2><h3 id="ImportSettings"><a href="#ImportSettings" class="headerlink" title="ImportSettings"></a>ImportSettings</h3><p>Force To Mono：将多声道音频混合为单声道，一般手机使用单声道足够满足需求<br>Load In Background：When this option is enabled, the loading of the clip will happen at a delayed time on a separate thread, without blocking the main thread. 分线程加载， 不阻塞主线程<br>Ambisonic：是否环绕声</p>
-<p>Load Type：加载方式</p>
-<p><strong>Decompress On Load</strong> ：在音频 <strong>加载后马上解压缩</strong> 。对 <strong>较小的压缩声音</strong> 使用此选项可以避免动态解压缩的性能开销，不过在加载时解压缩Vorbis编码的声音将使用大约十倍于内存的内存（对于ADPCM编码约为3.5倍），因此请勿对大文件使用此选项。<br><strong>Compressed In Memory</strong> ：将声音压缩在内存中并在 <strong>播放时解压缩</strong> 。 此选项具有轻微的性能开销（特别是对于Ogg / Vorbis压缩文件），因此仅将其 <strong>用于加载时解压缩将使用大量内存的较大的文件</strong> 。 解压缩发生在 <strong>混音器线程</strong> 上，可以在探查器窗口的音频窗格中的”DSP CPU(Digital Signal Processor)”部分进行监视。<br><strong>Streaming</strong> ： <strong>动态解码</strong> 声音。 此方法使用 <strong>最少量的内存来缓冲从磁盘中逐步读取并在运行中解码的压缩数据</strong> 。 解压缩发生在单独的流线程上，可以在Profiler窗口的音频窗格的”Streaming CPU”部分中监视其CPU使用情况。 即使没有加载任何音频数据，Streaming的剪辑也有大约200KB的消耗。</p>
-<p>Preload Audio Data：预加载</p>
-<p>Compression Format<br>PCM：此选项以 <strong>更大的文件</strong> 大小为代价提供 <strong>更高的质量</strong> ，并且最适 <strong>合非常短的声音</strong> 效果。<br>ADPCM：这种格式对于 <strong>包含大量噪音</strong> 且 <strong>需要大量播放</strong> 的声音非常有用，例如脚步声，撞击声，武器。 <strong>压缩比</strong> 是PCM的 <strong>3.5倍</strong> ，而且 <strong>CPU使用率</strong> 远 <strong>低</strong> 于MP3 / Vorbis格式，这使其成为上述类别声音的首选。<br>Vorbis/MP3：压缩为较小的文件，但与PCM音频相比 <strong>质量稍低</strong> 。 <strong>压缩量</strong> 可通过”质量”滑块进行 <strong>配置</strong> 。 此格式最适合 <strong>中等长度</strong> 的音效和音乐。</p>
-<p>Sample Rate Setting： 采样率设置<br>Preserve Sample Rate: 保留采样率<br>Optimize Sample Rate：此设置根据分析的最高频率内容自动优化采样率。<br>Override Sample Rate：此设置允许手动覆盖采样率，因此可以有效地避免采样内容丢失。</p>
-<blockquote>
-<p>要关注:<br> OriginalSize:磁盘大小<br> ImportedSize:内存大小<br> Ratio:ImportedSize占OriginalSize比例</p>
-</blockquote>
-<h3 id="设置建议"><a href="#设置建议" class="headerlink" title="设置建议"></a>设置建议</h3><ol>
-<li><p>建议都勾选ForceToMono：将多声道音频混合为单声道</p>
-</li>
-<li><p>在iOS上请使用MP3格式，在Android上使用Vorbis</p>
-</li>
-<li><p>场景等长音效使用Streaming + Vorbis/MP3</p>
-</li>
-<li><p>技能等短音效使用DecompressOnLoad + ADPCM</p>
-</li>
-<li><p>采样率选择手动控制到22050左右</p>
-</li>
-<li><p>短音频可选格式aifff或wav，长音频可选格式mp3或ogg</p>
-</li>
-</ol>
-<h3 id="导入后处理脚本"><a href="#导入后处理脚本" class="headerlink" title="导入后处理脚本"></a>导入后处理脚本</h3><pre><code class="lang-csharp">
-using System; 
-
-using UnityEngine; 
-
-using System.Collections; 
-
-using UnityEditor; 
-
-public class MyAudioProcessor : AssetPostprocessor
-
-{ 
-
-public void OnPreprocessAudio()
-
-{ 
-
-if (!assetPath.StartsWith(&quot;Assets/MyAudio&quot;)) return; 
-
-AudioImporter audioImporter = (AudioImporter)assetImporter; 
-
-audioImporter.forceToMono = true; 
-
-//Android设置
-
-AudioImporterSampleSettings androidSettings = new AudioImporterSampleSettings(); 
-
-androidSettings.loadType = AudioClipLoadType.DecompressOnLoad; //长音效用Streaming，短的用DecompressOnLoad
-
-androidSettings.compressionFormat = AudioCompressionFormat.Vorbis; //Android用Vorbis
-
-androidSettings.quality = 100; 
-
-androidSettings.sampleRateSetting = AudioSampleRateSetting.OverrideSampleRate; //采样率控制到22050左右
-
-androidSettings.sampleRateOverride = 22050; 
-
-audioImporter.SetOverrideSampleSettings(&quot;Android&quot;, androidSettings); 
-
-//iOS设置
-
-AudioImporterSampleSettings iOSSettings = new AudioImporterSampleSettings(); 
-
-iOSSettings.loadType = AudioClipLoadType.DecompressOnLoad; //长音效用Streaming，短的用DecompressOnLoad
-
-iOSSettings.compressionFormat = AudioCompressionFormat.MP3; //iOS用MP3
-
-iOSSettings.quality = 100; 
-
-iOSSettings.sampleRateSetting = AudioSampleRateSetting.OverrideSampleRate; //采样率控制到22050左右
-
-iOSSettings.sampleRateOverride = 22050; 
-
-audioImporter.SetOverrideSampleSettings(&quot;iOS&quot;, iOSSettings); 
-
-} 
-
-}
-</code></pre>
-<blockquote>
-<p>Ref:<br> <a href="https://blog.csdn.net/LeoHiJack/article/details/95228708" target="_blank" rel="noopener">https://blog.csdn.net/LeoHiJack/article/details/95228708</a><br> <a href="https://blog.csdn.net/u013244147/article/details/104548393" target="_blank" rel="noopener">https://blog.csdn.net/u013244147/article/details/104548393</a><br> <a href="https://zhuanlan.zhihu.com/p/27438828" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/27438828</a></p>
-</blockquote>
-<h2 id="Cull-Transparent-Mesh"><a href="#Cull-Transparent-Mesh" class="headerlink" title="Cull Transparent Mesh"></a>Cull Transparent Mesh</h2><p>Unity2018.2加入的新功能：Image对应的CanvasRenderer组件上可以勾选Cull Transparent Mesh</p>
-<blockquote>
-<p>官方描述：Indicates whether geometry emitted by this renderer can be ignored when the vertex color alpha is close to zero for every vertex of the mesh.</p>
-</blockquote>
-<p>若Image的Color属性的Alpha值接近于0，则该Image是看不见的，如果对其进行渲染，则会造成不必要的渲染性能开销。<br>如果在Image对应的CanvasRenderer开启Cull Transparent Mesh，则Unity进行渲染时会对该Image的Color的Alpha值进行检测，若该值接近于0，就忽略该Image，不进行绘制，节约性能。</p>
-<p><img src="U3D资源优化（零碎）知识点汇总/2.png" alt="Alt text"></p>
-<p><img src="U3D资源优化（零碎）知识点汇总/1.png" alt="Alt text"></p>
-<p>如上图，第二张图Image组件的Alpha值为0，由FrameDebugger可见，Unity没有对该Image进行绘制。</p>
-<p>更具体的，可见讨论：<br>I assume this culling test has a cost, which is why it’s not enabled by default/done automatically.</p>
-<p>实现上：<br>this checkbox toggles a shader feature to cull pixels in the fragment shader with very low alpha value.</p>
-<p>Docs would seem to indicate this uses the vertex colour alpha at the vertex stage:</p>
-<p><a href="https://docs.unity3d.com/ScriptReference/CanvasRenderer-cullTransparentMesh.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/CanvasRenderer-cullTransparentMesh.html</a></p>
-<p>But e.g:</p>
-<p><a href="https://github.com/TwoTailsGames/Un...er/DefaultResourcesExtra/UI/UI-Default.shader" target="_blank" rel="noopener">https://github.com/TwoTailsGames/Un…er/DefaultResourcesExtra/UI/UI-Default.shader</a></p>
-<blockquote>
-<p>Ref:<br> <a href="https://twitter.com/dmitriy_focus/status/1166706421389496321?lang=en" target="_blank" rel="noopener">https://twitter.com/dmitriy_focus/status/1166706421389496321?lang=en</a><br> <a href="https://docs.unity3d.com/ScriptReference/CanvasRenderer-cullTransparentMesh.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/CanvasRenderer-cullTransparentMesh.html</a><br> <a href="https://forum.unity.com/threads/practical-effect-of-cull-transparent-mesh.746711/" target="_blank" rel="noopener">https://forum.unity.com/threads/practical-effect-of-cull-transparent-mesh.746711/</a></p>
-</blockquote>
- 
       <!-- reward -->
       
     </div>

@@ -171,6 +171,594 @@
     
     
     <article
+  id="post-Unity3D-从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-%E4%BB%8EEnumerator%E5%88%B0StartCoroutine%E5%BA%95%E5%B1%82%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E5%AE%B9%E5%99%A8%E7%9A%84%E6%A6%82%E5%BF%B5%E6%9E%9A%E4%B8%BE%E5%99%A8%E4%B8%8E%E4%BB%A3%E7%A0%81%E7%9A%84%E5%8D%8F/"
+    >从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-%E4%BB%8EEnumerator%E5%88%B0StartCoroutine%E5%BA%95%E5%B1%82%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E5%AE%B9%E5%99%A8%E7%9A%84%E6%A6%82%E5%BF%B5%E6%9E%9A%E4%B8%BE%E5%99%A8%E4%B8%8E%E4%BB%A3%E7%A0%81%E7%9A%84%E5%8D%8F/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.357Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>程、异步执行究竟有什么关系？</p>
+<p>程、异步执行究竟有什么关系？</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><pre><code class="lang-csharp">
+yield return &lt;expression&gt;; 
+
+yield break;
+</code></pre>
+<p>如果你在语句中使用 yield 上下文关键字，则意味着它在其中出现的方法、运算符或 get 访问器是迭代器，向编译器指示它所在的方法是迭代器块。 </p>
+<p>使用 yield return 语句可一次返回一个元素。可通过使用 foreach 语句或 LINQ 查询来使用从迭代器方法返回的序列。 foreach 循环的每次迭代都会调用迭代器方法。 迭代器方法运行到 yield return 语句时，会返回一个 expression，并保留当前在代码中的位置。 下次调用迭代器函数时，将从该位置重新开始执行。</p>
+<p>在 yield return 语句中，将计算 expression 并将结果以值的形式返回给枚举器对象；expression 必须可以隐式转换为 yield 类型的迭代器。</p>
+<p>可以使用 yield break 语句来终止迭代。</p>
+<p>实现原理 - 编辑器遇到上面的情况会将生成一些类来保存yield return的所有调用都一一做分支处理（状态机分支），下次对IEnumerator.moveNext时会从上次的状态开始（如：迭代到第几个）</p>
+<h2 id="迭代器模式的实现与Enumerator"><a href="#迭代器模式的实现与Enumerator" class="headerlink" title="迭代器模式的实现与Enumerator"></a>迭代器模式的实现与Enumerator</h2><h3 id="foreach的原理"><a href="#foreach的原理" class="headerlink" title="foreach的原理"></a>foreach的原理</h3><p>在 C# 中，foreach 其实是一个语法糖，在编译成 IL 代码时，foreach 会变成基于迭代器 IEnumerator 的调用方式。</p>
+<p>foreach编译成的IL代码如下：</p>
+<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615789031828.png" alt="Alt text"></p>
+<p>以下两段代码效果相同：</p>
+<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615789060736.png" alt="Alt text"></p>
+<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615789081096.png" alt="Alt text"></p>
+<h3 id="迭代器模式的实现"><a href="#迭代器模式的实现" class="headerlink" title="迭代器模式的实现"></a>迭代器模式的实现</h3><p>有许多种方法可以把对象堆起来成为一个集合，你可以把它们放进数组、链表、树、散列表等等不同的数据结构中，每一种对象的组织方式都有它的优点和适合的使用场景。<br>迭代器模式使我们在遍历集合时，不需要清楚集合的内部实现方式。不同集合存储方式的细节不同，但遍历方式的统一的。</p>
+<blockquote>
+<p>设计思想原则：隐藏细节，开放接口</p>
+</blockquote>
+<p>遍历集合时，处理好三件事即可：</p>
+<ul>
+<li><p>能够以某种顺序一个一个访问集合中的元素</p>
+</li>
+<li><p>能够获得当前元素的值</p>
+</li>
+<li><p>能够重新回到集合的开头</p>
+</li>
+</ul>
+<p>为此，IEnumerator接口分别定义了三个方法：MoveNext, get_Current, Reset</p>
+<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615789423446.png" alt="Alt text"></p>
+<p>.NET 系统库提供的 List、ArrayList、Dictionary 等集合都实现了 Enumerator。以List为例看看具体的实现：<br><code>List&lt;T&gt;</code>实现了<code>IEnumerable&lt;T&gt;</code>和<code>IEnumerable</code>接口，这两个接口也就定义了<code>GetEnumerator</code>方法：</p>
+<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615790017077.png" alt="Alt text"></p>
+<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615790081591.png" alt="Alt text"></p>
+<p>而<code>Enumerator</code>是List类中的一个结构体类型，该结构体实现了<code>IEnumerator</code>接口。</p>
+<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615790157682.png" alt="Alt text"></p>
+<p>当对<code>List&lt;T&gt;</code>调用GetEnumerator()方法时，返回的的<code>List&lt;T&gt;.Enumerator</code>类的一个对象。</p>
+<blockquote>
+<p>使用迭代器进行遍历时，不能进行Remove和Add操作，因为这两个操作会导致元素整体移动，导致当前Index指向的元素位置偏移，遍历结果错误。</p>
+</blockquote>
+<h3 id="自己实现一个List"><a href="#自己实现一个List" class="headerlink" title="自己实现一个List"></a>自己实现一个List</h3><pre><code class="lang-csharp">
+using System.Collections; 
+
+using System; 
+
+public class MyList&lt;T&gt; : IEnumerable
+
+{ 
+
+private static readonly T[] _emptyArray = new T[0]; 
+
+private const int _defaultCapacity = 4; 
+
+private T[] _items; 
+
+private int _size; 
+
+private int _version; 
+
+private Func&lt;T, bool&gt; _filterFunc; 
+
+public int Count =&gt; _size; 
+
+IEnumerator IEnumerable.GetEnumerator() 
+
+{ 
+
+return GetEnumerator(); 
+
+} 
+
+public MyList()
+
+{ 
+
+this._items = _emptyArray; 
+
+} 
+
+/// &lt;param name=&quot;func&quot;&gt;&lt;/param&gt;
+
+public MyList(Func&lt;T, bool&gt; func)
+
+{ 
+
+this._items = _emptyArray; 
+
+_filterFunc = func; 
+
+} 
+
+public IEnumerator GetEnumerator()
+
+{ 
+
+return new Enumerator(this); 
+
+} 
+
+public void Add(T item)
+
+{ 
+
+if (this._size == this._items.Length) 
+
+this.EnsureCapacity(this._size + 1); 
+
+this._items[this._size++] = item; 
+
+++this._version; 
+
+} 
+
+/// &lt;summary&gt;
+
+/// 扩容机制
+
+/// &lt;/summary&gt;
+
+/// &lt;param name=&quot;min&quot;&gt;&lt;/param&gt;
+
+private void EnsureCapacity(int min)
+
+{ 
+
+if (this._items.Length &gt;= min) 
+
+return; 
+
+int num = this._items.Length == 0 ? 4 : this._items.Length * 2; 
+
+if ((uint)num &gt; 2146435071U) 
+
+num = 2146435071; 
+
+if (num &lt; min) 
+
+num = min; 
+
+this.Capacity = num; 
+
+} 
+
+public int Capacity 
+
+{ 
+
+get =&gt; this._items.Length; 
+
+set //有点子监听的感觉
+
+{ 
+
+if (value == this._items.Length) 
+
+return; 
+
+if (value &gt; 0) 
+
+{ 
+
+T[] objArray = new T[value]; 
+
+if (this._size &gt; 0) //扩容真正实现在这里
+
+Array.Copy((Array)this._items, 0, (Array)objArray, 0, this._size); 
+
+this._items = objArray; 
+
+} 
+
+else
+
+this._items = _emptyArray; 
+
+} 
+
+} 
+
+/// &lt;summary&gt;
+
+/// 迭代器定义
+
+/// &lt;/summary&gt;
+
+public struct Enumerator : IEnumerator 
+
+{ 
+
+private MyList&lt;T&gt; _list; 
+
+private int _index; 
+
+private int _version; 
+
+private T current; 
+
+internal Enumerator(MyList&lt;T&gt; list)
+
+{ 
+
+this._list = list; 
+
+this._index = 0; 
+
+this._version = list._version; 
+
+this.current = default(T); 
+
+} 
+
+public bool MoveNext()
+
+{ 
+
+if (this._version != _list._version || (uint)this._index &gt;= (uint)_list._size) 
+
+return this.MoveNextRare(); 
+
+this.current = _list._items[this._index]; 
+
+++this._index; 
+
+//当不满足过滤条件时，foreach遍历Current返回为空
+
+if (_list._filterFunc != null &amp;&amp; !_list._filterFunc(this.current)) 
+
+this.current = default(T); 
+
+return true; 
+
+} 
+
+private bool MoveNextRare()
+
+{ 
+
+this._index = this._list._size + 1; 
+
+this.current = default(T); 
+
+return false; 
+
+} 
+
+public object Current =&gt; this.current; 
+
+public void Reset()
+
+{ 
+
+_index = 0; 
+
+current = default(T); 
+
+} 
+
+} 
+
+}
+</code></pre>
+<h2 id="Enumerator与yield-return"><a href="#Enumerator与yield-return" class="headerlink" title="Enumerator与yield return"></a>Enumerator与yield return</h2><p>You use a yield return statement to <strong>return each element one at a time</strong>.</p>
+<p>When a yield return statement is reached in the iterator method, <strong>expression is returned</strong> , and <strong>the current location in code is retained</strong>. Execution is restarted <strong>from that location the next time</strong> that the iterator function is called.</p>
+<pre><code class="lang-csharp">
+public static void TestGetVs()
+
+{ 
+
+IEnumerator&lt;int&gt; enumerator = GetVs(); 
+
+while(enumerator.MoveNext()) 
+
+{ 
+
+int current = enumerator.Current; 
+
+Debug.Log(current); 
+
+} 
+
+} 
+
+public static IEnumerator&lt;int&gt; GetVs()
+
+{ 
+
+//for (int i = 0; i &lt; 3; i++)
+
+//{
+
+// yield return i;
+
+//}
+
+yield return 3; 
+
+yield return 4; 
+
+yield return 5; 
+
+}
+</code></pre>
+<p>底层原理：<br>如果写了一个函数，返回值类型为IEnumerator，方法体中有yield return，那么编译器会为这个方法自动定义一个类型，这个类型实现IEnumerator接口。</p>
+<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615794880255.png" alt="Alt text"></p>
+<p>这个类型有两个字段：</p>
+<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615794868354.png" alt="Alt text"></p>
+<p>state保存当前执行到的位置，current为当前的返回值。</p>
+<p>使用foreach对这个方法的返回值进行遍历，实质上就是对这个迭代器进行遍历。每次调用MoveNext()，从state指向的位置开始执行，直到遇到下一个yield return，将返回的结果存到current当中，保存当前位置到state中。MoveNext函数的IL语言形式如下：</p>
+<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615795022810.png" alt="Alt text"></p>
+<p>总结：使用IEnumerator与yield return的方式，可以实现有多个返回值的方法，对多个返回值进行遍历，每访问一个值，执行一段代码，不需要先计算出所有的值，再进行遍历。其本质是把函数(例子当中为GetVs)的代码放到Enumerator类型的MoveNext当中，用state进行控制，每调用一次，执行不同的段落。</p>
+<h2 id="Unity3D协程"><a href="#Unity3D协程" class="headerlink" title="Unity3D协程"></a>Unity3D协程</h2><p>Ref: <a href="https://www.cnblogs.com/Roz-001/p/11205700.html" target="_blank" rel="noopener">https://www.cnblogs.com/Roz-001/p/11205700.html</a></p>
+<p><img src="从Enumerator到StartCoroutine底层分析——容器的概念枚举器与代码的协/1615796287192.png" alt="Alt text"></p>
+<p>以上代码，实质上是调用Test2Sceonds方法，返回一个Enumerator对象，然后传递给StartCoroutine方法。</p>
+<p>StartCoroutine是在Native层实现的。从行为上来看，当StartCoroutine后，Unity会每一帧执行一次MoveNext。</p>
+<p>如果yield return 返回的对象为WaitForSecond等，Unity会据此判断下一次调用MoveNext是什么时候。如以上代码，Unity会在2秒后，再次调用MoveNext。</p>
+<h3 id="本质是什么"><a href="#本质是什么" class="headerlink" title="本质是什么"></a>本质是什么</h3><p>协程是一种异步执行代码的方式，是一种假的多线程。本质上，是 <strong>将一件任务，分到多个帧中去执行</strong> 。</p>
+<p>多线程（并发）与迭代器、枚举器、容器是毫不相干的两个概念，Unity为什么就把这两个概念联系到一起了呢？为什么实现协程要用到枚举类型？这种实现方案，本质上是用了Enumerator的什么特性呢？这是笔者一直困惑的。</p>
+<p>如果一个技术A，要用到技术B，那么A的需求，一定与B的特性是有共同点的，否则A不会用到B。那么我们从这个角度去思考上述问题。</p>
+<ul>
+<li><p>协程，本质是异步执行，把一个任务（一段代码），分多帧去执行。</p>
+</li>
+<li><p>.NET当中的Enumerator与yield return的机制，恰好本质上是把一段代码拆分为多个段落（部分），每次调用MoveNext，执行一段逻辑，获取一个返回值。</p>
+</li>
+</ul>
+<p>那么，两个技术自然就关联到了一起——Unity对Enumerator的MoveNext进行调用，就实现了将一个任务分多次去执行的需求。每一帧调用一次MoveNext，就实现了每一帧执行一部分任务。而Native层还对yield return返回的类型进行了判断，根据返回类型的不同 ，控制下一次调用MoveNext的时机，例如，如果返回值是new WaitForSeconds(2)，那么Unity会在2秒后调用下一个MoveNext，并获取返回值。如果返回值是UnityWebRequest.SendWebRequest，那么Unity会在相应的请求执行完后，继续执行后面的部分。</p>
+<h3 id="yield-return-的一些特殊含义"><a href="#yield-return-的一些特殊含义" class="headerlink" title="yield return 的一些特殊含义"></a>yield return 的一些特殊含义</h3><pre><code class="lang-csharp">
+//程序在下一帧中从当前位置继续执行
+
+yield return 0; 
+
+//程序在下一帧中从当前位置继续执行
+
+yield return null; 
+
+//程序等待N秒后从当前位置继续执行
+
+yield return new WaitForSeconds(N); 
+
+//在所有的渲染以及GUI程序执行完成后从当前位置继续执行
+
+yield new WaitForEndOfFrame(); 
+
+//所有脚本中的FixedUpdate()函数都被执行后从当前位置继续执行
+
+yield new WaitForFixedUpdate(); 
+
+//等待一个网络请求完成后从当前位置继续执行
+
+yield return WWW; 
+
+//等待一个xxx的协程执行完成后从当前位置继续执行
+
+yield return StartCoroutine(xxx); 
+
+//如果使用yield break语句，将会导致协程的执行条件不被满足，不会从当前的位置继续执行程序，而是直接从当前位置跳出函数体，回到函数的根部
+
+yield break; 
+
+yield return IEnumerator自己定义实现类，等待到自定义的时间或事件结束。
+</code></pre>
+<h3 id="一些Demo"><a href="#一些Demo" class="headerlink" title="一些Demo"></a>一些Demo</h3><pre><code class="lang-csharp">
+//下面定义了一个协程函数，注意必须使用IEnumerator作为返还值才能成为协程函数。 
+
+IEnumerator Test() 
+
+{ 
+
+for(int i = 0; i&lt;1000 ; ++i) 
+
+{ 
+
+ans += i; yield return 0;//挂起，下一帧再来从这个位置继续执行。 
+
+} 
+
+j+=2; 
+
+yield return 0;//挂起，下一帧再来从这个位置继续执行。 ++j; 
+
+yield return 0;//挂起，下一帧再来从这个位置继续执行。
+
+}
+</code></pre>
+<p>Demo1:</p>
+<pre><code class="lang-csharp">
+//3s后执行Debug.Log
+
+IEnumerator Test()
+
+{ 
+
+for(float timer = 0.0f; timer &lt; 3.0f ; timer += Time.DeltaTime){ 
+
+yield return 0;//挂起，下一帧再来从这个位置继续执行。
+
+} 
+
+Debug.Log(&quot;启动协程3s后&quot;); 
+
+}
+</code></pre>
+<p>Demo2:</p>
+<pre><code class="lang-csharp">
+IEnumerator TestWaitForSeconds()
+
+{ 
+
+//3s后执行Debug.Log;
+
+yield return new WaitForSeconds(3.0f); 
+
+Debug.Log(&quot;启动协程3s后&quot;); 
+
+}
+</code></pre>
+<h3 id="AssetBundle异步加载"><a href="#AssetBundle异步加载" class="headerlink" title="AssetBundle异步加载"></a>AssetBundle异步加载</h3><pre><code class="lang-csharp">
+/// &lt;summary&gt;
+
+/// 从文件进行异步加载
+
+/// &lt;/summary&gt;
+
+/// &lt;param name=&quot;abFullPath&quot;&gt;ab包的绝对路径&lt;/param&gt;
+
+/// &lt;param name=&quot;finishCallBack&quot;&gt;完成加载回调，返回加载的AssetBundle&lt;/param&gt;
+
+/// &lt;param name=&quot;updateCallBack&quot;&gt;加载过程中的更新回调，返回加载进度&lt;/param&gt;
+
+/// &lt;returns&gt;&lt;/returns&gt;
+
+IEnumerator LoadABFileAsync(string abFullPath,Action&lt;AssetBundle&gt; finishCallBack, Action&lt;float&gt; updateCallBack=null)
+
+{ 
+
+AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(abFullPath); 
+
+while (!request.isDone) 
+
+{ 
+
+if(updateCallBack != null) 
+
+{ 
+
+updateCallBack(request.progress); 
+
+} 
+
+yield return null; 
+
+} 
+
+yield return request; 
+
+if(finishCallBack!=null) 
+
+finishCallBack(request.assetBundle); 
+
+} 
+
+private void Start()
+
+{ 
+
+assetPath = Application.dataPath + &quot;/../MyAssetBundles/&quot;; 
+
+StartCoroutine(LoadABFileAsync(assetPath + assetBundleName, OnFinish, OnUpdate)); 
+
+} 
+
+private void OnUpdate(float obj)
+
+{ 
+
+Debug.Log(obj); 
+
+} 
+
+private void OnFinish(AssetBundle obj)
+
+{ 
+
+Instantiate(obj.LoadAsset(loadPrefabName)); 
+
+obj.Unload(false); 
+
+}
+</code></pre>
+<h3 id="UnityWebRequest"><a href="#UnityWebRequest" class="headerlink" title="UnityWebRequest"></a>UnityWebRequest</h3><pre><code class="lang-csharp">
+using UnityEngine; 
+
+using UnityEngine.Networking; 
+
+using System.Collections; 
+
+public class TestWebRequest : MonoBehaviour { 
+
+void Start() { 
+
+StartCoroutine(GetText()); 
+
+} 
+
+IEnumerator GetText() { 
+
+UnityWebRequest www = new UnityWebRequest(&quot;http://www.my-server.com&quot;); 
+
+www.downloadHandler = new DownloadHandlerBuffer(); 
+
+yield return www.SendWebRequest(); 
+
+if (www.result != UnityWebRequest.Result.Success) { 
+
+Debug.Log(www.error); 
+
+} 
+
+else { 
+
+// Show results as text
+
+Debug.Log(www.downloadHandler.text); 
+
+// Or retrieve results as binary data
+
+byte[] results = www.downloadHandler.data; 
+
+} 
+
+} 
+
+}
+</code></pre>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref:"></a>Ref:</h2><p><a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/keywords/yield" target="_blank" rel="noopener">https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/keywords/yield</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-【资源】Asset-Bundle-2020-10-25-022900"
   class="article article-type-post"
   itemscope
@@ -1033,6 +1621,58 @@ public static AssetBundle LoadFromFile(string path, uint crc, ulong offset);
 
     
     <article
+  id="post-Unity3D-【动画】Animator-ApplyRootMotion"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-%E3%80%90%E5%8A%A8%E7%94%BB%E3%80%91Animator-ApplyRootMotion/"
+    >【动画】Animator &amp; ApplyRootMotion</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-%E3%80%90%E5%8A%A8%E7%94%BB%E3%80%91Animator-ApplyRootMotion/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.340Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+   
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-【内存】内存底层深入"
   class="article article-type-post"
   itemscope
@@ -1084,58 +1724,6 @@ public static AssetBundle LoadFromFile(string path, uint crc, ulong offset);
 <h2 id="内存分页"><a href="#内存分页" class="headerlink" title="内存分页"></a>内存分页</h2><p>内存分页（IOS上大部分为16K/page）是内存管理的最小单位，当Unity需要申请内存的时候，都会以block的方式（若干个页）进行申请。如果某一页在若干次GC（IOS为8次）之后仍然为Empty的话，它就会被释放，实际的物理内存就会被还给物理内存。</p>
 <h2 id="Unity"><a href="#Unity" class="headerlink" title="Unity"></a>Unity</h2><h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://zhuanlan.zhihu.com/p/370467923" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/370467923</a><br><a href="https://zhuanlan.zhihu.com/p/362941227" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/362941227</a></p>
  
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-【动画】Animator-ApplyRootMotion"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-%E3%80%90%E5%8A%A8%E7%94%BB%E3%80%91Animator-ApplyRootMotion/"
-    >【动画】Animator &amp; ApplyRootMotion</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-%E3%80%90%E5%8A%A8%E7%94%BB%E3%80%91Animator-ApplyRootMotion/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.340Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-   
       <!-- reward -->
       
     </div>
@@ -1964,87 +2552,6 @@ GUI.Label (new Rect (10, 10, 200, 80), &quot;Hello World!&quot;);
 <p>最后方方面面知识都接触过了，融会贯通，培养技术的想象力，能结合各种技术，随时结合已有的技术，解决具体的问题。</p>
 <h2 id="gougou槐宏文"><a href="#gougou槐宏文" class="headerlink" title="gougou槐宏文"></a>gougou槐宏文</h2><p>最稀缺的人才，就是高质量独立游戏制作者的模式，一个人可以包揽设计和实现，一个人可以完成迭代，从设计到打磨玩法全部做好（需要动画美术支持可能），这是最理想的gameplay最稀缺的人才。</p>
 <p>做游戏是工程学，不是做研究。一个好的工作室的技术积累，大部分的时间不是研究高精尖的算法，而是 <strong>在优化自己的生产管线</strong> 。也就是说，如何 <strong>提高自己工作室某个类型开发过程的效率</strong> ，降低开发成本，优化迭代速度，靠着强大的产出工具链产出内容，完成优秀的产品。如果你仔细看看很多gdc关于pipeline的talk，看看虚幻引擎的工具集，等等，你会发现，这里面不只是技术的积累，更是在某一个游戏领域经验的积累。比如ue4的cinematic的工具集，没有做过很多大型3A游戏的cine的经验是没有办法优化的如此好的，这里面当然需要好的程序技术，但是也需要对这个行业，对游戏开发很懂的人才能做出来，这不是一个算法的问题。好的pipeline可以极大的节省成本，优化流程，是一个游戏工作室最核心的竞争力和技术积累之一。</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-Windows与MacOS在U3D项目中的使用"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-Windows%E4%B8%8EMacOS%E5%9C%A8U3D%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8/"
-    >Windows与MacOS在U3D项目中的使用</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-Windows%E4%B8%8EMacOS%E5%9C%A8U3D%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.327Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p>Windows的优劣</p>
-<ol>
-<li><p>优势</p>
-<ol>
-<li><p>和美术协作比较方便</p>
-</li>
-<li><p>显卡性能也有保障</p>
-</li>
-<li><p>设备性价比高</p>
-</li>
-<li></li>
-</ol>
-</li>
-</ol>
-<p>MacOS的优劣</p>
-<ol>
-<li><p>优势</p>
-<ol>
-<li><p>出包或者做平台关联 api。 有时候要导出 xcode 项目，需要在 xcode 里写代码。</p>
-</li>
-<li><p>好看逼格高系统舒服</p>
-</li>
-</ol>
-</li>
-<li><p>设备成本较高。同等价位设备性能较差</p>
-</li>
-</ol>
-<p>主要使用windows 开发，mac 打包</p>
-<p>参考讨论：<a href="https://www.v2ex.com/t/670347" target="_blank" rel="noopener">https://www.v2ex.com/t/670347</a></p>
  
       <!-- reward -->
       

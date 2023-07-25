@@ -171,6 +171,68 @@
     
     
     <article
+  id="post-Unreal-Build-UE-CI"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unreal-Build-UE-CI/"
+    >Build - UE CI</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unreal-Build-UE-CI/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.387Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>run Setup.bat for checking dependencies</p>
+<p>run GenerateProjectFiles.bat for generating your project files</p>
+<p>build engine in the configuration we needed</p>
+<p>D:\UnrealEngineSource\Setup.bat</p>
+<p>D:\UnrealEngineSource\GenerateProjectFiles.bat</p>
+<p>“c:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe” “D:\UnrealEngineSource\UE4.sln” -target:”Engine\UE4” -property:Platform=Win64;Configuration=”Development Editor” -verbosity:diagnostic</p>
+<p>“C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin\MSBuild.exe” “D:\Unreal\UnrealEngine\UE_5\UE5.sln” -target:”Engine\UE5” -property:Platform=Win64;Configuration=”Development Editor” -verbosity:diagnostic</p>
+<p><a href="https://blog.mi.hdm-stuttgart.de/index.php/2017/02/11/uat-automation/" target="_blank" rel="noopener">https://blog.mi.hdm-stuttgart.de/index.php/2017/02/11/uat-automation/</a></p>
+<p><a href="&#109;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#x68;&#116;&#116;&#x70;&#115;&#58;&#x2f;&#x2f;&#109;&#x65;&#100;&#x69;&#117;&#x6d;&#x2e;&#99;&#x6f;&#109;&#47;&#64;&#x6c;&#105;&#x66;&#101;&#101;&#x78;&#x65;&#47;&#117;&#x6e;&#114;&#101;&#97;&#x6c;&#x2d;&#101;&#x6e;&#103;&#105;&#110;&#x65;&#45;&#x63;&#105;&#x2d;&#112;&#x61;&#x72;&#116;&#x2d;&#105;&#45;&#115;&#111;&#117;&#x72;&#99;&#x65;&#x2d;&#x63;&#111;&#100;&#x65;&#45;&#98;&#117;&#x69;&#108;&#x64;&#x73;&#45;&#x38;&#48;&#x30;&#x30;&#x63;&#97;&#x31;&#x64;&#x61;&#55;&#50;&#51;">&#x68;&#116;&#116;&#x70;&#115;&#58;&#x2f;&#x2f;&#109;&#x65;&#100;&#x69;&#117;&#x6d;&#x2e;&#99;&#x6f;&#109;&#47;&#64;&#x6c;&#105;&#x66;&#101;&#101;&#x78;&#x65;&#47;&#117;&#x6e;&#114;&#101;&#97;&#x6c;&#x2d;&#101;&#x6e;&#103;&#105;&#110;&#x65;&#45;&#x63;&#105;&#x2d;&#112;&#x61;&#x72;&#116;&#x2d;&#105;&#45;&#115;&#111;&#117;&#x72;&#99;&#x65;&#x2d;&#x63;&#111;&#100;&#x65;&#45;&#98;&#117;&#x69;&#108;&#x64;&#x73;&#45;&#x38;&#48;&#x30;&#x30;&#x63;&#97;&#x31;&#x64;&#x61;&#55;&#50;&#51;</a></p>
+<p><a href="https://www.cnblogs.com/WoodJim/p/15965121.html" target="_blank" rel="noopener">https://www.cnblogs.com/WoodJim/p/15965121.html</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unreal/" rel="tag">Unreal</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unreal-Build-Unreal-Build-System"
   class="article article-type-post"
   itemscope
@@ -324,7 +386,7 @@
 <li><img src="assets/9999%20Unreal学习与拓展规划\\en_todo.png" alt=""><br><a href="https://github.com/botman99/ue4-unreal-automation-tool" target="_blank" rel="noopener">https://github.com/botman99/ue4-unreal-automation-tool</a></li>
 </ul>
 <h2 id="基本自动化构建"><a href="#基本自动化构建" class="headerlink" title="基本自动化构建"></a>基本自动化构建</h2><h3 id="Source-Code-Automation"><a href="#Source-Code-Automation" class="headerlink" title="Source Code Automation"></a>Source Code Automation</h3><ul>
-<li><img src="assets/9999%20Unreal学习与拓展规划\\en_todo_1.png" alt=""><br><a href="&#x6d;&#97;&#105;&#108;&#x74;&#x6f;&#58;&#104;&#x74;&#x74;&#x70;&#x73;&#58;&#x2f;&#47;&#x6d;&#x65;&#100;&#x69;&#117;&#109;&#x2e;&#x63;&#111;&#x6d;&#x2f;&#x40;&#108;&#x69;&#102;&#x65;&#101;&#120;&#101;&#47;&#x75;&#x6e;&#x72;&#x65;&#x61;&#x6c;&#45;&#101;&#x6e;&#103;&#x69;&#x6e;&#101;&#x2d;&#x63;&#x69;&#x2d;&#x70;&#x61;&#x72;&#x74;&#x2d;&#105;&#45;&#x73;&#111;&#117;&#114;&#x63;&#101;&#x2d;&#x63;&#x6f;&#x64;&#101;&#x2d;&#98;&#x75;&#105;&#108;&#x64;&#115;&#x2d;&#x38;&#48;&#x30;&#x30;&#x63;&#97;&#x31;&#x64;&#x61;&#55;&#50;&#51;">&#104;&#x74;&#x74;&#x70;&#x73;&#58;&#x2f;&#47;&#x6d;&#x65;&#100;&#x69;&#117;&#109;&#x2e;&#x63;&#111;&#x6d;&#x2f;&#x40;&#108;&#x69;&#102;&#x65;&#101;&#120;&#101;&#47;&#x75;&#x6e;&#x72;&#x65;&#x61;&#x6c;&#45;&#101;&#x6e;&#103;&#x69;&#x6e;&#101;&#x2d;&#x63;&#x69;&#x2d;&#x70;&#x61;&#x72;&#x74;&#x2d;&#105;&#45;&#x73;&#111;&#117;&#114;&#x63;&#101;&#x2d;&#x63;&#x6f;&#x64;&#101;&#x2d;&#98;&#x75;&#105;&#108;&#x64;&#115;&#x2d;&#x38;&#48;&#x30;&#x30;&#x63;&#97;&#x31;&#x64;&#x61;&#55;&#50;&#51;</a></li>
+<li><img src="assets/9999%20Unreal学习与拓展规划\\en_todo_1.png" alt=""><br><a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#58;&#x68;&#x74;&#x74;&#x70;&#x73;&#58;&#47;&#47;&#109;&#x65;&#x64;&#x69;&#x75;&#109;&#x2e;&#x63;&#111;&#x6d;&#x2f;&#64;&#x6c;&#105;&#x66;&#x65;&#101;&#x78;&#101;&#x2f;&#117;&#110;&#114;&#101;&#x61;&#108;&#x2d;&#x65;&#x6e;&#x67;&#105;&#110;&#101;&#45;&#99;&#x69;&#45;&#x70;&#97;&#x72;&#116;&#x2d;&#x69;&#45;&#115;&#x6f;&#117;&#114;&#99;&#x65;&#45;&#x63;&#111;&#100;&#101;&#45;&#x62;&#x75;&#x69;&#108;&#x64;&#x73;&#45;&#56;&#x30;&#48;&#48;&#x63;&#97;&#x31;&#100;&#97;&#55;&#x32;&#51;">&#x68;&#x74;&#x74;&#x70;&#x73;&#58;&#47;&#47;&#109;&#x65;&#x64;&#x69;&#x75;&#109;&#x2e;&#x63;&#111;&#x6d;&#x2f;&#64;&#x6c;&#105;&#x66;&#x65;&#101;&#x78;&#101;&#x2f;&#117;&#110;&#114;&#101;&#x61;&#108;&#x2d;&#x65;&#x6e;&#x67;&#105;&#110;&#101;&#45;&#99;&#x69;&#45;&#x70;&#97;&#x72;&#116;&#x2d;&#x69;&#45;&#115;&#x6f;&#117;&#114;&#99;&#x65;&#45;&#x63;&#111;&#100;&#101;&#45;&#x62;&#x75;&#x69;&#108;&#x64;&#x73;&#45;&#56;&#x30;&#48;&#48;&#x63;&#97;&#x31;&#100;&#97;&#55;&#x32;&#51;</a></li>
 </ul>
 <h3 id="Client-Game-Automation"><a href="#Client-Game-Automation" class="headerlink" title="Client Game Automation"></a>Client Game Automation</h3><p>学习路径：</p>
 <ul>
@@ -655,6 +717,94 @@
 
     
     <article
+  id="post-Unreal-4-3-Unreal-index"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unreal-4-3-Unreal-index/"
+    >4-3 Unreal_index</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unreal-4-3-Unreal-index/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.373Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><ul>
+<li><a href="UE%20-%20Rendering%20Pipeline.html">UE - Rendering Pipeline</a></li>
+<li><a href="Unreal%20-%20蓝图Blueprint.html">Unreal - 蓝图Blueprint</a></li>
+<li><a href="9999%20Unreal入门路线.html">9999 Unreal入门路线</a></li>
+<li><a href="Unreal操作.html">Unreal操作</a></li>
+<li><a href="Unity-Unreal.html">Unity-&gt;Unreal</a></li>
+<li><a href="【Private】Unreal%20Glossary.html">【Private】Unreal Glossary</a></li>
+<li><a href="Build%20-%20Unreal%20Build%20System.html">Build - Unreal Build System</a></li>
+<li><a href="9999%20Unreal学习与拓展规划.html">9999 Unreal学习与拓展规划</a></li>
+<li><a href="CI实践：Cross-platform%20build%20automation%20for%20UE4%20.html">CI实践：Cross-platform build automation for UE4 projects with Jenkins</a></li>
+<li><a href="【CI】Mac自动导入证书.html">【CI】Mac自动导入证书</a></li>
+<li><a href="常见问题.html">常见问题</a></li>
+<li><a href="UI方案.html">UI方案</a></li>
+<li><a href="Unreal插件开发.html">Unreal插件开发</a></li>
+<li><a href="Unreal%20C++.html">Unreal C++</a></li>
+<li><a href="【C++】常用预处理指令.html">【C++】常用预处理指令</a></li>
+<li><a href="Unreal工程目录结构.html">Unreal工程目录结构</a></li>
+<li><a href="C++基础补充.html">C++基础补充</a></li>
+<li><a href="类与API.html">类与API</a></li>
+<li><a href="Actor%20Lifecycle.html">Actor Lifecycle</a></li>
+<li><a href="Unreal资源管理.html">Unreal资源管理</a></li>
+<li><a href="技术笔记.html">技术笔记</a></li>
+<li><a href="遇到的问题及解决.html">遇到的问题及解决</a></li>
+<li><a href="Unreal%20c++常见问题.html">Unreal c++常见问题</a></li>
+<li><a href="C++基础补充-2.html">C++基础补充-2</a></li>
+<li><a href="Unreal%20C++资料整理.html">Unreal C++资料整理</a></li>
+<li><a href="%5BTODO%5D解决困惑-Actor与component关系.html">[TODO]解决困惑-Actor与component关系</a></li>
+<li><a href="Unreal%20Plugin多个模块开发与编译.html">Unreal Plugin多个模块开发与编译</a></li>
+<li><a href="Slate%20UI.html">Slate UI</a></li>
+<li><a href="无标题笔记.html">无标题笔记</a></li>
+<li><a href="Mipmap与Texture%20Streaming.html">Mipmap与Texture Streaming</a></li>
+<li><a href="UDIM贴图.html">UDIM贴图</a></li>
+<li><a href="Build%20-%20踩坑.html">Build - 踩坑</a></li>
+<li><a href="Build%20-%20UE%20CI.html">Build - UE CI</a></li>
+<li><a href="UE%20移动设备调试.html">UE 移动设备调试</a></li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unreal/" rel="tag">Unreal</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-资源路径与文件加载"
   class="article article-type-post"
   itemscope
@@ -813,7 +963,7 @@ return xml;
 
     
     <article
-  id="post-Unreal-4-3-Unreal-index"
+  id="post-Unity3D-研究Unity引擎的技巧"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -824,8 +974,8 @@ return xml;
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unreal-4-3-Unreal-index/"
-    >4-3 Unreal_index</a> 
+  <a class="article-title" href="/2023/07/25/Unity3D-%E7%A0%94%E7%A9%B6Unity%E5%BC%95%E6%93%8E%E7%9A%84%E6%8A%80%E5%B7%A7/"
+    >研究Unity引擎的技巧</a> 
 </h2>
  
 
@@ -833,53 +983,22 @@ return xml;
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/25/Unreal-4-3-Unreal-index/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.373Z" itemprop="datePublished">2023-07-25</time>
+      <a href="/2023/07/25/Unity3D-%E7%A0%94%E7%A9%B6Unity%E5%BC%95%E6%93%8E%E7%9A%84%E6%8A%80%E5%B7%A7/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.369Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
   </div>
    
     </div>
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><ul>
-<li><a href="UE%20-%20Rendering%20Pipeline.html">UE - Rendering Pipeline</a></li>
-<li><a href="Unreal%20-%20蓝图Blueprint.html">Unreal - 蓝图Blueprint</a></li>
-<li><a href="9999%20Unreal入门路线.html">9999 Unreal入门路线</a></li>
-<li><a href="Unreal操作.html">Unreal操作</a></li>
-<li><a href="Unity-Unreal.html">Unity-&gt;Unreal</a></li>
-<li><a href="【Private】Unreal%20Glossary.html">【Private】Unreal Glossary</a></li>
-<li><a href="Build%20-%20Unreal%20Build%20System.html">Build - Unreal Build System</a></li>
-<li><a href="9999%20Unreal学习与拓展规划.html">9999 Unreal学习与拓展规划</a></li>
-<li><a href="CI实践：Cross-platform%20build%20automation%20for%20UE4%20.html">CI实践：Cross-platform build automation for UE4 projects with Jenkins</a></li>
-<li><a href="【CI】Mac自动导入证书.html">【CI】Mac自动导入证书</a></li>
-<li><a href="常见问题.html">常见问题</a></li>
-<li><a href="UI方案.html">UI方案</a></li>
-<li><a href="Unreal插件开发.html">Unreal插件开发</a></li>
-<li><a href="Unreal%20C++.html">Unreal C++</a></li>
-<li><a href="【C++】常用预处理指令.html">【C++】常用预处理指令</a></li>
-<li><a href="Unreal工程目录结构.html">Unreal工程目录结构</a></li>
-<li><a href="C++基础补充.html">C++基础补充</a></li>
-<li><a href="类与API.html">类与API</a></li>
-<li><a href="Actor%20Lifecycle.html">Actor Lifecycle</a></li>
-<li><a href="Unreal资源管理.html">Unreal资源管理</a></li>
-<li><a href="技术笔记.html">技术笔记</a></li>
-<li><a href="遇到的问题及解决.html">遇到的问题及解决</a></li>
-<li><a href="Unreal%20c++常见问题.html">Unreal c++常见问题</a></li>
-<li><a href="C++基础补充-2.html">C++基础补充-2</a></li>
-<li><a href="Unreal%20C++资料整理.html">Unreal C++资料整理</a></li>
-<li><a href="%5BTODO%5D解决困惑-Actor与component关系.html">[TODO]解决困惑-Actor与component关系</a></li>
-<li><a href="Unreal%20Plugin多个模块开发与编译.html">Unreal Plugin多个模块开发与编译</a></li>
-<li><a href="Slate%20UI.html">Slate UI</a></li>
-<li><a href="无标题笔记.html">无标题笔记</a></li>
-<li><a href="Mipmap与Texture%20Streaming.html">Mipmap与Texture Streaming</a></li>
-<li><a href="UDIM贴图.html">UDIM贴图</a></li>
-<li><a href="Build%20-%20踩坑.html">Build - 踩坑</a></li>
-<li><a href="Build%20-%20UE%20CI.html">Build - UE CI</a></li>
-<li><a href="UE%20移动设备调试.html">UE 移动设备调试</a></li>
-</ul>
+  <h1 id="调用Editor内部的函数"><a href="#调用Editor内部的函数" class="headerlink" title="调用Editor内部的函数"></a>调用Editor内部的函数</h1><p>参考:<br><a href="https://www.xuanyusong.com/archives/4263（获取资源内存和硬盘大小" target="_blank" rel="noopener">https://www.xuanyusong.com/archives/4263（获取资源内存和硬盘大小</a>)</p>
+<p>Unity Editor实现的一些功能，调用了Editor本身的一些函数。这些函数可能没有作为API提供出来。如果想要调用，可以看Editor的源码：用dnSpy反编译一下，找到相关的代码与函数。<br>然后利用反射，根据函数名调用相应函数。</p>
+<p>此外，该方法提供了一个思路：想要深入理解UnityEditor的实现，就多看看Editor的包文件，反编译看看源码。一个是顺藤摸瓜，看相应功能的实现。一个是看包的整体结构组织，了解各个模块的功能以及实现，理解模块之间的关系。<br>d<br>一个小工具（用来调用内部函数）：</p>
+<p><code>csharp private static object InvokeInternalAPI(string type, string method, params object[] parameters) { var assembly = typeof(AssetDatabase).Assembly; var custom = assembly.GetType(type); var methodInfo = custom.GetMethod(method, BindingFlags.Public | BindingFlags.Static); return methodInfo != null ? methodInfo.Invoke(null, parameters) : 0; }</code> <code>csharp [MenuItem(&quot;ProfilingTools/GetTextureMem&quot;)] public static void GetTextureMem() { Texture target = Selection.activeObject as Texture; Assembly editorAssembly = Assembly.Load(&quot;UnityEditor&quot;); var type = editorAssembly.GetType(&quot;UnityEditor.TextureUtil&quot;); MethodInfo methodInfo = type.GetMethod(&quot;GetStorageMemorySize&quot;, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public); Debug.Log(&quot;内存占用：&quot; \+ EditorUtility.FormatBytes(UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(Selection.activeObject))); Debug.Log(&quot;硬盘占用：&quot; \+ EditorUtility.FormatBytes((int)methodInfo.Invoke(null, new object[] { target }))); }</code> </p>
+<h1 id="监听Unity编辑器关闭的事件"><a href="#监听Unity编辑器关闭的事件" class="headerlink" title="监听Unity编辑器关闭的事件"></a>监听Unity编辑器关闭的事件</h1><p><code>csharp using UnityEditor; public class Test { [InitializeOnLoadMethod] static void InitializeOnLoadMethod() { EditorApplication.wantsToQuit -= Quit; EditorApplication.wantsToQuit += Quit; } static bool Quit() { EditorUtility.DisplayDialog(&quot;我就是不让你关闭unity&quot;, &quot;我就是不让你关闭unity&quot;, &quot;呵呵&quot;); return false; //return true表示可以关闭unity编辑器 } }</code> </p>
  
       <!-- reward -->
       
@@ -890,7 +1009,7 @@ return xml;
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unreal/" rel="tag">Unreal</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
 
     </footer>
   </div>
@@ -1059,546 +1178,6 @@ Hour -= 1;
 }
 </code></pre>
 <h3 id="注册撤销操作"><a href="#注册撤销操作" class="headerlink" title="注册撤销操作"></a>注册撤销操作</h3><p>Undo.RegisterCreatedObjectUndo方法注册撤销操作</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-研究Unity引擎的技巧"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-%E7%A0%94%E7%A9%B6Unity%E5%BC%95%E6%93%8E%E7%9A%84%E6%8A%80%E5%B7%A7/"
-    >研究Unity引擎的技巧</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-%E7%A0%94%E7%A9%B6Unity%E5%BC%95%E6%93%8E%E7%9A%84%E6%8A%80%E5%B7%A7/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.369Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="调用Editor内部的函数"><a href="#调用Editor内部的函数" class="headerlink" title="调用Editor内部的函数"></a>调用Editor内部的函数</h1><p>参考:<br><a href="https://www.xuanyusong.com/archives/4263（获取资源内存和硬盘大小" target="_blank" rel="noopener">https://www.xuanyusong.com/archives/4263（获取资源内存和硬盘大小</a>)</p>
-<p>Unity Editor实现的一些功能，调用了Editor本身的一些函数。这些函数可能没有作为API提供出来。如果想要调用，可以看Editor的源码：用dnSpy反编译一下，找到相关的代码与函数。<br>然后利用反射，根据函数名调用相应函数。</p>
-<p>此外，该方法提供了一个思路：想要深入理解UnityEditor的实现，就多看看Editor的包文件，反编译看看源码。一个是顺藤摸瓜，看相应功能的实现。一个是看包的整体结构组织，了解各个模块的功能以及实现，理解模块之间的关系。<br>d<br>一个小工具（用来调用内部函数）：</p>
-<p><code>csharp private static object InvokeInternalAPI(string type, string method, params object[] parameters) { var assembly = typeof(AssetDatabase).Assembly; var custom = assembly.GetType(type); var methodInfo = custom.GetMethod(method, BindingFlags.Public | BindingFlags.Static); return methodInfo != null ? methodInfo.Invoke(null, parameters) : 0; }</code> <code>csharp [MenuItem(&quot;ProfilingTools/GetTextureMem&quot;)] public static void GetTextureMem() { Texture target = Selection.activeObject as Texture; Assembly editorAssembly = Assembly.Load(&quot;UnityEditor&quot;); var type = editorAssembly.GetType(&quot;UnityEditor.TextureUtil&quot;); MethodInfo methodInfo = type.GetMethod(&quot;GetStorageMemorySize&quot;, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public); Debug.Log(&quot;内存占用：&quot; \+ EditorUtility.FormatBytes(UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(Selection.activeObject))); Debug.Log(&quot;硬盘占用：&quot; \+ EditorUtility.FormatBytes((int)methodInfo.Invoke(null, new object[] { target }))); }</code> </p>
-<h1 id="监听Unity编辑器关闭的事件"><a href="#监听Unity编辑器关闭的事件" class="headerlink" title="监听Unity编辑器关闭的事件"></a>监听Unity编辑器关闭的事件</h1><p><code>csharp using UnityEditor; public class Test { [InitializeOnLoadMethod] static void InitializeOnLoadMethod() { EditorApplication.wantsToQuit -= Quit; EditorApplication.wantsToQuit += Quit; } static bool Quit() { EditorUtility.DisplayDialog(&quot;我就是不让你关闭unity&quot;, &quot;我就是不让你关闭unity&quot;, &quot;呵呵&quot;); return false; //return true表示可以关闭unity编辑器 } }</code> </p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-资源与内存-加载、卸载、Destroy"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-%E8%B5%84%E6%BA%90%E4%B8%8E%E5%86%85%E5%AD%98-%E5%8A%A0%E8%BD%BD%E3%80%81%E5%8D%B8%E8%BD%BD%E3%80%81Destroy/"
-    >资源与内存(加载、卸载、Destroy)</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-%E8%B5%84%E6%BA%90%E4%B8%8E%E5%86%85%E5%AD%98-%E5%8A%A0%E8%BD%BD%E3%80%81%E5%8D%B8%E8%BD%BD%E3%80%81Destroy/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.369Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="Unity文件，文件引用，meta详解"><a href="#Unity文件，文件引用，meta详解" class="headerlink" title="Unity文件，文件引用，meta详解"></a>Unity文件，文件引用，meta详解</h2><h3 id="Assets目录下常见的文件类型"><a href="#Assets目录下常见的文件类型" class="headerlink" title="Assets目录下常见的文件类型"></a>Assets目录下常见的文件类型</h3><h4 id="资源文件-ImportedAsset"><a href="#资源文件-ImportedAsset" class="headerlink" title="资源文件(ImportedAsset)"></a>资源文件(ImportedAsset)</h4><p>创建好的，并且不再修改的文件：FBX文件，贴图文件，音频文件，视频文件，动画文件<br>导入时进行转化，每一个类型都对应一个AssetImporter<br>点击这样的资源，在Inspector面板会出现设置界面</p>
-<h4 id="代码文件"><a href="#代码文件" class="headerlink" title="代码文件"></a>代码文件</h4><p>代码文件包括所有的代码文件，代码库文件，shader文件等，在导入时，unity会进行一次编译。</p>
-<h4 id="序列化文件-Native-Asset"><a href="#序列化文件-Native-Asset" class="headerlink" title="序列化文件(Native Asset)"></a>序列化文件(Native Asset)</h4><p>序列化文件通常是指unity能够序列化的文件，一般是unity自身的一些类型。比如prefab(预制体)，unity3d(场景)文件，asset(ScriptableObject)文件.mat文件(材质球)，这些文件能够在运行时直接反序列化为对应类的一个实例。</p>
-<h4 id="文本文档"><a href="#文本文档" class="headerlink" title="文本文档"></a>文本文档</h4><p>不是序列化文件，但是unity可以识别为TextAsset。<br>很像资源文件，但是又不需要资源文件那样进行设置和转化。<br>如txt、xml文件等等</p>
-<h4 id="非序列化文件"><a href="#非序列化文件" class="headerlink" title="非序列化文件"></a>非序列化文件</h4><p>非序列文件是Unity无法识别的文件，比如文件夹</p>
-<h4 id="Meta文件"><a href="#Meta文件" class="headerlink" title="Meta文件"></a>Meta文件</h4><p>meta文件在unity中的作用非常关键，它有2个作用</p>
-<ul>
-<li><p>定义在它同目录下，同名的非meta文件的唯一ID：GUID。而对于unity的序列化文件来说，引用的对象用的就是这个GUID。所以一旦meta中的GUID变更了，就要注意，它很可能引起一场引用丢失的灾难</p>
-</li>
-<li><p>存储资源文件的ImportSetting数据。在上文中资源文件是有ImportSetting数据的，这个数据正数存储在meta文件中。ImportSetting中专门有存储Assetbundle相关的数据。这些数据帮助编辑器去搜集所有需要打包的文件并分门别类。所以每一次修改配置都会修改meta文件。</p>
-</li>
-</ul>
-<h3 id="Meta文件详解——Unity-GUID-LocalID系统"><a href="#Meta文件详解——Unity-GUID-LocalID系统" class="headerlink" title="Meta文件详解——Unity GUID/LocalID系统"></a>Meta文件详解——Unity GUID/LocalID系统</h3><p>meta文件——文本文档，YAML格式写的（序列化文件都是用这个格式写）</p>
-<h4 id="GUID"><a href="#GUID" class="headerlink" title="GUID"></a>GUID</h4><p>guid代表该文件，无论什么类型（甚至是文件夹）。<br>通过GUID就可以找到工程中的这个文件，无论它在项目的什么位置。<br>在编辑器中使用AssetDatabase.GUIDToAssetPath和AssetDatabase.AssetPathToGUID进行互转。</p>
-<h4 id="ImportSetting数据"><a href="#ImportSetting数据" class="headerlink" title="ImportSetting数据"></a>ImportSetting数据</h4><p>根据不同的文件类型，它的数据是不同的ImportSetting数据（Inspector面板设置），比如上面的NativeFormatImporter，ModelImporter，AudioImporter等等。把一个文件和这个文件的meta文件从一个Unity工程复制到另一个Unity工程中，它的配置是不会变的。（将fbx和它的meta文件拷贝到另一个工程，不需要重新裁剪动画）</p>
-<h4 id="FileID（LocalID）"><a href="#FileID（LocalID）" class="headerlink" title="FileID（LocalID）"></a>FileID（LocalID）</h4><p>如果是一个图集，下面有若干个图片，那么就需要另外一个ID来表示，这就是LocalID（meta文件名为: FileID。）</p>
-<ul>
-<li><p>对于资源文件，非序列化文件，由于一般不会去更改源文件，所以FileID存储在meta文件中。</p>
-</li>
-<li><p>对于序列化文件，自身数据里面会存储自身的FileID，也会记录所有子文件的FileID</p>
-</li>
-</ul>
-<blockquote>
-<p>所以在每次svn提交时如果发现有meta文件变更，一定要打开看一下。看看这个guid是否被更改。理论上是不需要更改的。</p>
-</blockquote>
-<h3 id="序列化文件详解——Unity文件引用系统"><a href="#序列化文件详解——Unity文件引用系统" class="headerlink" title="序列化文件详解——Unity文件引用系统"></a>序列化文件详解——Unity文件引用系统</h3><p>用sublime打开一个Scene文件(.unity)，<br>大概的数据：</p>
-<ul>
-<li><p>OcclusionCullingSettings裁剪数据（菜单Window-&gt;Occlusion面板中的数据）</p>
-</li>
-<li><p>RenderSettings（菜单Window-&gt;Lighting-&gt;Settings面板中的部分数据）</p>
-</li>
-<li><p>LightmapSettings（菜单Window-&gt;Lighting-&gt;Settings面板中的其他部分数据）</p>
-</li>
-<li><p>NavMeshSettings（菜单Window-&gt;Navigation面板中的数据）</p>
-</li>
-<li><p>之后就是场景中的GameObject的数据</p>
-</li>
-</ul>
-<h4 id="GameObject数据"><a href="#GameObject数据" class="headerlink" title="GameObject数据"></a>GameObject数据</h4><p>Name就是Main Camera<br>某个物体上有4个组件，每个组件有一个FileID，然后在需要引用时，使用这些FileID即可。实例化一个这样的GameObject时，只要依照次序，依次创建物体，组件，初始化数据并进行引用绑定即可在场景中生成一个实例。</p>
-<blockquote>
-<p>在Inspector面板中的右上角点击，然后选择Debug转成Debug模式下的Inspector面板。<br> 在Hierarchy面板中选中Main Camera可以看到如图所示，所有的组件的LocalIdentfierInFile的值就是刚刚在Sublime中看到的数据</p>
-</blockquote>
-<ul>
-<li><p><strong>InstanceID</strong> 是unity中一个实例的ID。</p>
-</li>
-<li><p>每一个Unity实例都会有一个InstanceID。在运行时，用UnityEngine.Object的GetInstanceID获取（《Unity编辑器下和运行时的加载过程》）</p>
-</li>
-</ul>
-<h4 id="组件数据"><a href="#组件数据" class="headerlink" title="组件数据"></a>组件数据</h4><p>在GameObject之后就是组件数据。可以结合Unity中这个组件的面板来了解每一个数据的意义。</p>
-<blockquote>
-<p>组件FlareLayer，在YAML里面只是一个Behaviour（所有Behaviour组件都看不到类型名字），怎么样才能知道他是一个FlareLayer？<br> FileID左边我们看到一个124。每一个unity类型都有一个对应的数字。<br> 参考：<a href="https://docs.unity3d.com/Manual/ClassIDReference.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/ClassIDReference.html</a></p>
-</blockquote>
-<p>任何一个文件都可以通过GUID找到，然后通过FileID找到它内部的子文件。所以这样就能识别出这个具体是什么类了。</p>
-<h4 id="Prefab数据"><a href="#Prefab数据" class="headerlink" title="Prefab数据"></a>Prefab数据</h4><p>在YAML的最下面有一个数据是Prefab数据，保存了最重要的几个数据：<br>Modification：每个组件的修改数据列表，但凡修改的数据，都会在这里体现。记录了：哪个资源（GUID）的哪个组件(FileID)的哪个成员(PropertyPath)的值(value)发生了改变。<br>ParentPrefab：表示是哪一个Prefab。</p>
-<p><img src="资源与内存\(加载、卸载、Destroy\" alt="Alt text"><br>_files/289969-20180402204239871-1854753914.png)</p>
-<h2 id="资源导入"><a href="#资源导入" class="headerlink" title="资源导入"></a>资源导入</h2><p>Unity automatically imports assets and manages various kinds of additional data about them for you, such as what import settings should be used to import the asset, and where the asset is used throughout your project. </p>
-<h3 id="What-happens-when-Unity-imports-an-Asset"><a href="#What-happens-when-Unity-imports-an-Asset" class="headerlink" title="What happens when Unity imports an Asset?"></a>What happens when Unity imports an Asset?</h3><ol>
-<li>A Unique ID is assigned<br>This ID is used internally by Unity to refer to the asset which means the asset can be moved or renamed without references to the asset breaking.</li>
-</ol>
-<blockquote>
-<p>the editor frequently checks the contents of the Assets folder against the list of assets it already knows about.</p>
-</blockquote>
-<ol>
-<li>A .meta file is created</li>
-</ol>
-<blockquote>
-<p>If an asset loses its meta file (for example, if you moved or renamed the asset outside of Unity, without moving/renaming the corresponding .meta file), any reference to that asset will be broken. Unity would generate a new .meta file for the moved/renamed asset as if it were a brand new asset, and delete the old “orphaned” .meta file.</p>
-</blockquote>
-<ol>
-<li>The source asset is processed<br>Unity reads and processes any files that you add to the Assets folder, converting the contents of the file to internal game-ready versions of the data. The actual asset files remain unmodified, and the processed and converted versions of the data are stored in the project’s <strong>Library</strong> folder.</li>
-</ol>
-<blockquote>
-<p>the Photoshop file format is convenient to work with and can be saved directly into your Assets folder, but hardware such as mobile devices and PC graphics cards can’t accept that format directly to render as textures. All the data for Unity’s internal representation of your assets is stored in the Library folder which can be thought of as similar to a cache folder. As a user, you should never have to alter the Library folder manually and attempting to do so may affect the functioning of the project in the Unity editor. However, it is always safe to delete the Library folder (while the project is not open in Unity) as all its data is generated from what is stored in the Assets and ProjectSettings folders. This also means that the Library folder should not be included in version control. </p>
-<p>Sometimes multiple assets are created from an import</p>
-<ul>
-<li><p>A 3D file, such as an FBX, defines Materials and/or contains embedded Textures.</p>
-</li>
-<li><p>An image file imported as multiple sprites.</p>
-</li>
-<li><p>A 3D file contains multiple animation timelines, or has multiple separate clips defined within its animation import settings.</p>
-</li>
-</ul>
-</blockquote>
-<h3 id="The-import-settings-can-alter-the-processing-of-the-asset"><a href="#The-import-settings-can-alter-the-processing-of-the-asset" class="headerlink" title="The import settings can alter the processing of the asset"></a>The import settings can alter the processing of the asset</h3><p>As well as the unique ID assigned to the asset, the meta files contain values for all the import settings you see in the inspector when you have an asset selected in your project window. For a texture, this includes settings such as the Texture Type, Wrap Mode, Filter Mode and Aniso Level.</p>
-<p>If you change the import settings for an asset, those changed settings are stored in the .meta file accompanying the asset. The asset will be re-imported according to your new settings, and the corresponding imported “game-ready” data will be updated in the project’s Library folder.</p>
-<h2 id="AssetDatabase"><a href="#AssetDatabase" class="headerlink" title="AssetDatabase"></a>AssetDatabase</h2><p>AssetDatabase is an API which allows you to access the assets contained in your project. Among other things, it provides methods to find and load assets and also to create, delete and modify them. The Unity Editor uses the AssetDatabase internally to keep track of asset files and maintain the linkage between assets and objects that reference them.</p>
-<h3 id="Importing-an-Asset"><a href="#Importing-an-Asset" class="headerlink" title="Importing an Asset"></a>Importing an Asset</h3><h3 id="Loading-an-Asset"><a href="#Loading-an-Asset" class="headerlink" title="Loading an Asset"></a>Loading an Asset</h3><h3 id="File-Operations-using-the-AssetDatabase"><a href="#File-Operations-using-the-AssetDatabase" class="headerlink" title="File Operations using the AssetDatabase"></a>File Operations using the AssetDatabase</h3><h3 id="Using-AssetDatabase-Refresh"><a href="#Using-AssetDatabase-Refresh" class="headerlink" title="Using AssetDatabase.Refresh"></a>Using AssetDatabase.Refresh</h3><p>When you have finished modifying assets, you should call AssetDatabase.Refresh to commit your changes to the database and make them visible in the project.</p>
-<h3 id="CreateAssets-amp-FindAssets-amp-ScriptableObject"><a href="#CreateAssets-amp-FindAssets-amp-ScriptableObject" class="headerlink" title="CreateAssets &amp; FindAssets &amp; ScriptableObject"></a>CreateAssets &amp; FindAssets &amp; ScriptableObject</h3><ol>
-<li><p>对于ScriptableObject，使用CreateInstance来创建Asset实例对象<br><code>testI = (ScriptObj)ScriptableObject.CreateInstance(typeof(ScriptObj));</code></p>
-</li>
-<li><p>对于其他资源类型，使用new来创建对象</p>
-</li>
-<li><p>然后调用 <code>AssetDatabase.CreateAsset</code>函数，将实例对象作为资源存储在Assets路径当中。</p>
-</li>
-<li><p>最后使用<code>AssetDatabase.FindAssets</code>获取相应资源的GUID</p>
-</li>
-<li><p>由 <code>AssetDatabase.GUIDToAssetPath</code> 获取相应资源的路径。</p>
-</li>
-</ol>
-<pre><code class="lang-csharp">
-// This script file has two CS classes. The first is a simple Unity ScriptableObject script.
-
-// The class it defines is used by the Example class below.
-
-// (This is a single Unity script file. You could split this file into a ScriptObj.cs and an
-
-// Example.cs file which is more structured.)
-
-using UnityEngine; 
-
-using UnityEditor; 
-
-public class ScriptObj : ScriptableObject
-
-{ 
-
-public void Awake()
-
-{ 
-
-Debug.Log(&quot;ScriptObj created&quot;); 
-
-} 
-
-} 
-
-// Use ScriptObj to show how AssetDabase.FindAssets can be used
-
-public class Example
-
-{ 
-
-static ScriptObj testI; 
-
-static ScriptObj testJ; 
-
-static ScriptObj testK; 
-
-[MenuItem(&quot;Examples/FindAssets Example two&quot;)] 
-
-static void ExampleScript()
-
-{ 
-
-CreateAssets(); 
-
-NamesExample(); 
-
-LabelsExample(); 
-
-TypesExample(); 
-
-} 
-
-static void CreateAssets()
-
-{ 
-
-testI = (ScriptObj)ScriptableObject.CreateInstance(typeof(ScriptObj)); 
-
-AssetDatabase.CreateAsset(testI, &quot;Assets/AssetFolder/testI.asset&quot;); 
-
-testJ = (ScriptObj)ScriptableObject.CreateInstance(typeof(ScriptObj)); 
-
-AssetDatabase.CreateAsset(testJ, &quot;Assets/AssetFolder/testJ.asset&quot;); 
-
-// create an asset in a sub-folder and with a name which contains a space
-
-testK = (ScriptObj)ScriptableObject.CreateInstance(typeof(ScriptObj)); 
-
-AssetDatabase.CreateAsset(testK, &quot;Assets/AssetFolder/SpecialFolder/testK example.asset&quot;); 
-
-// an asset with a material will be used later
-
-Material material = new Material(Shader.Find(&quot;Standard&quot;)); 
-
-AssetDatabase.CreateAsset(material, &quot;Assets/AssetFolder/SpecialFolder/MyMaterial.mat&quot;); 
-
-} 
-
-static void NamesExample()
-
-{ 
-
-Debug.Log(&quot;*** FINDING ASSETS BY NAME ***&quot;); 
-
-string[] results; 
-
-results = AssetDatabase.FindAssets(&quot;testI&quot;); 
-
-foreach (string guid in results) 
-
-{ 
-
-Debug.Log(&quot;testI: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
-
-} 
-
-results = AssetDatabase.FindAssets(&quot;testJ&quot;); 
-
-foreach (string guid in results) 
-
-{ 
-
-Debug.Log(&quot;testJ: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
-
-} 
-
-results = AssetDatabase.FindAssets(&quot;testK example&quot;); 
-
-foreach (string guid in results) 
-
-{ 
-
-Debug.Log(&quot;testK example: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
-
-} 
-
-Debug.Log(&quot;*** More complex asset search ***&quot;); 
-
-// find all assets that contain test (which is all assets)
-
-results = AssetDatabase.FindAssets(&quot;test&quot;); 
-
-foreach (string guid in results) 
-
-{ 
-
-Debug.Log(&quot;name:test - &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
-
-} 
-
-} 
-
-static void LabelsExample()
-
-{ 
-
-Debug.Log(&quot;*** FINDING ASSETS BY LABELS ***&quot;); 
-
-string[] setLabels; 
-
-setLabels = new string[] {&quot;wrapper&quot;}; 
-
-AssetDatabase.SetLabels(testI, setLabels); 
-
-setLabels = new string[] {&quot;bottle&quot;, &quot;banana&quot;, &quot;carrot&quot;}; 
-
-AssetDatabase.SetLabels(testJ, setLabels); 
-
-setLabels = new string[] {&quot;swappable&quot;, &quot;helmet&quot;}; 
-
-AssetDatabase.SetLabels(testK, setLabels); 
-
-// label searching:
-
-// testI has wrapper, testK has swappable, so both have &#39;app&#39;
-
-// testJ has bottle, so have a label searched as &#39;bot&#39;
-
-string[] getGuids = AssetDatabase.FindAssets(&quot;l:app l:bot&quot;); 
-
-foreach (string guid in getGuids) 
-
-{ 
-
-Debug.Log(&quot;label lookup: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
-
-} 
-
-} 
-
-static void TypesExample()
-
-{ 
-
-Debug.Log(&quot;*** FINDING ASSETS BY TYPE ***&quot;); 
-
-string[] guids; 
-
-// search for a ScriptObject called ScriptObj
-
-guids = AssetDatabase.FindAssets(&quot;t:ScriptObj&quot;); 
-
-foreach (string guid in guids) 
-
-{ 
-
-Debug.Log(&quot;ScriptObj: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
-
-} 
-
-guids = AssetDatabase.FindAssets(&quot;t:ScriptObj l:helmet&quot;); 
-
-foreach (string guid in guids) 
-
-{ 
-
-Debug.Log(&quot;ScriptObj+bottle: &quot; \+ AssetDatabase.GUIDToAssetPath(guid)); 
-
-} 
-
-} 
-
-}
-</code></pre>
-<h2 id="AssetBundle"><a href="#AssetBundle" class="headerlink" title="AssetBundle"></a>AssetBundle</h2><p><a href="https://blog.csdn.net/qq_35361471/article/details/82854560" target="_blank" rel="noopener">https://blog.csdn.net/qq_35361471/article/details/82854560</a></p>
-<h2 id="资源卸载（Unload-amp-Destroy）"><a href="#资源卸载（Unload-amp-Destroy）" class="headerlink" title="资源卸载（Unload &amp; Destroy）"></a>资源卸载（Unload &amp; Destroy）</h2><h3 id="Destroy"><a href="#Destroy" class="headerlink" title="Destroy"></a>Destroy</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>UNITY Destroy()和DestroyImadiate()都不会立即释放对象内存<br>DestroyImadiate是立即将物体从场景hierachy中移除，并标记为 “null”，注意 是带引号的null。这是UNITY内部的一个处理技巧。关于这个技巧有很争议。<br>Destroy要等到帧末才会将物体从场景层级中移除并标记为”null”。</p>
-<p>不管如何，二者都只是UNITY引擎层面的标记与处理，但在.NET底层，对象的内存都没有释放，只有手动GC.Collect()或等待NET去GC时才会释放掉对象内存。<br>如果该对象在其他地方还有引用的话，GC也无法将对象的内存释放。</p>
-<h4 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h4><p>（1）obj并不会立即销毁，而是需要等待下一个Update更新，所以还是可以被print出来；<br>（2）DestroyImmediate立即对对像进行销毁，print出来是null；<br>（3）Destroy销毁场景中的物体，但内存中还存在，当令它需要销毁时，只是给一个标识。而内存中它依然是存在的，只有当内存不够，或一段时间没有再次被引用时（或者更多合理的条件满足），机制才会将它销毁并释放内存；<br>（4）这样做的目的就是为了避免频繁对内存的读写操作。回收器会定时清理一次内存中引用计数为0的对象，很可能你的要销毁的对象在其他地方还有引用而你自己不清楚，直接销毁可能导致其他地方空引用错误；<br>（5）建议使用平常Destroy函数，而不是DestroyImmediate函数；</p>
-<h4 id="作用对象"><a href="#作用对象" class="headerlink" title="作用对象"></a>作用对象</h4><p>GameObject、Component这样的在内存当中的实例，可以直接销毁，销毁掉后对硬盘上的资源是没有影响的。<br>Load进来的资源文件（Texture等）不可以使用DestroyImmediate(obj)直接销毁。如果使用DestroyImmediate(obj, true)接口，可以销毁。对于序列化文件等Unity可以直接识别和接管的文件，相应的资源文件会销毁掉，而对于Texture这样的资源，Unity无法识别资源原始的图片，只能识别导入后加入Library中的文件，则会销毁Library中相应的资源，并断掉对该资源的引用（路径上就找不到该资源了）。而对于图片，由于原始文件没有被销毁，重新打开项目后，该图片会重新被Import进来。</p>
-<p>总之，Destroy接口本身是不应该用来销毁资源的。</p>
-<p>如果在游戏当中把资源Destroy掉，下次打开游戏，这个资源就没有了，加载不到了。</p>
-<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>测试代码如下：点ADD按钮不断创建对象，点DEL按钮清除所有对象，通过观察进程内存数值来察看对象内存是否释放。</p>
-<pre><code class="lang-csharp">
-using System.Collections; 
-
-using System.Collections.Generic; 
-
-using System.Diagnostics; 
-
-using UnityEngine; 
-
-using UnityEngine.UI; 
-
-public class MyGo : MonoBehaviour
-
-{ 
-
-byte[] data = new byte[83000]; 
-
-} 
-
-public class testad : MonoBehaviour { 
-
-Transform objs; 
-
-Text txt; 
-
-Process proc; 
-
-void Start () { 
-
-var btnadd = transform.Find(&quot;btnAdd&quot;).GetComponent&lt;Button&gt;(); 
-
-btnadd.onClick.AddListener(OnClckAdd); 
-
-var btndel = transform.Find(&quot;btnDel&quot;).GetComponent&lt;Button&gt;(); 
-
-btndel.onClick.AddListener(OnClckDel); 
-
-objs = transform.Find(&quot;objs&quot;); 
-
-txt = transform.Find(&quot;Text&quot;).GetComponent&lt;Text&gt;(); 
-
-proc = Process.GetCurrentProcess(); 
-
-} 
-
-void OnClckAdd()
-
-{ 
-
-for (int i = 0; i &lt; 20; ++i) 
-
-{ 
-
-var go = new GameObject(); 
-
-go.AddComponent&lt;MyGo&gt;(); 
-
-go.transform.SetParent(objs); 
-
-} 
-
-} 
-
-void OnClckDel()
-
-{ 
-
-for (int i = objs.childCount - 1; i &gt;= 0; i--) 
-
-{ 
-
-GameObject.DestroyImmediate(objs.GetChild(i).gameObject); 
-
-} 
-
-System.GC.Collect(); 
-
-} 
-
-// Update is called once per frame
-
-float timer = 0; 
-
-void Update () 
-
-{ 
-
-if (timer &gt; 0.5f) 
-
-{ 
-
-timer = 0; 
-
-txt.text = ((int)(proc.WorkingSet64 / 1024)).ToString(); 
-
-} 
-
-timer += Time.deltaTime; 
-
-} 
-
-}
-</code></pre>
-<h4 id="Resources-UnloadUnusedAssets"><a href="#Resources-UnloadUnusedAssets" class="headerlink" title="Resources.UnloadUnusedAssets"></a>Resources.UnloadUnusedAssets</h4><p>运行中卸载，可能是在帧末尾卸载</p>
-<h4 id="Resources-UnloadAsset"><a href="#Resources-UnloadAsset" class="headerlink" title="Resources.UnloadAsset()"></a>Resources.UnloadAsset()</h4><p>对于场景当中的特定资源，如果相机照射到他或者在脚本中有对资源的引用的话就无法卸载。<br>如果相机没有看到他，并且没有被引用到，那么该资源会在内存当中被卸载。而若下次引用到他，或者相机照射到他，那么该资源会被重新加载到内存当中。</p>
-<h4 id="EditorUtility-UnloadUnusedAssets"><a href="#EditorUtility-UnloadUnusedAssets" class="headerlink" title="EditorUtility.UnloadUnusedAssets"></a>EditorUtility.UnloadUnusedAssets</h4><p>编辑器下的卸载资源接口。</p>
-<h2 id="资源卸载与内存管理问题的处理经验"><a href="#资源卸载与内存管理问题的处理经验" class="headerlink" title="资源卸载与内存管理问题的处理经验"></a>资源卸载与内存管理问题的处理经验</h2><ol>
-<li><p>Editor中的脚本对物体的引用无法用Memory Profiler检测到，因为Editor脚本对MemoryProfiler是不可见的。</p>
-</li>
-<li><p>只要脚本中有对Texture等资源实例的引用，那么相应的资源就无法卸载掉。</p>
-</li>
-<li><p>EditorUtility.UnloadUnusedAssets确实可以卸载没有被引用的资源对象，但是不会一调用就立即卸载掉，可能稍等一会儿才会卸载掉。所以，在这个函数调用过后立即检测内存，是看不出来卸载的效果的，过一小段时间后，再打印内存，就可以看到卸载的效果。根据对内存的监控可以判断：刚刚调用Unload资源函数的时候，内存不会立即释放，在下次加载资源的时候，会进行内存释放操作。</p>
-</li>
-<li><p>把加载进内存的对象直接Destroy掉，就不会占用内存，不需要调用Unload函数也可以。 如果把对资源的引用设置为null，不调用unload函数的话，资源会留在内存当中，只有调用unload之后，资源才会被卸载</p>
-</li>
-</ol>
-<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.cnblogs.com/CodeGize/p/8697227.html" target="_blank" rel="noopener">https://www.cnblogs.com/CodeGize/p/8697227.html</a><br><a href="https://www.cnblogs.com/timeObjserver/p/7575035.html" target="_blank" rel="noopener">https://www.cnblogs.com/timeObjserver/p/7575035.html</a><br><a href="https://docs.unity3d.com/2017.2/Documentation/Manual/BehindtheScenes.html" target="_blank" rel="noopener">https://docs.unity3d.com/2017.2/Documentation/Manual/BehindtheScenes.html</a></p>
  
       <!-- reward -->
       

@@ -229,7 +229,7 @@
 
     
     <article
-  id="post-Unity3D-GPU-Skinning"
+  id="post-Unity3D-LUA相关"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -240,8 +240,8 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-GPU-Skinning/"
-    >GPU Skinning</a> 
+  <a class="article-title" href="/2023/07/25/Unity3D-LUA%E7%9B%B8%E5%85%B3/"
+    >LUA相关</a> 
 </h2>
  
 
@@ -249,8 +249,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-GPU-Skinning/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.251Z" itemprop="datePublished">2023-07-25</time>
+      <a href="/2023/07/25/Unity3D-LUA%E7%9B%B8%E5%85%B3/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.253Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -260,8 +260,12 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="蒙皮-Skinning"><a href="#蒙皮-Skinning" class="headerlink" title="蒙皮(Skinning)"></a>蒙皮(Skinning)</h3><p>将模型的网格皮肤(skin mesh)绑定给骨骼的过程</p>
-<h3 id="刚体蒙皮"><a href="#刚体蒙皮" class="headerlink" title="刚体蒙皮"></a>刚体蒙皮</h3><h3 id="顶点混合"><a href="#顶点混合" class="headerlink" title="顶点混合"></a>顶点混合</h3> 
+  <h2 id="相关网站"><a href="#相关网站" class="headerlink" title="相关网站"></a>相关网站</h2><ul>
+<li><p><a href="https://github.com/mpeterv/luacheck" target="_blank" rel="noopener">https://github.com/mpeterv/luacheck</a></p>
+</li>
+<li></li>
+</ul>
+ 
       <!-- reward -->
       
     </div>
@@ -430,7 +434,7 @@ GUILayout.EndVertical();
 
     
     <article
-  id="post-Unity3D-GPU和CPU的区别"
+  id="post-Unity3D-GPU-Skinning"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -441,8 +445,8 @@ GUILayout.EndVertical();
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-GPU%E5%92%8CCPU%E7%9A%84%E5%8C%BA%E5%88%AB/"
-    >GPU和CPU的区别</a> 
+  <a class="article-title" href="/2023/07/25/Unity3D-GPU-Skinning/"
+    >GPU Skinning</a> 
 </h2>
  
 
@@ -450,7 +454,7 @@ GUILayout.EndVertical();
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-GPU%E5%92%8CCPU%E7%9A%84%E5%8C%BA%E5%88%AB/" class="article-date">
+      <a href="/2023/07/25/Unity3D-GPU-Skinning/" class="article-date">
   <time datetime="2023-07-25T12:56:23.251Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
@@ -461,9 +465,8 @@ GUILayout.EndVertical();
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h3 id="GPU"><a href="#GPU" class="headerlink" title="GPU"></a>GPU</h3><p>GPU比较适合大量可并行的简单任务。比如场景渲染，光照处理等等。<br>GPU也支持一些其他的运算，比如通过GLSL，HLSL和Cg支持并行运算等等。<br>GPU同时也对游戏中的一些物理效果提供支持，比如PhysX。<br><strong>GPU负责显示特效</strong></p>
-<h3 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h3><p>CPU用于一些数值运算，比如伤害，随机数等等。同时你的敌人AI也是CPU运算出来的。<br>越是大型的单机游戏，游戏资源量越大，资源的实时加载以及处理也是大多由CPU来完成的。<br><strong>CPU负责游戏逻辑</strong></p>
- 
+  <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="蒙皮-Skinning"><a href="#蒙皮-Skinning" class="headerlink" title="蒙皮(Skinning)"></a>蒙皮(Skinning)</h3><p>将模型的网格皮肤(skin mesh)绑定给骨骼的过程</p>
+<h3 id="刚体蒙皮"><a href="#刚体蒙皮" class="headerlink" title="刚体蒙皮"></a>刚体蒙皮</h3><h3 id="顶点混合"><a href="#顶点混合" class="headerlink" title="顶点混合"></a>顶点混合</h3> 
       <!-- reward -->
       
     </div>
@@ -537,6 +540,60 @@ GUILayout.EndVertical();
 </blockquote>
 <p>Set Native Size：设置元素为原本的像素大小</p>
 <h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://blog.csdn.net/ecidevilin/article/details/52556724" target="_blank" rel="noopener">https://blog.csdn.net/ecidevilin/article/details/52556724</a><br><a href="http://&quot;https://blog.csdn.net/LLLLL&lt;strong" target="_blank" rel="noopener">/article/details/103807887?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.channel_param&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.channel_param”&gt;https://blog.csdn.net/LLLLL/article/details/103807887?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.channel_param&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.channel_param</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-GPU和CPU的区别"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-GPU%E5%92%8CCPU%E7%9A%84%E5%8C%BA%E5%88%AB/"
+    >GPU和CPU的区别</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-GPU%E5%92%8CCPU%E7%9A%84%E5%8C%BA%E5%88%AB/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.251Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h3 id="GPU"><a href="#GPU" class="headerlink" title="GPU"></a>GPU</h3><p>GPU比较适合大量可并行的简单任务。比如场景渲染，光照处理等等。<br>GPU也支持一些其他的运算，比如通过GLSL，HLSL和Cg支持并行运算等等。<br>GPU同时也对游戏中的一些物理效果提供支持，比如PhysX。<br><strong>GPU负责显示特效</strong></p>
+<h3 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h3><p>CPU用于一些数值运算，比如伤害，随机数等等。同时你的敌人AI也是CPU运算出来的。<br>越是大型的单机游戏，游戏资源量越大，资源的实时加载以及处理也是大多由CPU来完成的。<br><strong>CPU负责游戏逻辑</strong></p>
  
       <!-- reward -->
       
@@ -1048,59 +1105,6 @@ return col;
 <p><img src="assets/CubeMap%20&amp;%20Skybox/1615185458141.png" alt="Alt text"></p>
 <h3 id="Panorama-全景画"><a href="#Panorama-全景画" class="headerlink" title="Panorama(全景画)"></a>Panorama(全景画)</h3><p>Builtin Shader: Skybox/Panoramic<br>可以直接Texture2D格式的对全景图进行采样。</p>
 <h1 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h1><p><a href="https://blog.csdn.net/v_xchen_v/article/details/79474193" target="_blank" rel="noopener">https://blog.csdn.net/v_xchen_v/article/details/79474193</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-Collider"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unity3D-Collider/"
-    >Collider</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unity3D-Collider/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.242Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="MeshCollider"><a href="#MeshCollider" class="headerlink" title="MeshCollider"></a>MeshCollider</h1><p>网格碰撞体 (Mesh Collider) 采用网格资源 (Mesh Asset) 并基于该网格构建其碰撞体 (Collider)。</p>
  
       <!-- reward -->
       

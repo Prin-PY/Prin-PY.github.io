@@ -171,6 +171,90 @@
     
     
     <article
+  id="post-Unreal-Unreal插件开发"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unreal-Unreal%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/"
+    >Unreal插件开发</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unreal-Unreal%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.412Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>Engine /[UE4 Root]/Engine/Plugins/[Plugin Name]/</p>
+<p>Game /[Project Root]/Plugins/[Plugin Name]/<br>(will be detected and loaded at Engine or Editor start-up time)</p>
+<p>Public/Classes的父目录名就是module名</p>
+<h3 id="Plugin-Descriptor-Files"><a href="#Plugin-Descriptor-Files" class="headerlink" title="Plugin Descriptor Files"></a>Plugin Descriptor Files</h3><p>Plugin descriptor Files: <code>.uplugin</code><br>API: <a href="https://docs.unrealengine.com/4.27/en-US/API/Runtime/Projects/FPluginDescriptor/" target="_blank" rel="noopener">https://docs.unrealengine.com/4.27/en-US/API/Runtime/Projects/FPluginDescriptor/</a></p>
+<p>Category：类目名即在插件浏览器中所属的类目。<br>Installed：默认启用或禁用状态，在插件浏览器中可以控制加载卸载插件模块。<br>Modules：描述模块名、运行类型、加载时机、支持平台等信息。<br>Type：Runtime，RuntimeNoCommandlet，Developer，Editor，EditorNoCommandlet，Program。<br>LoadingPhase：Default，PreDefault，PostConfigInit，PostConfigInit。<br>WhitelistPlatforms：支持的平台<br>BlacklistPlatforms：不支持的平台</p>
+<h2 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h2><p>unreal的理念是开发工作都是在工程目录进行，包括插件开发</p>
+<h3 id="打包发布"><a href="#打包发布" class="headerlink" title="打包发布"></a>打包发布</h3><p><a href="https://blog.csdn.net/jxyb2012/article/details/88839224" target="_blank" rel="noopener">https://blog.csdn.net/jxyb2012/article/details/88839224</a></p>
+<p><code>csharp &quot;E:\Program Files\Epic Games\UE_4.25\Engine\Build\BatchFiles\RunUAT.bat&quot; BuildPlugin Plugin=&quot;D:\work\UE4_25\PluginFactory\Plugins\MyNewPlugin\MyNewPlugin.uplugin&quot; Package=&quot;D:\work\UE4_25\PluginPackaged&quot;</code> </p>
+<h2 id="插件编译执行过程"><a href="#插件编译执行过程" class="headerlink" title="插件编译执行过程"></a>插件编译执行过程</h2><p>Plugins will automatically be compiled by UBT when compiling your game project.</p>
+<p><code>csharp #pragma once #include &quot;CoreMinimal.h&quot; #include &quot;ModuleManager.h&quot; class FPanoCamModule : public IModuleInterface { public: /** IModuleInterface implementation */ virtual void StartupModule() override; virtual void ShutdownModule() override; };</code> </p>
+<p>每个独立模块都有一个类继承自 IModuleInterface，重写了插件加载卸载的方法。</p>
+<p>.uplugin文件中Modules下的LoadingPhase字段说明了模块加载的时机，当满足这个时机时此模块StartupModule函数将被调用。此插件的功能入口就是从这里开始。当程序关闭或主动调用ShutdownModule函数时，模块将被卸载。</p>
+<h2 id="编辑器拓展开发接口"><a href="#编辑器拓展开发接口" class="headerlink" title="编辑器拓展开发接口"></a>编辑器拓展开发接口</h2><p>LevelEditorModule.GetToolBarExtensibilityManager()可以拓展关卡编辑器的工具栏，GetMenuExtensibilityManager()可以拓展菜单栏。<br>GEditor-&gt;GetEditorSubsystem<UAssetEditorSubsystem>()-&gt;OnAssetOpenedInEditor()，可以监听UE中，任意编辑器打开的事件。<br>FCoreUObjectDelegates::OnObjectPropertyChanged可以监听任意Object，任意属性的变化事件。</p>
+<h2 id="其他技巧"><a href="#其他技巧" class="headerlink" title="其他技巧"></a>其他技巧</h2><h3 id="Include"><a href="#Include" class="headerlink" title="Include"></a>Include</h3><blockquote>
+<p>unreal中所有头文件都可以include。只是ue建议只include public目录或Classes的头文件，不建议include private目录的。</p>
+</blockquote>
+<h4 id="Include-public"><a href="#Include-public" class="headerlink" title="Include public"></a>Include public</h4><p>在XXX.Build.cs文件中添加依赖Module：PublicDependencyModuleNames.AddRange<br>然后在某个源码文件，直接include。（从Public/Classes开始算路径）</p>
+<h4 id="Include-private"><a href="#Include-private" class="headerlink" title="Include private"></a>Include private</h4><p>在当前插件模块的build.cs文件中添加Private目录:</p>
+<p><code>csharp var EngineDir = Path.GetFullPath(Target.RelativeEnginePath); PrivateIncludePaths.AddRange( new string[] { Path.Combine(EngineDir, &quot;Source/Editor/AnimationBlueprintEditor/Private/&quot;), });</code> <code>csharp // 用尖括号也可以 #include &quot;AnimationBlueprintEditor.h&quot;</code> </p>
+<h3 id="添加第三方依赖库"><a href="#添加第三方依赖库" class="headerlink" title="添加第三方依赖库"></a>添加第三方依赖库</h3><p>PublicIncludePaths.Add(zlibPath + “include” + platform); //把（.h）头文件路径引入。<br>PublicLibraryPaths.Add(zlibPath + “lib” + platform); //把（.lib）库文件路径引入。<br>PublicAdditionalLibraries.Add(“zlibstatic.lib”); //把（.lib）库文件引入。</p>
+<p><a href="https://blog.csdn.net/jxyb2012/article/details/88839224" target="_blank" rel="noopener">https://blog.csdn.net/jxyb2012/article/details/88839224</a></p>
+<h4 id="链接错误的解决方法"><a href="#链接错误的解决方法" class="headerlink" title="链接错误的解决方法"></a>链接错误的解决方法</h4><ol>
+<li>确保：把所属module添加到PublicDependencyModuleNames中</li>
+<li>确保：如果缺失的函数or类是某个插件中的，需要标识为API，在函数前加入对应API宏。</li>
+</ol>
+<blockquote>
+<p>例如module名为SamplePlg，则API宏为：SAMPLEPLG_API</p>
+</blockquote>
+<h3 id="访问private或protected的UPROPERTY"><a href="#访问private或protected的UPROPERTY" class="headerlink" title="访问private或protected的UPROPERTY"></a>访问private或protected的UPROPERTY</h3><p><code>csharp USTRUCT() struct FAnimLinkableElement { GENERATED_USTRUCT_BODY() protected: /** The slot index we are currently using within LinkedMontage */ UPROPERTY(EditAnywhere, Category=AnimLink) int32 SlotIndex; };</code> <code>csharp int32* GetSlotIndex(void *pAnimLinkableElement) { static UScriptStruct* Struct = FindObjectSafe&lt;UScriptStruct&gt;(ANY_PACKAGE, TEXT(&quot;AnimLinkableElement&quot;)); auto Prop = Struct-&gt;FindPropertyByName(TEXT(&quot;SlotIndex&quot;)); check(Prop); return Prop-&gt;ContainerPtrToValuePtr&lt;int32&gt;(pAnimLinkableElement); }</code> </p>
+<h2 id="Build-cs"><a href="#Build-cs" class="headerlink" title="Build.cs"></a>Build.cs</h2><p>配置文件属性详细说明：<a href="https://blog.csdn.net/jxyb2012/article/details/88839224" target="_blank" rel="noopener">https://blog.csdn.net/jxyb2012/article/details/88839224</a></p>
+<p><code>csharp using UnrealBuildTool; using System.IO; //路径获取需要用到IO public class TestPlugin : ModuleRules ｛ private string ModulePath //当前TestPlugin.Build.cs文件所在的路径 ｛ get ｛ return Path.GetDirectoryName(RulesCompiler.GetModuleFilename(this.GetType().Name)); ｝ ｝ private string ThirdPartyPath //这个插件引用的第三方库的目录 ｛ get ｛ return Path.GetFullPath(Path.Combine(ModulePath, &quot;../../ThirdParty/&quot;)); ｝ ｝ private string MyTestLibPath //第三方库MyTestLib的目录 ｛ get ｛ return Path.GetFullPath(Path.Combine(ThirdPartyPath, &quot;MyTestLib&quot;)); ｝ ｝ public TestPlugin(TargetInfo Target) ｛ PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs; PublicIncludePaths.AddRange( //公有文件搜索路径 new string[] ｛ &quot;TestPlugin/Public&quot; // ... add public include paths required here ... ｝ ); PrivateIncludePaths.AddRange( new string[] ｛ &quot;TestPlugin/Private&quot; //私有文件搜索路径 // ... add other private include paths required here ... ｝ ); PublicDependencyModuleNames.AddRange( new string[] ｛ &quot;Core&quot; // ... add other public dependencies that you statically link with here ... ｝ ); PrivateDependencyModuleNames.AddRange( new string[] ｛ &quot;CoreUObject&quot;, &quot;Engine&quot;, &quot;Slate&quot;, &quot;SlateCore&quot;, // ... add private dependencies that you statically link with here ... ｝ ); DynamicallyLoadedModuleNames.AddRange( new string[] ｛ // ... add any modules that your module loads dynamically here ... ｝ ); LoadThirdPartyLib(Target); //加载第三方库 ｝ public bool LoadThirdPartyLib(TargetInfo Target) ｛ bool isLibrarySupported = false; if ((Target.Platform == UnrealTargetPlatform.Win64) || (Target.Platform == UnrealTargetPlatform.Win32))//平台判断 ｛ isLibrarySupported = true; System.Console.WriteLine(&quot;\----- isLibrarySupported true&quot;); string PlatformSubPath = (Target.Platform == UnrealTargetPlatform.Win64) ? &quot;Win64&quot; : &quot;Win32&quot;; string LibrariesPath = Path.Combine(MyTestLibPath, &quot;Lib&quot;); PublicAdditionalLibraries.Add(Path.Combine(LibrariesPath, PlatformSubPath, &quot;TestLib.lib&quot;));//加载第三方静态库.lib ｝ if (isLibrarySupported) //成功加载库的情况下，包含第三方库的头文件 ｛ // Include path System.Console.WriteLine(&quot;\----- PublicIncludePaths.Add true&quot;); PublicIncludePaths.Add(Path.Combine(MyTestLibPath, &quot;Include&quot;)); ｝ return isLibrarySupported; ｝ ｝</code> </p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.jianshu.com/p/ec0ae889f417" target="_blank" rel="noopener">https://www.jianshu.com/p/ec0ae889f417</a><br><a href="https://www.jianshu.com/p/49684c1b6011" target="_blank" rel="noopener">https://www.jianshu.com/p/49684c1b6011</a><br><a href="https://gameinstitute.qq.com/community/detail/121298" target="_blank" rel="noopener">https://gameinstitute.qq.com/community/detail/121298</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unreal/" rel="tag">Unreal</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unreal-Unreal操作"
   class="article article-type-post"
   itemscope
@@ -833,67 +917,6 @@
 <p>GEngine-&gt;AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Printf(TEXT(“Server not connected yet.”)));</p>
 <p><a href="https://blog.csdn.net/m0_51819222/article/details/122511585" target="_blank" rel="noopener">https://blog.csdn.net/m0_51819222/article/details/122511585</a></p>
 <p><a href="https://blog.csdn.net/Jason6620/article/details/128404026" target="_blank" rel="noopener">https://blog.csdn.net/Jason6620/article/details/128404026</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unreal/" rel="tag">Unreal</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unreal-UE-Rendering-Pipeline"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/25/Unreal-UE-Rendering-Pipeline/"
-    >UE - Rendering Pipeline</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/25/Unreal-UE-Rendering-Pipeline/" class="article-date">
-  <time datetime="2023-07-25T12:56:23.400Z" itemprop="datePublished">2023-07-25</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="静态网格"><a href="#静态网格" class="headerlink" title="静态网格"></a>静态网格</h2><h3 id="HLOD-Hierarchical-Level-of-Detail"><a href="#HLOD-Hierarchical-Level-of-Detail" class="headerlink" title="HLOD (Hierarchical Level of Detail )"></a>HLOD (Hierarchical Level of Detail )</h3><ul>
-<li><p>合并网格</p>
-</li>
-<li><p>合并材质</p>
-</li>
-<li><p>减少Draw Call</p>
-</li>
-</ul>
-<h2 id="Demos"><a href="#Demos" class="headerlink" title="Demos"></a>Demos</h2><p>Content Examples</p>
  
       <!-- reward -->
       
