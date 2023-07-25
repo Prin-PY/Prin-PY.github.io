@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>An introduction to IL2CPP internalsВведение в |  半个出家人</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/circle_image.png" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="半个出家人" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Unity3D-An-introduction-to-IL2CPP-internalsВведение-в"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  An introduction to IL2CPP internalsВведение в
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-An-introduction-to-IL2CPP-internals%D0%92%D0%B2%D0%B5%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B2/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.212Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">3.7k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">22 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p> IL2CPP - Unity Technologies Blog</p>
+<h1 id="An-introduction-to-IL2CPP-internals"><a href="#An-introduction-to-IL2CPP-internals" class="headerlink" title="An introduction to IL2CPP internals"></a>An introduction to IL2CPP internals</h1><p><a href="https://blogs.unity3d.com/author/josh/" target="_blank" rel="noopener" title="Posts by Josh Peterson">Josh Peterson</a>, May 6, 2015</p>
+<p><a href="https://blogs.unity3d.com/category/technology/" target="_blank" rel="noopener">Technology</a></p>
+<p><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;470.5&#39; height=&#39;470.5&#39; viewBox=&#39;0 0 470.5 470.5&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’278’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’279’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3cpath d=’M271.5 154.2v-40.5c0-6.1 0.3-10.8 0.8-14.1 0.6-3.3 1.9-6.6 3.9-9.9 2-3.2 5.2-5.5 9.7-6.7 4.5-1.2 10.4-1.9 17.9-1.9h40.5V0h-64.8c-37.5 0-64.4 8.9-80.8 26.7 -16.4 17.8-24.6 44-24.6 78.7v48.8h-48.5v81.1h48.5v235.3h97.4V235.3h64.8l8.6-81.1H271.5z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’280’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a><a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F&amp;text=An+introduction+to+IL2CPP+internals&amp;via=unity3d" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;450&#39; height=&#39;450&#39; viewBox=&#39;0 0 450 450&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’282’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’283’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3cpath d=’M450 85.7c-17.7 7.6-35.4 12.4-53.1 14.3 20-12 33.5-28.9 40.5-50.8 -18.3 10.8-37.8 18.3-58.5 22.3 -18.3-19.4-40.7-29.1-67.4-29.1 -25.5 0-47.2 9-65.2 27 -18 18-27 39.7-27 65.2 0 6.9 0.8 13.9 2.3 21.1 -37.7-1.9-73-11.4-106.1-28.4C82.5 110.2 54.4 87.5 31.4 59.1c-8.4 14.3-12.6 29.8-12.6 46.5 0 15.8 3.7 30.5 11.1 44 7.4 13.5 17.4 24.5 30 32.8 -14.8-0.6-28.7-4.5-41.7-11.7v1.1c0 22.3 7 41.8 21 58.7 14 16.8 31.6 27.5 53 31.8 -8 2.1-16.1 3.1-24.3 3.1 -5.3 0-11.1-0.5-17.4-1.4 5.9 18.5 16.8 33.6 32.5 45.5 15.8 11.9 33.7 18 53.7 18.4 -33.5 26.3-71.7 39.4-114.5 39.4 -8.2 0-15.6-0.4-22.3-1.1 42.8 27.6 90 41.4 141.6 41.4 32.7 0 63.5-5.2 92.2-15.6 28.7-10.4 53.3-24.3 73.7-41.7 20.4-17.4 37.9-37.4 52.7-60.1 14.8-22.7 25.7-46.3 33-70.9 7.2-24.7 10.8-49.3 10.8-74.1 0-5.3-0.1-9.3-0.3-12C421.8 120.2 437.2 104.3 450 85.7z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’284’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F&amp;title=An+introduction+to+IL2CPP+internals&amp;summary=Almost+a+year+ago+now%2C+we+started+to+talk+about+the+future+of+scripting+in+Unity.+The+new+IL2CPP+scripting+backend+promised+to+bring+a+highly-performant%2C+highly-portable+virtual+machine+to+Unity.+In+January%2C+we+shipped+our+first+platform+using+IL2CPP%2C+iOS+64-bit.+The+Unity+5+release+brought+another+platform%2C+WebGL.+Thanks+to+the+input+from+%5B%26hellip%3B%5D&amp;source=Unity3d+Blog" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;438.5&#39; height=&#39;438.5&#39; viewBox=&#39;0 0 438.5 438.5&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’286’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’287’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3crect x=’5.4’ y=’145.9’ width=’94.2’ height=’282.9’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’288’ class=’js-evernote-checked’%3e%3c/rect%3e %3cpath d=’M408.8 171.7c-19.8-21.6-46-32.4-78.5-32.4 -12 0-22.9 1.5-32.7 4.4 -9.8 3-18.1 7.1-24.8 12.4 -6.8 5.3-12.1 10.3-16.1 14.8 -3.8 4.3-7.5 9.4-11.1 15.1v-40.2h-93.9l0.3 13.7c0.2 9.1 0.3 37.3 0.3 84.5 0 47.2-0.2 108.8-0.6 184.7h93.9V270.9c0-9.7 1-17.4 3.1-23.1 4-9.7 10-17.8 18.1-24.4 8.1-6.6 18.1-9.9 30.1-9.9 16.4 0 28.4 5.7 36.1 17 7.7 11.3 11.6 27 11.6 47V428.8h93.9V266.7C438.5 225 428.6 193.3 408.8 171.7zM53.1 9.7c-15.8 0-28.6 4.6-38.4 13.8C4.9 32.8 0 44.4 0 58.5c0 13.9 4.8 25.5 14.3 34.8 9.5 9.3 22.1 14 37.7 14h0.6c16 0 28.9-4.7 38.7-14 9.8-9.3 14.6-20.9 14.4-34.8 -0.2-14.1-5-25.7-14.6-35C81.6 14.3 68.9 9.7 53.1 9.7z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’289’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a></p>
+<p>Almost a year ago now, we started to talk about the <a href="http://blogs.unity3d.com/2014/05/20/the-future-of-scripting-in-unity/" target="_blank" rel="noopener">future</a> of scripting in Unity. The new IL2CPP scripting backend promised to bring a highly-performant, highly-portable virtual machine to Unity. In January, we shipped our first platform using IL2CPP, <a href="http://blogs.unity3d.com/2015/01/29/unity-4-6-2-ios-64-bit-support/" target="_blank" rel="noopener">iOS 64-bit</a>. The Unity 5 release brought another platform, <a href="http://blogs.unity3d.com/2014/04/29/on-the-future-of-web-publishing-in-unity/" target="_blank" rel="noopener">WebGL</a>. Thanks to the input from our tremendous community of users, we have shipped many patch release <a href="http://blogs.unity3d.com/2015/04/07/weekly-ios-64-bit-and-metal-update/" target="_blank" rel="noopener">updates</a> for IL2CPP, steadily improving its compiler and runtime.</p>
+<p>We have no plans to stop improving IL2CPP, but we thought it might be a good idea to take a step back and tell you a little bit about how IL2CPP works from the inside out. Over the next few months, we’re planning to write about the following topics (and maybe others) in this IL2CPP Internals series of posts:</p>
+<ol>
+<li>The basics – toolchain and command line arguments (this post)</li>
+<li><a href="http://blogs.unity3d.com/2015/05/13/il2cpp-internals-a-tour-of-generated-code/" target="_blank" rel="noopener">A tour of generated code</a></li>
+<li><a href="http://blogs.unity3d.com/2015/05/20/il2cpp-internals-debugging-tips-for-generated-code/" target="_blank" rel="noopener">Debugging tips for generated code</a></li>
+<li><a href="http://blogs.unity3d.com/2015/06/03/il2cpp-internals-method-calls/" target="_blank" rel="noopener">Method calls</a> (normal methods, virtual methods, etc.)</li>
+<li><a href="http://blogs.unity3d.com/2015/06/16/il2cpp-internals-generic-sharing-implementation" target="_blank" rel="noopener">Generic sharing implementation</a></li>
+<li><a href="http://blogs.unity3d.com/2015/07/02/il2cpp-internals-pinvoke-wrappers/" target="_blank" rel="noopener">P/invoke wrappers for types and methods</a></li>
+<li><a href="http://blogs.unity3d.com/2015/07/09/il2cpp-internals-garbage-collector-integration/" target="_blank" rel="noopener">Garbage collection integration</a></li>
+<li><a href="http://blogs.unity3d.com/2015/07/20/il2cpp-internals-testing-frameworks/" target="_blank" rel="noopener">Testing frameworks and usage</a></li>
+</ol>
+<p>In order to make this series of posts possible, we’re going to discuss some details about the IL2CPP implementation that will surely change in the future. Hopefully we can still provide some useful and interesting information.</p>
+<p><strong>What is IL2CPP?</strong></p>
+<p>The technology that we refer to as IL2CPP has two distinct parts.</p>
+<ul>
+<li>•An ahead-of-time (AOT) compiler</li>
+<li>•A runtime library to support the virtual machine</li>
+</ul>
+<p>The AOT compiler translates Intermediate Language (IL), the low-level output from .NET compilers, to C++ source code. The runtime library provides services and abstractions like a garbage collector, platform-independent access to threads and files, and implementations of internal calls (native code which modifies managed data structures directly).</p>
+<p><strong>The AOT compiler</strong></p>
+<p>The IL2CPP AOT compiler is named il2cpp.exe. On Windows you can find it in the Editor\Data\il2cpp directory. On OSX it is in the Contents/Frameworks/il2cpp/build directory in the Unity installation. The il2cpp.exe utility is a managed executable, written entirely in C#. We compile it with both .NET and Mono compilers during our development of IL2CPP.</p>
+<p>The il2cpp.exe utility accepts managed assemblies compiled with the Mono compiler that ships with Unity and generates C++ code which we pass on to a platform-specific C++ compiler.</p>
+<p>You can think about the IL2CPP toolchain like this:</p>
+<p><a href="https://blogs.unity3d.com/wp-content/uploads/2015/04/il2cpp-toolchain-smaller.png" target="_blank" rel="noopener"><br><img src="assets/An%20introduction%20to%20IL2CPP%20internalsВведение%20в/il2cpp-toolchain-smaller.png" alt="">
+</a></p>
+<p><strong>The runtime library</strong></p>
+<p>The other part of the IL2CPP technology is a runtime library to support the virtual machine. We have implemented this library using almost entirely C++ code (it has a little bit of platform-specific assembly code, but let’s keep that between the two of us). We call the runtime library libil2cpp, and it is shipped as a static library linked into the player executable. One of the key benefits of the IL2CPP technology is this simple and portable runtime library.</p>
+<p>You can find some clues about how the libil2cpp code is organized by looking at the header files for libil2cpp we ship with Unity (you’ll find them in the Editor\Data\PlaybackEngines\webglsupport\BuildTools\Libraries\libil2cpp\include directory on Windows, or the Contents/Frameworks/il2cpp/libil2cpp directory on OSX). For example, the interface between the C++ code generated by il2cpp.exe and the libil2cpp runtime is located in the codegen/il2cpp-codegen.h header file.</p>
+<p>One key part of the runtime is the garbage collector. We’re shipping Unity 5 with <a href="https://github.com/ivmai/bdwgc/" target="_blank" rel="noopener">libgc</a>, the Boehm-Demers-Weiser garbage collector. However, libil2cpp has been designed to allow us to use other garbage collectors. For example, we are researching an integration of the Microsoft GC which was open-sourced as part of the CoreCLR. We’ll have more to say about this in our post about garbage collector integration later in the series.</p>
+<p><strong>How is il2cpp.exe executed?</strong></p>
+<p>Let’s take a look at an example. I’ll be using Unity 5.0.1 on Windows, and I’ll start with a new, empty project. So that we have at least one user script to convert, I’ll add this simple MonoBehaviour component to the Main Camera game object:</p>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>4</p>
+<p>5</p>
+<p>6</p>
+<p>7</p>
+<p>| </p>
+<p>using UnityEngine;</p>
+<p>public class HelloWorld : MonoBehaviour {</p>
+<p>void Start () {</p>
+<p>Debug.Log(“Hello, IL2CPP!”);</p>
+<p>}</p>
+<p>}  </p>
+<p>—-|—-  </p>
+<p>When I build for the WebGL platform, I can use <a href="https://technet.microsoft.com/en-us/sysinternals/bb896653.aspx" target="_blank" rel="noopener">Process Explorer</a> to see the command line Unity used to run il2cpp.exe:</p>
+<p>1</p>
+<p>| </p>
+<p>“C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe” “C:\Program Files\Unity\Editor\Data\il2cpp/il2cpp.exe” --copy-level=None --enable-generic-sharing --enable-unity-event-support --output-format=Compact --extra-types.file=”C:\Program Files\Unity\Editor\Data\il2cpp\il2cpp_default_extra_types.txt” “C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll” “C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\Managed\UnityEngine.UI.dll” “C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\il2cppOutput”  </p>
+<p>—-|—-  </p>
+<p>That command line is pretty long and horrible, so let’s unpack it. First, Unity is running this executable:</p>
+<p>1</p>
+<p>| </p>
+<p>“C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe”  </p>
+<p>—-|—-  </p>
+<p>The next argument on the command line is the il2cpp.exe utility itself.</p>
+<p>1</p>
+<p>| </p>
+<p>“C:\Program Files\Unity\Editor\Data\il2cpp/il2cpp.exe”  </p>
+<p>—-|—-  </p>
+<p>The remaining command line arguments are passed to il2cpp.exe, not mono.exe. Let’s look at them. First, Unity passes five flags to il2cpp.exe:</p>
+<ul>
+<li>•–copy-level=None <ul>
+<li>Specify that il2cpp.exe should not perform an special file copies of the generated C++ code.</li>
+</ul>
+</li>
+<li>•–enable-generic-sharing <ul>
+<li>This is a code and binary size reduction feature. IL2CPP will share the implementation of generic methods when it can.</li>
+</ul>
+</li>
+<li>•–enable-unity-event-support <ul>
+<li>Special support to ensure that code for Unity events, which are accessed via reflection, is correctly generated.</li>
+</ul>
+</li>
+<li>•–output-format=Compact <ul>
+<li>Generate C++ code in a format that requires fewer characters for type and method names. This code is difficult to debug, since the names in the IL code are not preserved, but it often compiles faster, since there is less code for the C++ compiler to parse.</li>
+</ul>
+</li>
+<li>•–extra-types.file=”C:\Program Files\Unity\Editor\Data\il2cpp\il2cpp_default_extra_types.txt” <ul>
+<li>Use the default (and empty) extra types file. This file can be added in a Unity project to let il2cpp.exe know which generic or array types will be created at runtime, but are not present in the IL code.</li>
+</ul>
+</li>
+</ul>
+<p>It is important to note that these command line arguments can and will be changed in later releases. We’re not at a point yet where we have a stable and supported set of command line arguments for il2cpp.exe.</p>
+<p>Finally, we have a list of two files and one directory on the command line:</p>
+<ul>
+<li>•“C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll”</li>
+<li>•“C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\Managed\UnityEngine.UI.dll”</li>
+<li>•“C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\il2cppOutput”</li>
+</ul>
+<p>The il2cpp.exe utility accepts a list of all of the IL assemblies it should convert. In this case they are the assembly containing my simple MonoBehaviour, Assembly-CSharp.dll, and the GUI assembly, UnityEngine.UI.dll. Note that there are a few conspicuously missing assembles here. Clearly, my script references UnityEngine.dll, and that references at least mscorlib.dll, and maybe other assemblies. Where are they? Actually, il2cpp.exe resolves those assemblies internally. They can be mentioned on the command line, but they are not necessary. Unity only needs to mention the root assemblies (those which are not referenced by any other assembly) explicitly.</p>
+<p>The last argument on the il2cpp.exe command line is the directory where the output C++ files should be created. If you are curious, have a look at the generated files in that directory, they will be the subject of the next post in this series. Before you do though, you might want to choose the “Development Player” option in the WebGL build settings. That will remove the –output-format=Compact command line argument and give you better type and method names in the generated C++ code.</p>
+<p>Try changing various options in the WebGL or iOS Player Settings. You should be able to see different command line options passed to il2cpp.exe to enable different code generation steps. For example, changing the “Enable Exceptions” setting in the WebGL Player Settings to a value of “Full” adds the –emit-null-checks, –enable-stacktrace, and –enable-array-bounds-check arguments to the il2cpp.exe command line.</p>
+<p><strong>What does IL2CPP not do?</strong></p>
+<p>I’d like to point out one of the challenges that we did not take on with IL2CPP, and we could not be happier that we ignored it. We did not attempt to re-write the C# standard library with IL2CPP. When you build a Unity project which uses the IL2CPP scripting backend, all of the C# standard library code in mscorlib.dll, System.dll, etc. is the exact same code used for the Mono scripting backend.</p>
+<p>We rely on C# standard library code that is already well-known by users and well-tested in Unity projects. So when we investigate a bug related to IL2CPP, we can be fairly confident that the bug is in either the AOT compiler or the runtime library, and nowhere else.</p>
+<p><strong>How we develop, test, and ship IL2CPP</strong></p>
+<p>Since the initial public release of IL2CPP at version 4.6.1p5 in January, we’ve shipped 6 full releases and 7 patch releases (across versions 4.6 and 5.0 of Unity). We have corrected more than 100 bugs mentioned in the release notes.</p>
+<p>In order to make this continuous improvement happen, we develop against only one version of the IL2CPP code internally, which sits on the bleeding edge of the trunk branch in Unity used to ship alpha and beta releases. Just before each release, we port the IL2CPP changes to the specific release branch, run our tests, and verify all of the bugs we fixed are corrected in that version. Our QA and Sustained Engineering teams have done incredible work to make delivery at this rate possible. This means that our users are never more than about one week away from the latest fixes for IL2CPP bugs.</p>
+<p>Our user community has proven invaluable by submitting many high quality bug reports. We appreciate all the feedback from our users to help continually improve IL2CPP, and we look forward to more of it.</p>
+<p>The development team working on IL2CPP has a strong test-first mentality. We often employee Test Driven Design practices, and seldom merge a pull request without good tests. This strategy works well for a technology like IL2CPP, where we have clear inputs and outputs. It means that the vast majority of the bugs we see are not unexpected behavior, but rather unexpected cases (e.g. it is possible to use an 64-bit IntPtr as a 32-bit array index, causing clang to fail with a C++ compiler error, and <a href="http://forum.unity3d.com/threads/4-6-3-il2cpp-xcode-build-errors.299561/" target="_blank" rel="noopener">real code</a> actually does this!). That difference allows us to fix bugs quickly with a high degree of confidence.</p>
+<p>With the help of our community, we’re working hard to make IL2CPP as stable and fast as possible. By the way, if any of this excites you, <a href="http://unity3d.com/jobs/position?id=oWfh0fwc" target="_blank" rel="noopener">we’re hiring</a> (just sayin’).</p>
+<p><strong>More to come</strong></p>
+<p>I fear that I’ve spent too much time here teasing future blog posts. We have a lot to say, and it simply won’t all fit in one post. Next time, we’ll dig into the code generated by il2cpp.exe to see how your project actually looks to the C++ compiler.</p>
+<p><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;470.5&#39; height=&#39;470.5&#39; viewBox=&#39;0 0 470.5 470.5&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’599’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’600’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3cpath d=’M271.5 154.2v-40.5c0-6.1 0.3-10.8 0.8-14.1 0.6-3.3 1.9-6.6 3.9-9.9 2-3.2 5.2-5.5 9.7-6.7 4.5-1.2 10.4-1.9 17.9-1.9h40.5V0h-64.8c-37.5 0-64.4 8.9-80.8 26.7 -16.4 17.8-24.6 44-24.6 78.7v48.8h-48.5v81.1h48.5v235.3h97.4V235.3h64.8l8.6-81.1H271.5z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’601’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a><a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F&amp;text=An+introduction+to+IL2CPP+internals&amp;via=unity3d" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;450&#39; height=&#39;450&#39; viewBox=&#39;0 0 450 450&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’603’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’604’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3cpath d=’M450 85.7c-17.7 7.6-35.4 12.4-53.1 14.3 20-12 33.5-28.9 40.5-50.8 -18.3 10.8-37.8 18.3-58.5 22.3 -18.3-19.4-40.7-29.1-67.4-29.1 -25.5 0-47.2 9-65.2 27 -18 18-27 39.7-27 65.2 0 6.9 0.8 13.9 2.3 21.1 -37.7-1.9-73-11.4-106.1-28.4C82.5 110.2 54.4 87.5 31.4 59.1c-8.4 14.3-12.6 29.8-12.6 46.5 0 15.8 3.7 30.5 11.1 44 7.4 13.5 17.4 24.5 30 32.8 -14.8-0.6-28.7-4.5-41.7-11.7v1.1c0 22.3 7 41.8 21 58.7 14 16.8 31.6 27.5 53 31.8 -8 2.1-16.1 3.1-24.3 3.1 -5.3 0-11.1-0.5-17.4-1.4 5.9 18.5 16.8 33.6 32.5 45.5 15.8 11.9 33.7 18 53.7 18.4 -33.5 26.3-71.7 39.4-114.5 39.4 -8.2 0-15.6-0.4-22.3-1.1 42.8 27.6 90 41.4 141.6 41.4 32.7 0 63.5-5.2 92.2-15.6 28.7-10.4 53.3-24.3 73.7-41.7 20.4-17.4 37.9-37.4 52.7-60.1 14.8-22.7 25.7-46.3 33-70.9 7.2-24.7 10.8-49.3 10.8-74.1 0-5.3-0.1-9.3-0.3-12C421.8 120.2 437.2 104.3 450 85.7z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’605’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F&amp;title=An+introduction+to+IL2CPP+internals&amp;summary=Almost+a+year+ago+now%2C+we+started+to+talk+about+the+future+of+scripting+in+Unity.+The+new+IL2CPP+scripting+backend+promised+to+bring+a+highly-performant%2C+highly-portable+virtual+machine+to+Unity.+In+January%2C+we+shipped+our+first+platform+using+IL2CPP%2C+iOS+64-bit.+The+Unity+5+release+brought+another+platform%2C+WebGL.+Thanks+to+the+input+from+%5B%26hellip%3B%5D&amp;source=Unity3d+Blog" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;438.5&#39; height=&#39;438.5&#39; viewBox=&#39;0 0 438.5 438.5&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’607’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’608’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3crect x=’5.4’ y=’145.9’ width=’94.2’ height=’282.9’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’609’ class=’js-evernote-checked’%3e%3c/rect%3e %3cpath d=’M408.8 171.7c-19.8-21.6-46-32.4-78.5-32.4 -12 0-22.9 1.5-32.7 4.4 -9.8 3-18.1 7.1-24.8 12.4 -6.8 5.3-12.1 10.3-16.1 14.8 -3.8 4.3-7.5 9.4-11.1 15.1v-40.2h-93.9l0.3 13.7c0.2 9.1 0.3 37.3 0.3 84.5 0 47.2-0.2 108.8-0.6 184.7h93.9V270.9c0-9.7 1-17.4 3.1-23.1 4-9.7 10-17.8 18.1-24.4 8.1-6.6 18.1-9.9 30.1-9.9 16.4 0 28.4 5.7 36.1 17 7.7 11.3 11.6 27 11.6 47V428.8h93.9V266.7C438.5 225 428.6 193.3 408.8 171.7zM53.1 9.7c-15.8 0-28.6 4.6-38.4 13.8C4.9 32.8 0 44.4 0 58.5c0 13.9 4.8 25.5 14.3 34.8 9.5 9.3 22.1 14 37.7 14h0.6c16 0 28.9-4.7 38.7-14 9.8-9.3 14.6-20.9 14.4-34.8 -0.2-14.1-5-25.7-14.6-35C81.6 14.3 68.9 9.7 53.1 9.7z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’610’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.prince-y-p.com/2023/07/25/Unity3D-An-introduction-to-IL2CPP-internals%D0%92%D0%B2%D0%B5%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/25/Unity3D-Assembly-Definition-File-Package-Manager/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Assembly Definition File &amp; Package Manager
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/25/Unity3D-Animation%E4%BC%98%E5%8C%96/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Animation优化</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> Prin
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/circle_image.png" alt="半个出家人"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/Unreal">虚幻引擎</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

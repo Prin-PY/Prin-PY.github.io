@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Unity-Unreal |  半个出家人</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/circle_image.png" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="半个出家人" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Unreal-Unity-Unreal"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Unity-Unreal
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unreal-Unity-Unreal/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.404Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">6 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Unity-gt-Unreal"><a href="#Unity-gt-Unreal" class="headerlink" title="Unity-&gt;Unreal"></a>Unity-&gt;Unreal</h1><p>可以通过Unity那边的概念、结构、操作方式来理解Unreal。但是又不能完全类比，不能期待一方中的操作方法在另一方里面一定有，如果完全一致的话，两个就变成同一个引擎了。接近本质的点上可以对照去看，比如序列化、反序列化，比如内存管理、资源管理等，是独立于引擎的，都要有的。而上层的、操作习惯上的点就不能一一对照了。</p>
+<h2 id="Unity-gt-UE-官方"><a href="#Unity-gt-UE-官方" class="headerlink" title="Unity-&gt;UE 官方"></a>Unity-&gt;UE 官方</h2><h3 id="Glossary"><a href="#Glossary" class="headerlink" title="Glossary"></a>Glossary</h3><p>Unity -&gt; Unreal</p>
+<hr>
+<p>Prefab -&gt; Blueprint Class<br>Mesh -&gt; Static Mesh<br>Skinned Mesh -&gt; Skeletal Mesh<br>Shader -&gt; Material, Material Editor<br>Material -&gt; Material Instance<br>Material Instance -&gt; ?<br>Sprite -&gt; EditorPaper2D<br>Mecanim -&gt; Persona , Animation Blueprint<br>UI -&gt; UMG (Unreal Motion Graphics)</p>
+<p>Raycast -&gt; Line Trace, Shape Trace</p>
+<p>Rigid Body -&gt; Collision, Physics</p>
+<h3 id="Projects-and-Files"><a href="#Projects-and-Files" class="headerlink" title="Projects and Files"></a>Projects and Files</h3><p>Content - Assets</p>
+<p>Map file - Scene, Map files store data about your Level and the objects in it, as well as lighting data and certain level-specific settings.</p>
+<p>Edit-&gt;Project Settings-&gt;Platforms-&gt;Android/… - “player settings” in Unity</p>
+<p>Source sub-folder -</p>
+<h3 id="Actor"><a href="#Actor" class="headerlink" title="Actor"></a>Actor</h3><p>In Unity, GameObject is C# class which you cannot directly extend.<br>In UE4, Actor is a C++ class which you can extend and customize using inheritance.</p>
+<ul>
+<li><p>任意可以被放置到关卡中的游戏物体都是一个 Actor</p>
+</li>
+<li><p>Actor 可以被认为维系了一些特殊 Object 的容器，这些特殊 Object 被称为组件（Component）</p>
+</li>
+<li><p>Actor像是Prefab一样，可以在场景中实例化多个，当Actor进行了修改，那么场景中的物体会同样被修改</p>
+</li>
+</ul>
+<h3 id="Blueprint-vs-Prefab"><a href="#Blueprint-vs-Prefab" class="headerlink" title="Blueprint vs. Prefab"></a>Blueprint vs. Prefab</h3><p>UE4中，Unity的Prefab使用Blueprint Class替代。Blueprint Class支持继承，修改公共的Function很方便。</p>
+<p>蓝图-Code挂Asset<br>Prefab-Asset挂code</p>
+<h3 id="Component"><a href="#Component" class="headerlink" title="Component"></a>Component</h3><p>BeginPlay = Initialize Component = Unity Start()<br>Tick Component = Unity Update</p>
+<h3 id="Blueprint-or-C"><a href="#Blueprint-or-C" class="headerlink" title="Blueprint or C++?"></a>Blueprint or C++?</h3><p>Most projects will use a mix of Blueprints and C++. Many developers prototype game functionality using Blueprints, because it is so easy and fun, and later move some or all of it to C++ for performance and engineering rigor.</p>
+<h3 id="Transform-Components"><a href="#Transform-Components" class="headerlink" title="Transform Components"></a>Transform Components</h3><p>Root Component - any subclass of Scene Component</p>
+<p>A Scene Component gives the Actor a location, rotation, and scale in the world which is applied hierarchically to all components underneath it.</p>
+<h3 id="Actor-1"><a href="#Actor-1" class="headerlink" title="Actor"></a>Actor</h3><p>Actors are most common class used for gameplay in UE4 and the only type that can be Spawned into the World. So everything you place in your level will be an Actor.</p>
+<p>Object is actually the base class of all Unreal classes, including Actor and many others.</p>
+<h3 id="Gameplay-Framework"><a href="#Gameplay-Framework" class="headerlink" title="Gameplay Framework"></a>Gameplay Framework</h3><p><a href="https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Framework/" target="_blank" rel="noopener">https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Framework/</a><br>customized built-in Actor classes<br>replication and networking features</p>
+<h3 id="Programming"><a href="#Programming" class="headerlink" title="Programming"></a>Programming</h3><h4 id="Event-Functions"><a href="#Event-Functions" class="headerlink" title="Event Functions"></a>Event Functions</h4><p>Remember, in UE4 it is important to call the parent class’ version of method.</p>
+<p>A - Actor sub-class<br>U - Object sub-class<br>F - plain data structures or non-UObject classes</p>
+<h4 id="Unity功能在Unreal中实现"><a href="#Unity功能在Unreal中实现" class="headerlink" title="Unity功能在Unreal中实现"></a>Unity功能在Unreal中实现</h4><p>文档中查阅：<a href="https://docs.unrealengine.com/4.27/en-US/Basics/UnrealEngineForUnityDevs/" target="_blank" rel="noopener">https://docs.unrealengine.com/4.27/en-US/Basics/UnrealEngineForUnityDevs/</a></p>
+<p>Instantiating GameObject / Spawning Actor<br>Casting from One Type to Another</p>
+<p>Destroying GameObject / Actor<br>Destroying GameObject / Actor (With 1 Second Delay)<br>Disabling GameObjects / Actors</p>
+<p>Accessing the GameObject / Actor from a Component<br>Accessing a Component from the GameObject / Actor<br>Finding GameObjects / Actors<br>Adding tags to GameObjects / Actors<br>Adding tags to MonoBehaviours / ActorComponents<br>Comparing tags on GameObjects / Actors and MonoBehaviours / ActorComponents</p>
+<h5 id="Physics-RigidBody-vs-Primitive-Component"><a href="#Physics-RigidBody-vs-Primitive-Component" class="headerlink" title="Physics: RigidBody vs. Primitive Component"></a>Physics: RigidBody vs. Primitive Component</h5><p>Layers vs Channels<br>RayCast vs RayTrace<br>Triggers</p>
+<p>Kinematic Rigidbodies</p>
+<h5 id="Input-events"><a href="#Input-events" class="headerlink" title="Input events"></a>Input events</h5><p>Engine-Input</p>
+<h4 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a>Exception</h4><p>check() - You can pass in an error message.<br>ensure() - log an error with a full call stack</p>
+<h2 id="Unity-gt-UE经验博客"><a href="#Unity-gt-UE经验博客" class="headerlink" title="Unity-&gt;UE经验博客"></a>Unity-&gt;UE经验博客</h2><h3 id="Actor-Lifecycle"><a href="#Actor-Lifecycle" class="headerlink" title="Actor Lifecycle"></a>Actor Lifecycle</h3><p><a href="https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Actors/ActorLifecycle/" target="_blank" rel="noopener">https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Actors/ActorLifecycle/</a><br>Destroy<br>EndPlay<br>OnDestroy - 不要用这个，要用EndPlay</p>
+<h4 id="销毁对象"><a href="#销毁对象" class="headerlink" title="销毁对象"></a>销毁对象</h4><p><code>csharp // 针对AActor子类可调用 MyActor-&gt;Destroy(); // 针对UObject的子类，可调用 MyObj-&gt;MarkPendingKill(); MyObj = nullptr;</code> </p>
+<h3 id="Garbage-Collection"><a href="#Garbage-Collection" class="headerlink" title="Garbage Collection"></a>Garbage Collection</h3><h4 id="Advanced-GC"><a href="#Advanced-GC" class="headerlink" title="Advanced GC"></a>Advanced GC</h4><p>Clustering -: builds clusters of objects that are all destroyed together</p>
+<p>Cluster Merging - For example, a particle system asset may reference a material asset, but if cluster merging is turned off, the material and the particle system will remain in separate clusters for garbage collection purposes. With cluster merging turned on, the particle asset cluster will be merged with the material cluster due to the particle system referencing the material.</p>
+<h3 id="对象查找"><a href="#对象查找" class="headerlink" title="对象查找"></a>对象查找</h3><p><code>csharp // Find Actor by name (also works on UObjects) AActor* MyActor = FindObject&lt;AActor&gt;(nullptr, TEXT(&quot;MyNamedActor&quot;)); // Find Actors by type (needs a UWorld object) for (TActorIterator&lt;AMyActor&gt; It(GetWorld()); It; ++It){ AMyActor* MyActor = *It; // ... } // Find UObjects by type for (TObjectIterator&lt;UMyObject&gt; It; It; ++It){ UMyObject* MyObject = *It; // ... } // Find Actors by tag (also works on ActorComponents, use TObjectIterator instead) for (TActorIterator&lt;AActor&gt; It(GetWorld()); It; ++It){ AActor* Actor = *It; if (Actor-&gt;ActorHasTag(FName(TEXT(&quot;Mytag&quot;)))) { // ... }}</code> </p>
+<h3 id="Referencing-Assets"><a href="#Referencing-Assets" class="headerlink" title="Referencing Assets"></a>Referencing Assets</h3><p>Direct Property Reference<br>Construction Time Reference<br>Indirect Property Reference</p>
+<h3 id="Actor与蓝图的加载、生成"><a href="#Actor与蓝图的加载、生成" class="headerlink" title="Actor与蓝图的加载、生成"></a>Actor与蓝图的加载、生成</h3><p><code>csharp void ATestBPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult&amp; Hit){ …… DEFINE_LOG_CATEGORY_STATIC(LogBPDynamicLoad, Warning, All); // 方法1：通过蓝图对象的GeneratedClass取得类型描述 UBlueprint* BlueprintObj = LoadObject&lt;UBlueprint&gt;(nullptr, TEXT(&quot;Blueprint&#39;/Engine/Tutorial/SubEditors/TutorialAssets/Character/TutorialCharacter.TutorialCharacter&#39;&quot;)); UE_LOG(LogBPDynamicLoad, Warning, TEXT(&quot;Blueprint GeneratedClass:%s&quot;), *BlueprintObj-&gt;GeneratedClass-&gt;GetName()); GetWorld()-&gt;SpawnActor(BlueprintObj-&gt;GeneratedClass, &amp;GetTransform()); // 方法2：加载蓝图对象的UClass，注意资源路径后要加_C，不然加载出来为null UClass* BlueprintClass = LoadClass&lt;AActor&gt;(nullptr, TEXT(&quot;Blueprint&#39;/Engine/Tutorial/SubEditors/TutorialAssets/Character/TutorialCharacter.TutorialCharacter_C&#39;&quot;)); UE_LOG(LogBPDynamicLoad, Warning, TEXT(&quot;Blueprint Class:%s&quot;), *BlueprintClass-&gt;GetName()); GetWorld()-&gt;SpawnActor(BlueprintClass, &amp;GetTransform());}</code> </p>
+<h3 id="资源路径"><a href="#资源路径" class="headerlink" title="资源路径"></a>资源路径</h3><p><img src="Unity-Unreal/Image.png" alt=""></p>
+<p>目前UE4采用每个资源一个包，以前UE3和UE2时代，一个包中可以有多个资源对象，因此现在包名和资源名都是一样的，除非有手动重命名过。</p>
+<p><code>csharp Material&#39;/Game/Geometry/Meshes/CubeMaterial.CubeMaterial&#39; World&#39;/Game/FirstPersonCPP/Maps/FirstPersonExampleMap.FirstPersonExampleMap&#39; Blueprint&#39;/Game/FirstPersonCPP/Blueprints/FirstPersonCharacter.FirstPersonCharacter&#39; Texture2D&#39;/Game/FirstPerson/Textures/FirstPersonCrosshair.FirstPersonCrosshair&#39; SoundWave&#39;/Game/FirstPerson/Audio/FirstPersonTemplateWeaponFire02.FirstPersonTemplateWeaponFire02&#39; AnimBlueprint&#39;/Game/FirstPerson/Animations/FirstPerson_AnimBP.FirstPerson_AnimBP&#39; AnimSequence&#39;/Game/FirstPerson/Animations/FirstPerson_Fire.FirstPerson_Fire&#39; AnimMontage&#39;/Game/FirstPerson/Animations/FirstPersonFire_Montage.FirstPersonFire_Montage&#39; StaticMesh&#39;/Engine/BasicShapes/Cone.Cone&#39; Material&#39;/Engine/BufferVisualization/AmbientOcclusion.AmbientOcclusion&#39; Blueprint&#39;/Engine/EditorBlueprintResources/ActorMacros.ActorMacros&#39; SoundCue&#39;/Engine/EditorSounds/GamePreview/EjectFromPlayer_Cue.EjectFromPlayer_Cue&#39; Texture2D&#39;/Engine/EngineMaterials/Grid.Grid&#39;</code> </p>
+<h2 id="Unreal-vs-Unity"><a href="#Unreal-vs-Unity" class="headerlink" title="Unreal vs. Unity"></a>Unreal vs. Unity</h2><h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://zhuanlan.zhihu.com/p/444044071" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/444044071</a></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.prince-y-p.com/2023/07/25/Unreal-Unity-Unreal/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unreal/" rel="tag">Unreal</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/25/Unreal-Unreal-%E8%93%9D%E5%9B%BEBlueprint/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Unreal - 蓝图Blueprint
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/25/Unreal-UI%E6%96%B9%E6%A1%88/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">UI方案</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> Prin
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/circle_image.png" alt="半个出家人"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/Unreal">虚幻引擎</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

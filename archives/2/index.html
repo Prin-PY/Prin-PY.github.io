@@ -171,7 +171,7 @@
     
     
     <article
-  id="post-Unreal-Unreal插件开发"
+  id="post-Unreal-Unreal操作"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -182,8 +182,8 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unreal-Unreal%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/"
-    >Unreal插件开发</a> 
+  <a class="article-title" href="/2023/07/25/Unreal-Unreal%E6%93%8D%E4%BD%9C/"
+    >Unreal操作</a> 
 </h2>
  
 
@@ -191,8 +191,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unreal-Unreal%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/" class="article-date">
-  <time datetime="2023-07-20T15:00:29.319Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unreal-Unreal%E6%93%8D%E4%BD%9C/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.412Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
@@ -202,38 +202,8 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>Engine /[UE4 Root]/Engine/Plugins/[Plugin Name]/</p>
-<p>Game /[Project Root]/Plugins/[Plugin Name]/<br>(will be detected and loaded at Engine or Editor start-up time)</p>
-<p>Public/Classes的父目录名就是module名</p>
-<h3 id="Plugin-Descriptor-Files"><a href="#Plugin-Descriptor-Files" class="headerlink" title="Plugin Descriptor Files"></a>Plugin Descriptor Files</h3><p>Plugin descriptor Files: <code>.uplugin</code><br>API: <a href="https://docs.unrealengine.com/4.27/en-US/API/Runtime/Projects/FPluginDescriptor/" target="_blank" rel="noopener">https://docs.unrealengine.com/4.27/en-US/API/Runtime/Projects/FPluginDescriptor/</a></p>
-<p>Category：类目名即在插件浏览器中所属的类目。<br>Installed：默认启用或禁用状态，在插件浏览器中可以控制加载卸载插件模块。<br>Modules：描述模块名、运行类型、加载时机、支持平台等信息。<br>Type：Runtime，RuntimeNoCommandlet，Developer，Editor，EditorNoCommandlet，Program。<br>LoadingPhase：Default，PreDefault，PostConfigInit，PostConfigInit。<br>WhitelistPlatforms：支持的平台<br>BlacklistPlatforms：不支持的平台</p>
-<h2 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h2><p>unreal的理念是开发工作都是在工程目录进行，包括插件开发</p>
-<h3 id="打包发布"><a href="#打包发布" class="headerlink" title="打包发布"></a>打包发布</h3><p><a href="https://blog.csdn.net/jxyb2012/article/details/88839224" target="_blank" rel="noopener">https://blog.csdn.net/jxyb2012/article/details/88839224</a></p>
-<p><code>csharp &quot;E:\Program Files\Epic Games\UE_4.25\Engine\Build\BatchFiles\RunUAT.bat&quot; BuildPlugin Plugin=&quot;D:\work\UE4_25\PluginFactory\Plugins\MyNewPlugin\MyNewPlugin.uplugin&quot; Package=&quot;D:\work\UE4_25\PluginPackaged&quot;</code> </p>
-<h2 id="插件编译执行过程"><a href="#插件编译执行过程" class="headerlink" title="插件编译执行过程"></a>插件编译执行过程</h2><p>Plugins will automatically be compiled by UBT when compiling your game project.</p>
-<p><code>csharp #pragma once #include &quot;CoreMinimal.h&quot; #include &quot;ModuleManager.h&quot; class FPanoCamModule : public IModuleInterface { public: /** IModuleInterface implementation */ virtual void StartupModule() override; virtual void ShutdownModule() override; };</code> </p>
-<p>每个独立模块都有一个类继承自 IModuleInterface，重写了插件加载卸载的方法。</p>
-<p>.uplugin文件中Modules下的LoadingPhase字段说明了模块加载的时机，当满足这个时机时此模块StartupModule函数将被调用。此插件的功能入口就是从这里开始。当程序关闭或主动调用ShutdownModule函数时，模块将被卸载。</p>
-<h2 id="编辑器拓展开发接口"><a href="#编辑器拓展开发接口" class="headerlink" title="编辑器拓展开发接口"></a>编辑器拓展开发接口</h2><p>LevelEditorModule.GetToolBarExtensibilityManager()可以拓展关卡编辑器的工具栏，GetMenuExtensibilityManager()可以拓展菜单栏。<br>GEditor-&gt;GetEditorSubsystem<UAssetEditorSubsystem>()-&gt;OnAssetOpenedInEditor()，可以监听UE中，任意编辑器打开的事件。<br>FCoreUObjectDelegates::OnObjectPropertyChanged可以监听任意Object，任意属性的变化事件。</p>
-<h2 id="其他技巧"><a href="#其他技巧" class="headerlink" title="其他技巧"></a>其他技巧</h2><h3 id="Include"><a href="#Include" class="headerlink" title="Include"></a>Include</h3><blockquote>
-<p>unreal中所有头文件都可以include。只是ue建议只include public目录或Classes的头文件，不建议include private目录的。</p>
-</blockquote>
-<h4 id="Include-public"><a href="#Include-public" class="headerlink" title="Include public"></a>Include public</h4><p>在XXX.Build.cs文件中添加依赖Module：PublicDependencyModuleNames.AddRange<br>然后在某个源码文件，直接include。（从Public/Classes开始算路径）</p>
-<h4 id="Include-private"><a href="#Include-private" class="headerlink" title="Include private"></a>Include private</h4><p>在当前插件模块的build.cs文件中添加Private目录:</p>
-<p><code>csharp var EngineDir = Path.GetFullPath(Target.RelativeEnginePath); PrivateIncludePaths.AddRange( new string[] { Path.Combine(EngineDir, &quot;Source/Editor/AnimationBlueprintEditor/Private/&quot;), });</code> <code>csharp // 用尖括号也可以 #include &quot;AnimationBlueprintEditor.h&quot;</code> </p>
-<h3 id="添加第三方依赖库"><a href="#添加第三方依赖库" class="headerlink" title="添加第三方依赖库"></a>添加第三方依赖库</h3><p>PublicIncludePaths.Add(zlibPath + “include” + platform); //把（.h）头文件路径引入。<br>PublicLibraryPaths.Add(zlibPath + “lib” + platform); //把（.lib）库文件路径引入。<br>PublicAdditionalLibraries.Add(“zlibstatic.lib”); //把（.lib）库文件引入。</p>
-<p><a href="https://blog.csdn.net/jxyb2012/article/details/88839224" target="_blank" rel="noopener">https://blog.csdn.net/jxyb2012/article/details/88839224</a></p>
-<h4 id="链接错误的解决方法"><a href="#链接错误的解决方法" class="headerlink" title="链接错误的解决方法"></a>链接错误的解决方法</h4><ol>
-<li>确保：把所属module添加到PublicDependencyModuleNames中</li>
-<li>确保：如果缺失的函数or类是某个插件中的，需要标识为API，在函数前加入对应API宏。</li>
-</ol>
-<blockquote>
-<p>例如module名为SamplePlg，则API宏为：SAMPLEPLG_API</p>
-</blockquote>
-<h3 id="访问private或protected的UPROPERTY"><a href="#访问private或protected的UPROPERTY" class="headerlink" title="访问private或protected的UPROPERTY"></a>访问private或protected的UPROPERTY</h3><p><code>csharp USTRUCT() struct FAnimLinkableElement { GENERATED_USTRUCT_BODY() protected: /** The slot index we are currently using within LinkedMontage */ UPROPERTY(EditAnywhere, Category=AnimLink) int32 SlotIndex; };</code> <code>csharp int32* GetSlotIndex(void *pAnimLinkableElement) { static UScriptStruct* Struct = FindObjectSafe&lt;UScriptStruct&gt;(ANY_PACKAGE, TEXT(&quot;AnimLinkableElement&quot;)); auto Prop = Struct-&gt;FindPropertyByName(TEXT(&quot;SlotIndex&quot;)); check(Prop); return Prop-&gt;ContainerPtrToValuePtr&lt;int32&gt;(pAnimLinkableElement); }</code> </p>
-<h2 id="Build-cs"><a href="#Build-cs" class="headerlink" title="Build.cs"></a>Build.cs</h2><p>配置文件属性详细说明：<a href="https://blog.csdn.net/jxyb2012/article/details/88839224" target="_blank" rel="noopener">https://blog.csdn.net/jxyb2012/article/details/88839224</a></p>
-<p><code>csharp using UnrealBuildTool; using System.IO; //路径获取需要用到IO public class TestPlugin : ModuleRules ｛ private string ModulePath //当前TestPlugin.Build.cs文件所在的路径 ｛ get ｛ return Path.GetDirectoryName(RulesCompiler.GetModuleFilename(this.GetType().Name)); ｝ ｝ private string ThirdPartyPath //这个插件引用的第三方库的目录 ｛ get ｛ return Path.GetFullPath(Path.Combine(ModulePath, &quot;../../ThirdParty/&quot;)); ｝ ｝ private string MyTestLibPath //第三方库MyTestLib的目录 ｛ get ｛ return Path.GetFullPath(Path.Combine(ThirdPartyPath, &quot;MyTestLib&quot;)); ｝ ｝ public TestPlugin(TargetInfo Target) ｛ PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs; PublicIncludePaths.AddRange( //公有文件搜索路径 new string[] ｛ &quot;TestPlugin/Public&quot; // ... add public include paths required here ... ｝ ); PrivateIncludePaths.AddRange( new string[] ｛ &quot;TestPlugin/Private&quot; //私有文件搜索路径 // ... add other private include paths required here ... ｝ ); PublicDependencyModuleNames.AddRange( new string[] ｛ &quot;Core&quot; // ... add other public dependencies that you statically link with here ... ｝ ); PrivateDependencyModuleNames.AddRange( new string[] ｛ &quot;CoreUObject&quot;, &quot;Engine&quot;, &quot;Slate&quot;, &quot;SlateCore&quot;, // ... add private dependencies that you statically link with here ... ｝ ); DynamicallyLoadedModuleNames.AddRange( new string[] ｛ // ... add any modules that your module loads dynamically here ... ｝ ); LoadThirdPartyLib(Target); //加载第三方库 ｝ public bool LoadThirdPartyLib(TargetInfo Target) ｛ bool isLibrarySupported = false; if ((Target.Platform == UnrealTargetPlatform.Win64) || (Target.Platform == UnrealTargetPlatform.Win32))//平台判断 ｛ isLibrarySupported = true; System.Console.WriteLine(&quot;\----- isLibrarySupported true&quot;); string PlatformSubPath = (Target.Platform == UnrealTargetPlatform.Win64) ? &quot;Win64&quot; : &quot;Win32&quot;; string LibrariesPath = Path.Combine(MyTestLibPath, &quot;Lib&quot;); PublicAdditionalLibraries.Add(Path.Combine(LibrariesPath, PlatformSubPath, &quot;TestLib.lib&quot;));//加载第三方静态库.lib ｝ if (isLibrarySupported) //成功加载库的情况下，包含第三方库的头文件 ｛ // Include path System.Console.WriteLine(&quot;\----- PublicIncludePaths.Add true&quot;); PublicIncludePaths.Add(Path.Combine(MyTestLibPath, &quot;Include&quot;)); ｝ return isLibrarySupported; ｝ ｝</code> </p>
-<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.jianshu.com/p/ec0ae889f417" target="_blank" rel="noopener">https://www.jianshu.com/p/ec0ae889f417</a><br><a href="https://www.jianshu.com/p/49684c1b6011" target="_blank" rel="noopener">https://www.jianshu.com/p/49684c1b6011</a><br><a href="https://gameinstitute.qq.com/community/detail/121298" target="_blank" rel="noopener">https://gameinstitute.qq.com/community/detail/121298</a></p>
+  <h2 id="入门配置"><a href="#入门配置" class="headerlink" title="入门配置"></a>入门配置</h2><p>VS配置：<a href="https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/DevelopmentSetup/VisualStudioSetup/UnrealVS/" target="_blank" rel="noopener">https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/DevelopmentSetup/VisualStudioSetup/UnrealVS/</a></p>
+<h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><h3 id="VS快捷键"><a href="#VS快捷键" class="headerlink" title="VS快捷键"></a>VS快捷键</h3><p>UnrealVS.BuildStartupProject: Ctrl + Shift + Alt + B<br>UnrealVS.CompileSingleFile: Ctrl+F7</p>
  
       <!-- reward -->
       
@@ -255,7 +225,7 @@
 
     
     <article
-  id="post-Unreal-Unreal工程目录结构"
+  id="post-Unreal-Unreal-c-常见问题"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -266,8 +236,8 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unreal-Unreal%E5%B7%A5%E7%A8%8B%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84/"
-    >Unreal工程目录结构</a> 
+  <a class="article-title" href="/2023/07/25/Unreal-Unreal-c-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/"
+    >Unreal c++常见问题</a> 
 </h2>
  
 
@@ -275,8 +245,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unreal-Unreal%E5%B7%A5%E7%A8%8B%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84/" class="article-date">
-  <time datetime="2023-07-20T15:00:29.317Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unreal-Unreal-c-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.411Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
@@ -286,7 +256,26 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-  <p><a href="https://muyunsoft.com/blog/Unreal4/Basic/DirectoryStructure.html#%E6%A0%B9%E7%9B%AE%E5%BD%95" target="_blank" rel="noopener">https://muyunsoft.com/blog/Unreal4/Basic/DirectoryStructure.html#%E6%A0%B9%E7%9B%AE%E5%BD%95</a></p>
+  <h1 id="类中静态成员变量-amp-amp-无法解析的外部符号：https-blog-csdn-net-u012911202-article-details-103532273"><a href="#类中静态成员变量-amp-amp-无法解析的外部符号：https-blog-csdn-net-u012911202-article-details-103532273" class="headerlink" title="类中静态成员变量 &amp;&amp; 无法解析的外部符号：https://blog.csdn.net/u012911202/article/details/103532273"></a>类中静态成员变量 &amp;&amp; 无法解析的外部符号：<a href="https://blog.csdn.net/u012911202/article/details/103532273" target="_blank" rel="noopener">https://blog.csdn.net/u012911202/article/details/103532273</a></h1><p>Unreal中使用Windows API：</p>
+<p>D:\Windows Kits\10\include\10.0.20348.0\um\winnt.h(169): fatal error C1189: #error: “No Target Architecture”</p>
+<p><img src="assets/Unreal%20c++常见问题/Image.png" alt=""></p>
+<p>winnt.h这个头文件依赖windows.h这个头文件</p>
+<p>但是Unreal又不能直接 #include “windows.h”，因为一些API有冲突，Unreal在windows的api上包了一层</p>
+<p>Unreal用windows的api要用这种形式</p>
+<p><img src="assets/Unreal%20c++常见问题/Image_1.png" alt=""></p>
+<p><a href="https://forums.unrealengine.com/t/how-to-include-windows-h/308000" target="_blank" rel="noopener">https://forums.unrealengine.com/t/how-to-include-windows-h/308000</a></p>
+<p>其他相关：<a href="https://stackoverflow.com/questions/4845198/fatal-error-no-target-architecture-in-visual-studio" target="_blank" rel="noopener">https://stackoverflow.com/questions/4845198/fatal-error-no-target-architecture-in-visual-studio</a></p>
+<h1 id="error-C4668-没有将“-WIN32-WINNT-WIN10-TH2”定义为预处理器宏，用“0”替换“-if-elif”"><a href="#error-C4668-没有将“-WIN32-WINNT-WIN10-TH2”定义为预处理器宏，用“0”替换“-if-elif”" class="headerlink" title="error C4668: 没有将“_WIN32_WINNT_WIN10_TH2”定义为预处理器宏，用“0”替换“#if/#elif”"></a>error C4668: 没有将“_WIN32_WINNT_WIN10_TH2”定义为预处理器宏，用“0”替换“#if/#elif”</h1><p>一般为Windows中的宏和UE4冲突所致，需要用如下头文件包裹冲突的头文件：</p>
+<h1 id="include-“Windows-AllowWindowsPlatformTypes-h”"><a href="#include-“Windows-AllowWindowsPlatformTypes-h”" class="headerlink" title="include “Windows/AllowWindowsPlatformTypes.h”"></a>include “Windows/AllowWindowsPlatformTypes.h”</h1><h1 id="include-“Windows-PreWindowsApi-h”"><a href="#include-“Windows-PreWindowsApi-h”" class="headerlink" title="include “Windows/PreWindowsApi.h”"></a>include “Windows/PreWindowsApi.h”</h1><h1 id="include-“冲突的头文件”"><a href="#include-“冲突的头文件”" class="headerlink" title="include “冲突的头文件”"></a>include “冲突的头文件”</h1><h1 id="include-“Windows-PostWindowsApi-h”"><a href="#include-“Windows-PostWindowsApi-h”" class="headerlink" title="include “Windows/PostWindowsApi.h”"></a>include “Windows/PostWindowsApi.h”</h1><h1 id="include-“Windows-HideWindowsPlatformTypes-h”"><a href="#include-“Windows-HideWindowsPlatformTypes-h”" class="headerlink" title="include “Windows/HideWindowsPlatformTypes.h”"></a>include “Windows/HideWindowsPlatformTypes.h”</h1><p>[TODO]Speed Up Shader Compiling</p>
+<p><a href="https://www.techarthub.com/seven-tricks-to-speed-up-shader-compilation-in-unreal-engine-4/" target="_blank" rel="noopener">https://www.techarthub.com/seven-tricks-to-speed-up-shader-compilation-in-unreal-engine-4/</a></p>
+<p><a href="https://forums.unrealengine.com/t/turn-off-auto-compile-shaders/353474" target="_blank" rel="noopener">https://forums.unrealengine.com/t/turn-off-auto-compile-shaders/353474</a></p>
+<p><a href="https://realtimevfx.com/t/ue4-compiling-shaders-is-super-slow/3163/27" target="_blank" rel="noopener">https://realtimevfx.com/t/ue4-compiling-shaders-is-super-slow/3163/27</a></p>
+<p><a href="https://medium.com/gamedev4k/reducing-shader-compile-time-for-unreal-engine-landscape-a7a6c7e2ca20" target="_blank" rel="noopener">https://medium.com/gamedev4k/reducing-shader-compile-time-for-unreal-engine-landscape-a7a6c7e2ca20</a></p>
+<p>程序里include过，VS中不报错，但是编译报错：无法解析外部符号。</p>
+<p>很可能在Build文件里面，没有把 依赖的相关模块 添加进来。</p>
+<p><img src="assets/Unreal%20c++常见问题/Image_2.png" alt=""></p>
+<p>unable to load module:</p>
+<p><a href="https://blog.ch-wind.com/ue4-transition-log/" target="_blank" rel="noopener">https://blog.ch-wind.com/ue4-transition-log/</a></p>
  
       <!-- reward -->
       
@@ -319,7 +308,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unreal-Unreal-Plugin%E5%A4%9A%E4%B8%AA%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91%E4%B8%8E%E7%BC%96%E8%AF%91/"
+  <a class="article-title" href="/2023/07/25/Unreal-Unreal-Plugin%E5%A4%9A%E4%B8%AA%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91%E4%B8%8E%E7%BC%96%E8%AF%91/"
     >Unreal Plugin多个模块开发与编译</a> 
 </h2>
  
@@ -328,8 +317,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unreal-Unreal-Plugin%E5%A4%9A%E4%B8%AA%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91%E4%B8%8E%E7%BC%96%E8%AF%91/" class="article-date">
-  <time datetime="2023-07-20T15:00:29.315Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unreal-Unreal-Plugin%E5%A4%9A%E4%B8%AA%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91%E4%B8%8E%E7%BC%96%E8%AF%91/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.409Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
@@ -383,7 +372,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unreal-Unreal-C-%E8%B5%84%E6%96%99%E6%95%B4%E7%90%86/"
+  <a class="article-title" href="/2023/07/25/Unreal-Unreal-C-%E8%B5%84%E6%96%99%E6%95%B4%E7%90%86/"
     >Unreal C++资料整理</a> 
 </h2>
  
@@ -392,8 +381,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unreal-Unreal-C-%E8%B5%84%E6%96%99%E6%95%B4%E7%90%86/" class="article-date">
-  <time datetime="2023-07-20T15:00:29.313Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unreal-Unreal-C-%E8%B5%84%E6%96%99%E6%95%B4%E7%90%86/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.408Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
@@ -428,78 +417,6 @@
 
     
     <article
-  id="post-Unreal-Unreal-c-常见问题"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unreal-Unreal-c-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/"
-    >Unreal c++常见问题</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unreal-Unreal-c-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" class="article-date">
-  <time datetime="2023-07-20T15:00:29.311Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="类中静态成员变量-amp-amp-无法解析的外部符号：https-blog-csdn-net-u012911202-article-details-103532273"><a href="#类中静态成员变量-amp-amp-无法解析的外部符号：https-blog-csdn-net-u012911202-article-details-103532273" class="headerlink" title="类中静态成员变量 &amp;&amp; 无法解析的外部符号：https://blog.csdn.net/u012911202/article/details/103532273"></a>类中静态成员变量 &amp;&amp; 无法解析的外部符号：<a href="https://blog.csdn.net/u012911202/article/details/103532273" target="_blank" rel="noopener">https://blog.csdn.net/u012911202/article/details/103532273</a></h1><p>Unreal中使用Windows API：</p>
-<p>D:\Windows Kits\10\include\10.0.20348.0\um\winnt.h(169): fatal error C1189: #error: “No Target Architecture”</p>
-<p><img src="assets/Unreal%20c++常见问题/Image.png" alt=""></p>
-<p>winnt.h这个头文件依赖windows.h这个头文件</p>
-<p>但是Unreal又不能直接 #include “windows.h”，因为一些API有冲突，Unreal在windows的api上包了一层</p>
-<p>Unreal用windows的api要用这种形式</p>
-<p><img src="assets/Unreal%20c++常见问题/Image_1.png" alt=""></p>
-<p><a href="https://forums.unrealengine.com/t/how-to-include-windows-h/308000" target="_blank" rel="noopener">https://forums.unrealengine.com/t/how-to-include-windows-h/308000</a></p>
-<p>其他相关：<a href="https://stackoverflow.com/questions/4845198/fatal-error-no-target-architecture-in-visual-studio" target="_blank" rel="noopener">https://stackoverflow.com/questions/4845198/fatal-error-no-target-architecture-in-visual-studio</a></p>
-<h1 id="error-C4668-没有将“-WIN32-WINNT-WIN10-TH2”定义为预处理器宏，用“0”替换“-if-elif”"><a href="#error-C4668-没有将“-WIN32-WINNT-WIN10-TH2”定义为预处理器宏，用“0”替换“-if-elif”" class="headerlink" title="error C4668: 没有将“_WIN32_WINNT_WIN10_TH2”定义为预处理器宏，用“0”替换“#if/#elif”"></a>error C4668: 没有将“_WIN32_WINNT_WIN10_TH2”定义为预处理器宏，用“0”替换“#if/#elif”</h1><p>一般为Windows中的宏和UE4冲突所致，需要用如下头文件包裹冲突的头文件：</p>
-<h1 id="include-“Windows-AllowWindowsPlatformTypes-h”"><a href="#include-“Windows-AllowWindowsPlatformTypes-h”" class="headerlink" title="include “Windows/AllowWindowsPlatformTypes.h”"></a>include “Windows/AllowWindowsPlatformTypes.h”</h1><h1 id="include-“Windows-PreWindowsApi-h”"><a href="#include-“Windows-PreWindowsApi-h”" class="headerlink" title="include “Windows/PreWindowsApi.h”"></a>include “Windows/PreWindowsApi.h”</h1><h1 id="include-“冲突的头文件”"><a href="#include-“冲突的头文件”" class="headerlink" title="include “冲突的头文件”"></a>include “冲突的头文件”</h1><h1 id="include-“Windows-PostWindowsApi-h”"><a href="#include-“Windows-PostWindowsApi-h”" class="headerlink" title="include “Windows/PostWindowsApi.h”"></a>include “Windows/PostWindowsApi.h”</h1><h1 id="include-“Windows-HideWindowsPlatformTypes-h”"><a href="#include-“Windows-HideWindowsPlatformTypes-h”" class="headerlink" title="include “Windows/HideWindowsPlatformTypes.h”"></a>include “Windows/HideWindowsPlatformTypes.h”</h1><p>[TODO]Speed Up Shader Compiling</p>
-<p><a href="https://www.techarthub.com/seven-tricks-to-speed-up-shader-compilation-in-unreal-engine-4/" target="_blank" rel="noopener">https://www.techarthub.com/seven-tricks-to-speed-up-shader-compilation-in-unreal-engine-4/</a></p>
-<p><a href="https://forums.unrealengine.com/t/turn-off-auto-compile-shaders/353474" target="_blank" rel="noopener">https://forums.unrealengine.com/t/turn-off-auto-compile-shaders/353474</a></p>
-<p><a href="https://realtimevfx.com/t/ue4-compiling-shaders-is-super-slow/3163/27" target="_blank" rel="noopener">https://realtimevfx.com/t/ue4-compiling-shaders-is-super-slow/3163/27</a></p>
-<p><a href="https://medium.com/gamedev4k/reducing-shader-compile-time-for-unreal-engine-landscape-a7a6c7e2ca20" target="_blank" rel="noopener">https://medium.com/gamedev4k/reducing-shader-compile-time-for-unreal-engine-landscape-a7a6c7e2ca20</a></p>
-<p>程序里include过，VS中不报错，但是编译报错：无法解析外部符号。</p>
-<p>很可能在Build文件里面，没有把 依赖的相关模块 添加进来。</p>
-<p><img src="assets/Unreal%20c++常见问题/Image_2.png" alt=""></p>
-<p>unable to load module:</p>
-<p><a href="https://blog.ch-wind.com/ue4-transition-log/" target="_blank" rel="noopener">https://blog.ch-wind.com/ue4-transition-log/</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unreal/" rel="tag">Unreal</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
   id="post-Unreal-Unreal-C"
   class="article article-type-post"
   itemscope
@@ -511,7 +428,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unreal-Unreal-C/"
+  <a class="article-title" href="/2023/07/25/Unreal-Unreal-C/"
     >Unreal C++</a> 
 </h2>
  
@@ -520,8 +437,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unreal-Unreal-C/" class="article-date">
-  <time datetime="2023-07-20T15:00:29.308Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unreal-Unreal-C/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.406Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
@@ -660,7 +577,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unreal-Unreal-%E8%93%9D%E5%9B%BEBlueprint/"
+  <a class="article-title" href="/2023/07/25/Unreal-Unreal-%E8%93%9D%E5%9B%BEBlueprint/"
     >Unreal - 蓝图Blueprint</a> 
 </h2>
  
@@ -669,8 +586,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unreal-Unreal-%E8%93%9D%E5%9B%BEBlueprint/" class="article-date">
-  <time datetime="2023-07-20T15:00:29.289Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unreal-Unreal-%E8%93%9D%E5%9B%BEBlueprint/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.406Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
@@ -718,7 +635,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unreal-Unity-Unreal/"
+  <a class="article-title" href="/2023/07/25/Unreal-Unity-Unreal/"
     >Unity-Unreal</a> 
 </h2>
  
@@ -727,8 +644,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unreal-Unity-Unreal/" class="article-date">
-  <time datetime="2023-07-20T15:00:29.286Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unreal-Unity-Unreal/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.404Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
@@ -819,7 +736,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unreal-UI%E6%96%B9%E6%A1%88/"
+  <a class="article-title" href="/2023/07/25/Unreal-UI%E6%96%B9%E6%A1%88/"
     >UI方案</a> 
 </h2>
  
@@ -828,8 +745,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unreal-UI%E6%96%B9%E6%A1%88/" class="article-date">
-  <time datetime="2023-07-20T15:00:29.284Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unreal-UI%E6%96%B9%E6%A1%88/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.403Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
@@ -886,7 +803,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unreal-UE-%E7%A7%BB%E5%8A%A8%E8%AE%BE%E5%A4%87%E8%B0%83%E8%AF%95/"
+  <a class="article-title" href="/2023/07/25/Unreal-UE-%E7%A7%BB%E5%8A%A8%E8%AE%BE%E5%A4%87%E8%B0%83%E8%AF%95/"
     >UE 移动设备调试</a> 
 </h2>
  
@@ -895,8 +812,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unreal-UE-%E7%A7%BB%E5%8A%A8%E8%AE%BE%E5%A4%87%E8%B0%83%E8%AF%95/" class="article-date">
-  <time datetime="2023-07-20T15:00:29.283Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unreal-UE-%E7%A7%BB%E5%8A%A8%E8%AE%BE%E5%A4%87%E8%B0%83%E8%AF%95/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.401Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
@@ -916,6 +833,67 @@
 <p>GEngine-&gt;AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Printf(TEXT(“Server not connected yet.”)));</p>
 <p><a href="https://blog.csdn.net/m0_51819222/article/details/122511585" target="_blank" rel="noopener">https://blog.csdn.net/m0_51819222/article/details/122511585</a></p>
 <p><a href="https://blog.csdn.net/Jason6620/article/details/128404026" target="_blank" rel="noopener">https://blog.csdn.net/Jason6620/article/details/128404026</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unreal/" rel="tag">Unreal</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unreal-UE-Rendering-Pipeline"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unreal-UE-Rendering-Pipeline/"
+    >UE - Rendering Pipeline</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unreal-UE-Rendering-Pipeline/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.400Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="静态网格"><a href="#静态网格" class="headerlink" title="静态网格"></a>静态网格</h2><h3 id="HLOD-Hierarchical-Level-of-Detail"><a href="#HLOD-Hierarchical-Level-of-Detail" class="headerlink" title="HLOD (Hierarchical Level of Detail )"></a>HLOD (Hierarchical Level of Detail )</h3><ul>
+<li><p>合并网格</p>
+</li>
+<li><p>合并材质</p>
+</li>
+<li><p>减少Draw Call</p>
+</li>
+</ul>
+<h2 id="Demos"><a href="#Demos" class="headerlink" title="Demos"></a>Demos</h2><p>Content Examples</p>
  
       <!-- reward -->
       

@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>序列化与反序列化 |  半个出家人</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/circle_image.png" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="半个出家人" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Unity3D-序列化与反序列化"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  序列化与反序列化
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.368Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.7k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">6 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Ref: <a href="https://zhuanlan.zhihu.com/p/27990334" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/27990334</a></p>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p><strong>序列化</strong> 又称串行化，是.NET运行时环境用来支持用户定义类型的流化的机制。其目的是以某种存储形式使自定义对象持久化，或者将这种对象从一个地方传输到另一个地方。</p>
+<h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><p>序列化是指把 <strong>对象</strong> 转换为 <strong>字节序列</strong> 的过程</p>
+<p>对象序列化的最主要的用处就是在 <strong>传递和保存对象</strong> 的时候，保证对象的完整性和可传递性。序列化是把对象转换成有序字节流，以便在网络上传输或者保存在本地文件中。序列化后的字节流保存了 <strong>对象的状态以及相关的描述信息</strong> 。序列化机制的核心作用就是对象状态的保存与重建。</p>
+<h3 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h3><p>反序列化是指把 <strong>字节序列</strong> （有序字节流）恢复为 <strong>对象</strong> 的过程</p>
+<p>客户端从文件中或网络上获得序列化后的对象字节流后，根据字节流中所保存的对象状态及描述信息，通过反序列化 <strong>重建对象，恢复对象状态</strong></p>
+<h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><ol>
+<li><p>永久性保存对象，保存对象的字节序列到本地文件或者数据库中；</p>
+</li>
+<li><p>通过序列化以字节流的形式使对象在网络中进行传递和接收；</p>
+</li>
+<li><p>通过序列化在进程间传递对象；</p>
+</li>
+</ol>
+<h2 id="Unity序列化"><a href="#Unity序列化" class="headerlink" title="Unity序列化"></a>Unity序列化</h2><p>Unity的场景文件和预制体默认就是以二进制的文件保存在工程目录下。<br>在 <strong>检视面板</strong> 中可以看到的，就是被 <strong>成功序列化了的参数</strong> 。与序列化相关的常用的关键字如下，可以组合使用。</p>
+<ul>
+<li><p>SerializeField : 表示变量可被序列化。众所周知，公有变量可以在检视面板中看到并编辑，而私有和保护变量不行。SerializeField与private，protected结合使用可以达到让脚本的变量在检视面板里可视化编辑，同时保持它的私有性的目的。</p>
+</li>
+<li><p>HideInInspector : 将原本显示在检视面板上的序列化值隐藏起来。</p>
+</li>
+<li><p>NonSerialized :通过此方法可以将一个公有变量不序列化并且不显示在检视面板中。</p>
+</li>
+<li><p>Serializable：用在类的前面，表示该类可被序列化。</p>
+</li>
+</ul>
+<p><strong>相关API</strong><br>SerializedObject: <a href="https://docs.unity3d.com/ScriptReference/SerializedObject.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/SerializedObject.html</a><br>SerializedProperty: <a href="https://docs.unity3d.com/ScriptReference/SerializedProperty.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/SerializedProperty.html</a></p>
+<blockquote>
+<p>注意：并非所有的公有变量都是可以被序列化的。其中const，static是静态的，属于类而非对象，无法序列化。链表和字典在内存中的存储是不连续的，也无法序列化。其中const，static，readonly的区别可参考文章：<a href="https://www.cnblogs.com/suizhikuo/p/4739388.html" target="_blank" rel="noopener">https://www.cnblogs.com/suizhikuo/p/4739388.html</a></p>
+</blockquote>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><h3 id="二进制方法（Binary-Formatter）"><a href="#二进制方法（Binary-Formatter）" class="headerlink" title="二进制方法（Binary Formatter）"></a>二进制方法（Binary Formatter）</h3><pre><code class="lang-csharp">
+void WriteTest()
+
+{ 
+
+DemoClass demo = new DemoClass (100, &quot;RCD&quot;); 
+
+FileStream fs = new FileStream (&quot;demo.bin&quot;, FileMode.OpenOrCreate); 
+
+BinaryFormatter bf = new BinaryFormatter (); 
+
+bf.Serialize (fs, demo); 
+
+fs.Close (); 
+
+Debug.LogError (&quot;write done&quot;); 
+
+} 
+
+void ReadTest()
+
+{ 
+
+FileStream fs = new FileStream(&quot;demo.bin&quot;, FileMode.Open); 
+
+BinaryFormatter bf = new BinaryFormatter(); 
+
+DemoClass demo = bf.Deserialize(fs) as DemoClass; 
+
+fs.Close(); 
+
+demo.Output(); 
+
+}
+</code></pre>
+<blockquote>
+<p>注意：二进制方法可以序列化私有变量，不能序列化被[NonSerialized ]修饰的变量且类需要被[Serializable ]标识。</p>
+</blockquote>
+<h3 id="Xml序列化"><a href="#Xml序列化" class="headerlink" title="Xml序列化"></a>Xml序列化</h3><p>XML(Extensible Markup Language, 可扩展标记语言), 标准通用标记语言(Standard Generalized Markup language, SGML)的子集。是一种用于标记电子文件使其具有结构性的标记语言。<br>提供统一的方法来描述和交换独立于应用程序或供应商的 <strong>结构化数据</strong> 。</p>
+<pre><code class="lang-csharp">
+using System.IO; 
+
+using System.Xml.Serialization; 
+
+using UnityEditor; 
+
+先定义一个类： 
+
+public class Studnet{ 
+
+public string m_Name = &quot;仑仑&quot;; 
+
+} 
+
+public class SerializeDemo : MonoBehaviour { 
+
+void Start()
+
+{ 
+
+//序列化：
+
+Student student = new Student(); 
+
+//第一要确定储存的位置
+
+//Application.dataPath就是unity中的Asset文件夹 
+
+StreamWriter sw = new StreamWriter(Application.dataPath + &quot;/Demo.xml&quot;); 
+
+//第二要对什么类型序列化
+
+XmlSerializer xs = new XmlSerializer(typeof(Student)); 
+
+//第三对对象序列化
+
+xs.Serialize(sw, student); 
+
+//关闭流
+
+sw.Close(); 
+
+//刷新Asset文件
+
+AssetDatabase.Refresh(); 
+
+//运行程序会在Asset目录下看到Demo.xml文件
+
+//反序列化
+
+//第一确定对哪个文件进行反序列化
+
+StreamReader sr = new StreamReader(Application.dataPath + &quot;/Demo.xml&quot;); 
+
+//第二要确定对什么类型反序列化
+
+XmlSerializer xs1 = new XmlSerializer(typeof(Student)); 
+
+//第三反序列化
+
+Student student1 = xs1.Deserialize(sr) as Student; 
+
+//关闭流
+
+sr.Close(); 
+
+//会在控制台看到 “仑仑”
+
+print(student1.m_Name); 
+
+} 
+
+} 
+
+SerializeDemo
+</code></pre>
+<h2 id="其他Unity数据存储方法"><a href="#其他Unity数据存储方法" class="headerlink" title="其他Unity数据存储方法"></a>其他Unity数据存储方法</h2><h3 id="ScriptableObject-自动序列化"><a href="#ScriptableObject-自动序列化" class="headerlink" title="ScriptableObject(自动序列化)"></a>ScriptableObject(自动序列化)</h3><h4 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h4><h5 id="MenuItem"><a href="#MenuItem" class="headerlink" title="MenuItem"></a>MenuItem</h5><p>需要指定创建的目录和资源名称，如果资源已经存在，则不会创建新资源；</p>
+<pre><code class="lang-csharp">
+public class MakeScriptableObject { 
+
+[MenuItem(&quot;Assets/Create/My Scriptable Object&quot;)] 
+
+public static void CreateMyAsset()
+
+{ 
+
+MyScriptableObjectClass asset = ScriptableObject.CreateInstance&lt;MyScriptableObjectClass&gt;(); 
+
+AssetDatabase.CreateAsset(asset, &quot;Assets/NewScripableObject.asset&quot;); 
+
+AssetDatabase.SaveAssets(); 
+
+EditorUtility.FocusProjectWindow(); 
+
+Selection.activeObject = asset; 
+
+} 
+
+}
+</code></pre>
+<h5 id="CreateAssetMenu"><a href="#CreateAssetMenu" class="headerlink" title="CreateAssetMenu"></a>CreateAssetMenu</h5><p>可以在Assets下任意目录创建资源，而且可以创建多个资源；</p>
+<pre><code class="lang-csharp">
+[CreateAssetMenu(fileName = &quot;data&quot;, menuName = &quot;ScriptableObjects/SpawnManagerScriptableObject&quot;, order = 1)] 
+
+public class SpawnManagerScriptableObject : ScriptableObject { 
+
+public string prefabName; 
+
+public int numberOfPrefabsToCreate; 
+
+public Vector3[] spawnPoints; 
+
+}
+</code></pre>
+<p>在Assets下创建一个可编程对象资源，设置好所需数据；如果需要在其它脚本中获取该数据，是需要声明一个该类型变量，然后为其赋值或加载该数据资源；然后，就像使用用一个类中的公有变量一样使用即可；</p>
+<pre><code class="lang-csharp">
+public SpawnManagerScriptableObject spawnManagerValues; 
+
+//spawnManagerValues.prefabName
+</code></pre>
+<h3 id="PlayerPrefs"><a href="#PlayerPrefs" class="headerlink" title="PlayerPrefs"></a>PlayerPrefs</h3><p>Ref: <a href="https://www.jianshu.com/p/579be3b8e1e3" target="_blank" rel="noopener">https://www.jianshu.com/p/579be3b8e1e3</a><br>PlayerPrefs是Unity内置的一个静态类，可以用于存储一些简单的数据类型：int ,string ,float。可以用它来做成计分板这类需要可持续化存储的小地方。</p>
+<h4 id="PlayerPrefs数据存储在哪里"><a href="#PlayerPrefs数据存储在哪里" class="headerlink" title="PlayerPrefs数据存储在哪里?"></a>PlayerPrefs数据存储在哪里?</h4><p>1.在Mac OS X上存储在~/Library/PlayerPrefs文件夹，名为unity.[company name].[product name].plist,这里company和product名是在project Setting中设置的<br>2.在windows下，playerPrefs被存储在注册的HKCU\Software[company name][product name]键下，这里company和product名是在project setting中设置的。<br>3.在Android上，数据存储（持久化）在设备上。数据保存在SharedPreferences中。</p>
+<h4 id="PlayerPrefs有哪些方法？"><a href="#PlayerPrefs有哪些方法？" class="headerlink" title="PlayerPrefs有哪些方法？"></a>PlayerPrefs有哪些方法？</h4><p>分为五类：SetXXX , GetXXX , DeleteXXX, HasKey , Save.<br>传送门：<a href="https://docs.unity3d.com/ScriptReference/PlayerPrefs.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/PlayerPrefs.html</a></p>
+<ol>
+<li><p>SetXXX : 是你要储存的数据类型，这里必须是一组键值对，第一个参数是Key,第二个参数是对应的Value。</p>
+</li>
+<li><p>GetXXX：这里是获取数据的函数，只有一个参数Key,用来获取对应Key的Value.<br>3.HasKey: 这个可以用来做判断。比如有两组数据一组有XX这个Key,另一组没有XX这个Key,这个时候我们就可以对这两组数据进行差异化操作。</p>
+</li>
+<li><p>DeleteXX:用于删除数据。</p>
+</li>
+<li><p>Save:用于在突发退出程序时，保存数据以备恢复时使用，但是会导致程序间断所以不建议调用。</p>
+</li>
+</ol>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.prince-y-p.com/2023/07/25/Unity3D-%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/25/Unity3D-%E8%B5%84%E6%BA%90%E4%B8%8E%E5%86%85%E5%AD%98-%E5%8A%A0%E8%BD%BD%E3%80%81%E5%8D%B8%E8%BD%BD%E3%80%81Destroy/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            资源与内存(加载、卸载、Destroy)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/25/Unity3D-%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B8%8E%E5%B0%8F%E5%B7%A5%E5%85%B7/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">小知识点与小工具</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> Prin
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/circle_image.png" alt="半个出家人"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/Unreal">虚幻引擎</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

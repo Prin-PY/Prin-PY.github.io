@@ -171,184 +171,6 @@
     
     
     <article
-  id="post-Unity3D-Unity中的路径获取"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-Unity%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84%E8%8E%B7%E5%8F%96/"
-    >Unity中的路径获取</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-Unity%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84%E8%8E%B7%E5%8F%96/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.401Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="AssetDatabase"><a href="#AssetDatabase" class="headerlink" title="AssetDatabase"></a>AssetDatabase</h2><h3 id="获取选中资源"><a href="#获取选中资源" class="headerlink" title="获取选中资源"></a>获取选中资源</h3><pre><code class="lang-csharp">
-[MenuItem(&quot;Tools/GetSelectPaths&quot;)] 
-
-public static void Execute()
-
-{ 
-
-string[] strs = Selection.assetGUIDs; 
-
-var curPath = System.IO.Directory.GetCurrentDirectory();//获取当前根目录
-
-foreach (var item in strs) 
-
-{ 
-
-string path = AssetDatabase.GUIDToAssetPath(item); 
-
-Debug.Log(curPath+&quot;/&quot;+path); 
-
-} 
-
-}
-</code></pre>
-<h3 id="Active-Deactive选中物体"><a href="#Active-Deactive选中物体" class="headerlink" title="Active/Deactive选中物体"></a>Active/Deactive选中物体</h3><pre><code class="lang-csharp">
-[MenuItem(&quot;Example/Toggle Active of Selected %i&quot;)] 
-
-static void DoToggle()
-
-{ 
-
-Object[] activeGOs = Selection.GetFiltered( 
-
-typeof(GameObject), 
-
-SelectionMode.Editable | SelectionMode.TopLevel); 
-
-foreach (GameObject obj in activeGOs) 
-
-{ 
-
-obj.SetActive(!obj.activeSelf); 
-
-} 
-
-}
-</code></pre>
-<h3 id="遍历所有文件"><a href="#遍历所有文件" class="headerlink" title="遍历所有文件"></a>遍历所有文件</h3><pre><code class="lang-csharp">
-private readonly string configJsonPath = AssetDatabase.GetAllAssetPaths() 
-
-.FirstOrDefault(p =&gt; p.EndsWith(&quot;uwascan_ruleconfig.json&quot;));
-</code></pre>
-<h2 id="Application"><a href="#Application" class="headerlink" title="Application"></a>Application</h2><p>获取路径：”………………../Assets”</p>
-<pre><code class="lang-csharp">
-string path = Application.dataPath;
-</code></pre>
-<h3 id="遍历所有文件夹-待学习"><a href="#遍历所有文件夹-待学习" class="headerlink" title="遍历所有文件夹 (待学习)"></a>遍历所有文件夹 (待学习)</h3><pre><code class="lang-csharp">
-//遍历所选文件夹，查找该文件夹以及子文件夹中 后缀为 .prefab的文件路径
-
-using UnityEngine; 
-
-using System.Collections; 
-
-using System.Collections.Generic; 
-
-using UnityEditor; 
-
-using System.IO; 
-
-public class CameraMove : MonoBehaviour { 
-
-// 在菜单来创建 选项 ， 点击该选项执行搜索代码
-
-[MenuItem(&quot;Tools/遍历项目所有文件夹&quot;)] 
-
-static void CheckSceneSetting()
-
-{ 
-
-List&lt;string&gt; dirs = new List&lt;string&gt;(); 
-
-GetDirs(Application.dataPath, ref dirs); 
-
-} 
-
-//参数1 为要查找的总路径， 参数2 保存路径
-
-private static void GetDirs(string dirPath, ref List&lt;string&gt; dirs)
-
-{ 
-
-foreach (string path in Directory.GetFiles(dirPath)) 
-
-{ 
-
-//获取所有文件夹中包含后缀为 .prefab 的路径
-
-if (System.IO.Path.GetExtension(path) == &quot;.prefab&quot;) 
-
-{ 
-
-dirs.Add(path.Substring(path.IndexOf(&quot;Assets&quot;))); 
-
-Debug.Log(path.Substring(path.IndexOf(&quot;Assets&quot;))); 
-
-} 
-
-} 
-
-if (Directory.GetDirectories(dirPath).Length &gt; 0) //遍历所有文件夹
-
-{ 
-
-foreach (string path in Directory.GetDirectories(dirPath)) 
-
-{ 
-
-GetDirs(path, ref dirs); 
-
-} 
-
-} 
-
-} 
-
-}
-</code></pre>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
   id="post-Unity3D-Unity中的Texture相关知识-To-Update"
   class="article article-type-post"
   itemscope
@@ -360,7 +182,7 @@ GetDirs(path, ref dirs);
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-Unity%E4%B8%AD%E7%9A%84Texture%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86-To-Update/"
+  <a class="article-title" href="/2023/07/25/Unity3D-Unity%E4%B8%AD%E7%9A%84Texture%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86-To-Update/"
     >Unity中的Texture相关知识(To Update)</a> 
 </h2>
  
@@ -369,8 +191,8 @@ GetDirs(path, ref dirs);
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-Unity%E4%B8%AD%E7%9A%84Texture%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86-To-Update/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.380Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-Unity%E4%B8%AD%E7%9A%84Texture%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86-To-Update/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.291Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -943,72 +765,6 @@ return buffer;
 
     
     <article
-  id="post-Unity3D-Unity中Culling相关技术"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-Unity%E4%B8%ADCulling%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/"
-    >Unity中Culling相关技术</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-Unity%E4%B8%ADCulling%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.378Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="Frustum-Culling"><a href="#Frustum-Culling" class="headerlink" title="Frustum Culling"></a>Frustum Culling</h2><p>剔除被其他物体遮挡的，摄像机不可见(但在视锥体内)的渲染物体。使用 Occlusion Culling 需要手动设置，并在 Occlusion Culling Window 中通过 Bake 计算剔除数据。<br><a href="https://docs.unity3d.com/Manual/OcclusionCulling.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/OcclusionCulling.html</a></p>
-<h3 id="Builtin管线"><a href="#Builtin管线" class="headerlink" title="Builtin管线"></a>Builtin管线</h3><p>视锥体剔除 - 视锥体剔除是引擎自己做的，在给GPU提交数据进行渲染前，会执行视锥体剔除，决定哪些可见哪些不可见。经过剔除之后，Renderer的isVisible值就表示相应物体的可见性，不过此时已经在这帧的Update之后了。在Update当中取IsVisible属性获取的实际上是上一帧的可见性。 至于视锥体剔除的实现方法我们不清楚，可能引擎底层会有一些优化，使用kd-tree进行空间划分等等。</p>
-<h3 id="SRP的Culling"><a href="#SRP的Culling" class="headerlink" title="SRP的Culling"></a>SRP的Culling</h3><ol>
-<li><p>SRP的Culling可以自己写</p>
-</li>
-<li><p>URP的管线相对比较固定，可定制化程度低，Culling不太好自己写</p>
-</li>
-</ol>
-<p>Occlusion Culling is different from Frustum Culling. Frustum Culling only disables the renderers for objects that are outside the camera’s viewing area but does not disable anything hidden from view by overdraw. Note that when you use Occlusion Culling you will still benefit from Frustum Culling.</p>
-<h2 id="Occlusion-Culling"><a href="#Occlusion-Culling" class="headerlink" title="Occlusion Culling"></a>Occlusion Culling</h2><p>在移动端使用的比较少，属于用 CPU时间换一定的CPU时间和一定的GPU时间的操作。使用方法是：预先烘焙遮挡剔除信息（对于一定的区域，哪些物体被遮挡），在游戏运行时，经过视锥体剔除之后，对于视锥体内的物体，相机到了一定的位置，会去取预先烘焙的信息，来判断哪些物体被遮挡，对相应的物体进行剔除，进而节省被遮挡的物体提交渲染进行、在GPU端进行绘制的时间。</p>
-<h2 id="Camera-layerCullDistance"><a href="#Camera-layerCullDistance" class="headerlink" title="Camera.layerCullDistance"></a>Camera.layerCullDistance</h2><p>For performance reasons, you might want to cull small objects earlier. For example, small rocks and debris could be made invisible at much smaller distance than large buildings. To do that, put small objects into a separate layer and set up per-layer cull distances using Camera.layerCullDistances script function.<br><a href="https://docs.unity3d.com/ScriptReference/Camera-layerCullDistances.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/Camera-layerCullDistances.html</a></p>
-<h2 id="CullingGroup-API"><a href="#CullingGroup-API" class="headerlink" title="CullingGroup API"></a>CullingGroup API</h2><p>CullingGroup offers a way to integrate your own systems into Unity’s culling and LOD pipeline.The CullingGroup will calculate visibility based on frustum culling and static occlusion culling only. It will not take dynamic objects into account as potential occluders.<br><a href="https://docs.unity3d.com/Manual/CullingGroupAPI.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/CullingGroupAPI.html</a></p>
-<p>Unity的CullingGroup API是纯逻辑的东西，不影响渲染。其使用方法是：在逻辑代码中定义CullingGroup，Group中加入一些球体(位置与半径，是逻辑上的球体，实际是不可见的)，并加入要检测的相机，渲染时，Unity会判断这些球体是否可见，进而判断CullingGroup的可见性。在渲染之后，可以在代码中获取该Group的可见性，进而据此控制一些逻辑。如果不用代码去取CullingGroup的信息，那么它就是没有用的。</p>
-<h2 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h2><p><a href="https://blog.csdn.net/kenight/article/details/82760667" target="_blank" rel="noopener">https://blog.csdn.net/kenight/article/details/82760667</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
   id="post-Unity3D-Unity-C预处理指令"
   class="article article-type-post"
   itemscope
@@ -1020,7 +776,7 @@ return buffer;
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-Unity-C%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/"
+  <a class="article-title" href="/2023/07/25/Unity3D-Unity-C%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/"
     >Unity&amp;C预处理指令</a> 
 </h2>
  
@@ -1029,8 +785,8 @@ return buffer;
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-Unity-C%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.375Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-Unity-C%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.290Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1089,6 +845,188 @@ return buffer;
 
     
     <article
+  id="post-Unity3D-Unity中Culling相关技术"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-Unity%E4%B8%ADCulling%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/"
+    >Unity中Culling相关技术</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-Unity%E4%B8%ADCulling%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.290Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Frustum-Culling"><a href="#Frustum-Culling" class="headerlink" title="Frustum Culling"></a>Frustum Culling</h2><p>剔除被其他物体遮挡的，摄像机不可见(但在视锥体内)的渲染物体。使用 Occlusion Culling 需要手动设置，并在 Occlusion Culling Window 中通过 Bake 计算剔除数据。<br><a href="https://docs.unity3d.com/Manual/OcclusionCulling.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/OcclusionCulling.html</a></p>
+<h3 id="Builtin管线"><a href="#Builtin管线" class="headerlink" title="Builtin管线"></a>Builtin管线</h3><p>视锥体剔除 - 视锥体剔除是引擎自己做的，在给GPU提交数据进行渲染前，会执行视锥体剔除，决定哪些可见哪些不可见。经过剔除之后，Renderer的isVisible值就表示相应物体的可见性，不过此时已经在这帧的Update之后了。在Update当中取IsVisible属性获取的实际上是上一帧的可见性。 至于视锥体剔除的实现方法我们不清楚，可能引擎底层会有一些优化，使用kd-tree进行空间划分等等。</p>
+<h3 id="SRP的Culling"><a href="#SRP的Culling" class="headerlink" title="SRP的Culling"></a>SRP的Culling</h3><ol>
+<li><p>SRP的Culling可以自己写</p>
+</li>
+<li><p>URP的管线相对比较固定，可定制化程度低，Culling不太好自己写</p>
+</li>
+</ol>
+<p>Occlusion Culling is different from Frustum Culling. Frustum Culling only disables the renderers for objects that are outside the camera’s viewing area but does not disable anything hidden from view by overdraw. Note that when you use Occlusion Culling you will still benefit from Frustum Culling.</p>
+<h2 id="Occlusion-Culling"><a href="#Occlusion-Culling" class="headerlink" title="Occlusion Culling"></a>Occlusion Culling</h2><p>在移动端使用的比较少，属于用 CPU时间换一定的CPU时间和一定的GPU时间的操作。使用方法是：预先烘焙遮挡剔除信息（对于一定的区域，哪些物体被遮挡），在游戏运行时，经过视锥体剔除之后，对于视锥体内的物体，相机到了一定的位置，会去取预先烘焙的信息，来判断哪些物体被遮挡，对相应的物体进行剔除，进而节省被遮挡的物体提交渲染进行、在GPU端进行绘制的时间。</p>
+<h2 id="Camera-layerCullDistance"><a href="#Camera-layerCullDistance" class="headerlink" title="Camera.layerCullDistance"></a>Camera.layerCullDistance</h2><p>For performance reasons, you might want to cull small objects earlier. For example, small rocks and debris could be made invisible at much smaller distance than large buildings. To do that, put small objects into a separate layer and set up per-layer cull distances using Camera.layerCullDistances script function.<br><a href="https://docs.unity3d.com/ScriptReference/Camera-layerCullDistances.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/Camera-layerCullDistances.html</a></p>
+<h2 id="CullingGroup-API"><a href="#CullingGroup-API" class="headerlink" title="CullingGroup API"></a>CullingGroup API</h2><p>CullingGroup offers a way to integrate your own systems into Unity’s culling and LOD pipeline.The CullingGroup will calculate visibility based on frustum culling and static occlusion culling only. It will not take dynamic objects into account as potential occluders.<br><a href="https://docs.unity3d.com/Manual/CullingGroupAPI.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/CullingGroupAPI.html</a></p>
+<p>Unity的CullingGroup API是纯逻辑的东西，不影响渲染。其使用方法是：在逻辑代码中定义CullingGroup，Group中加入一些球体(位置与半径，是逻辑上的球体，实际是不可见的)，并加入要检测的相机，渲染时，Unity会判断这些球体是否可见，进而判断CullingGroup的可见性。在渲染之后，可以在代码中获取该Group的可见性，进而据此控制一些逻辑。如果不用代码去取CullingGroup的信息，那么它就是没有用的。</p>
+<h2 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h2><p><a href="https://blog.csdn.net/kenight/article/details/82760667" target="_blank" rel="noopener">https://blog.csdn.net/kenight/article/details/82760667</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-Unity-Addressasble"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-Unity-Addressasble/"
+    >Unity Addressasble</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-Unity-Addressasble/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.284Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <ul>
+<li>Unity Addressasble<ul>
+<li>Heading</li>
+</ul>
+</li>
+</ul>
+<h2 id="Heading"><a href="#Heading" class="headerlink" title="Heading"></a>Heading</h2> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-Unity-Crash-与-符号表"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-Unity-Crash-%E4%B8%8E-%E7%AC%A6%E5%8F%B7%E8%A1%A8/"
+    >Unity Crash 与 符号表</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-Unity-Crash-%E4%B8%8E-%E7%AC%A6%E5%8F%B7%E8%A1%A8/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.284Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><a href="https://www.cnblogs.com/wayland/articles/13092292.html" target="_blank" rel="noopener">https://www.cnblogs.com/wayland/articles/13092292.html</a></p>
+<p><a href="https://blog.csdn.net/weixin_44084447/article/details/122929279" target="_blank" rel="noopener">https://blog.csdn.net/weixin_44084447/article/details/122929279</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/77984555" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/77984555</a></p>
+<p><a href="https://grrava.blogspot.com/2016/01/unity-crash-dumps-to-rescue.html" target="_blank" rel="noopener">https://grrava.blogspot.com/2016/01/unity-crash-dumps-to-rescue.html</a></p>
+<p><a href="https://www.sebaslab.com/how-to-debug-unity-natively-using-mixed-c-and-c-stack/" target="_blank" rel="noopener">https://www.sebaslab.com/how-to-debug-unity-natively-using-mixed-c-and-c-stack/</a></p>
+<p><a href="https://www.cnblogs.com/caiger-blog/p/16211519.html" target="_blank" rel="noopener">https://www.cnblogs.com/caiger-blog/p/16211519.html</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-Unity-Native-Programming（C与C-互相调用）"
   class="article article-type-post"
   itemscope
@@ -1100,7 +1038,7 @@ return buffer;
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-Unity-Native-Programming%EF%BC%88C%E4%B8%8EC-%E4%BA%92%E7%9B%B8%E8%B0%83%E7%94%A8%EF%BC%89/"
+  <a class="article-title" href="/2023/07/25/Unity3D-Unity-Native-Programming%EF%BC%88C%E4%B8%8EC-%E4%BA%92%E7%9B%B8%E8%B0%83%E7%94%A8%EF%BC%89/"
     >Unity Native Programming（C与C++互相调用）</a> 
 </h2>
  
@@ -1109,8 +1047,8 @@ return buffer;
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-Unity-Native-Programming%EF%BC%88C%E4%B8%8EC-%E4%BA%92%E7%9B%B8%E8%B0%83%E7%94%A8%EF%BC%89/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.359Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-Unity-Native-Programming%EF%BC%88C%E4%B8%8EC-%E4%BA%92%E7%9B%B8%E8%B0%83%E7%94%A8%EF%BC%89/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.284Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1644,7 +1582,7 @@ Log.v( TAG, &quot;native library dir &quot; \+ ainfo.nativeLibraryDir );
 
     
     <article
-  id="post-Unity3D-Unity-Crash-与-符号表"
+  id="post-Unity3D-UPM自定义资源包及相关规范"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -1655,8 +1593,8 @@ Log.v( TAG, &quot;native library dir &quot; \+ ainfo.nativeLibraryDir );
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-Unity-Crash-%E4%B8%8E-%E7%AC%A6%E5%8F%B7%E8%A1%A8/"
-    >Unity Crash 与 符号表</a> 
+  <a class="article-title" href="/2023/07/25/Unity3D-UPM%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B5%84%E6%BA%90%E5%8C%85%E5%8F%8A%E7%9B%B8%E5%85%B3%E8%A7%84%E8%8C%83/"
+    >UPM自定义资源包及相关规范</a> 
 </h2>
  
 
@@ -1664,8 +1602,8 @@ Log.v( TAG, &quot;native library dir &quot; \+ ainfo.nativeLibraryDir );
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-Unity-Crash-%E4%B8%8E-%E7%AC%A6%E5%8F%B7%E8%A1%A8/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.357Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-UPM%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B5%84%E6%BA%90%E5%8C%85%E5%8F%8A%E7%9B%B8%E5%85%B3%E8%A7%84%E8%8C%83/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.283Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1675,71 +1613,233 @@ Log.v( TAG, &quot;native library dir &quot; \+ ainfo.nativeLibraryDir );
       
     <div class="article-entry" itemprop="articleBody">
        
-  <p><a href="https://www.cnblogs.com/wayland/articles/13092292.html" target="_blank" rel="noopener">https://www.cnblogs.com/wayland/articles/13092292.html</a></p>
-<p><a href="https://blog.csdn.net/weixin_44084447/article/details/122929279" target="_blank" rel="noopener">https://blog.csdn.net/weixin_44084447/article/details/122929279</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/77984555" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/77984555</a></p>
-<p><a href="https://grrava.blogspot.com/2016/01/unity-crash-dumps-to-rescue.html" target="_blank" rel="noopener">https://grrava.blogspot.com/2016/01/unity-crash-dumps-to-rescue.html</a></p>
-<p><a href="https://www.sebaslab.com/how-to-debug-unity-natively-using-mixed-c-and-c-stack/" target="_blank" rel="noopener">https://www.sebaslab.com/how-to-debug-unity-natively-using-mixed-c-and-c-stack/</a></p>
-<p><a href="https://www.cnblogs.com/caiger-blog/p/16211519.html" target="_blank" rel="noopener">https://www.cnblogs.com/caiger-blog/p/16211519.html</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-Unity-Addressasble"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-Unity-Addressasble/"
-    >Unity Addressasble</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-Unity-Addressasble/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.354Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <ul>
-<li>Unity Addressasble<ul>
-<li>Heading</li>
-</ul>
+  <p>ByPrin@UWA</p>
+<h2 id="UPM资源包介绍"><a href="#UPM资源包介绍" class="headerlink" title="UPM资源包介绍"></a>UPM资源包介绍</h2><p>作用：给Unity Package Manager制作自定义资源包，并上传至Github托管。使用PackageManager设定项目的依赖、解析资源包依赖、下载添加需要的资源包，将内容整合到项目中，以便在其他项目中使用，并与其他开发者共享。<br>常用于</p>
+<ul>
+<li><p>编辑器工具——文本编辑器、动画查看器或文本框架、Physics API、图形管线</p>
+</li>
+<li><p>内容库——纹理和动画资源集合</p>
 </li>
 </ul>
-<h2 id="Heading"><a href="#Heading" class="headerlink" title="Heading"></a>Heading</h2> 
+<blockquote>
+<p><strong>Unity 2018.3 及之后版本, Unity Package Manager (UPM) 开始支持 Git</strong></p>
+</blockquote>
+<h3 id="文件布局"><a href="#文件布局" class="headerlink" title="文件布局"></a>文件布局</h3><p>UPM资源包是一个按特定标准排列的文件夹，是一个包含各种功能、资源的容器。必须遵循Unity的包格式标准才能正确运行（推荐的文件布局和版本号格式）。</p>
+<pre><code class="lang-csharp">
+&lt;root&gt;
+
+├── package.json
+
+├── README.md
+
+├── CHANGELOG.md
+
+├── LICENSE.md
+
+├── Editor
+
+│ ├── Unity.[YourPackageName].Editor.asmdef
+
+│ └── EditorExample.cs
+
+├── Runtime
+
+│ ├── Unity.[YourPackageName].asmdef
+
+│ └── RuntimeExample.cs
+
+├── Tests
+
+│ ├── Editor
+
+│ │ ├── Unity.[YourPackageName].Editor.Tests.asmdef
+
+│ │ └── EditorExampleTest.cs
+
+│ └── Runtime
+
+│ ├── Unity.[YourPackageName].Tests.asmdef
+
+│ └── RuntimeExampleTest.cs
+
+└── Documentation~
+
+└── [YourPackageName].md
+</code></pre>
+<blockquote>
+<p>文件夹名称以~结尾不会显示在Editor的Project窗口</p>
+</blockquote>
+<h3 id="Package-manifest"><a href="#Package-manifest" class="headerlink" title="Package manifest"></a>Package manifest</h3><p>可以在Unity - Inspector面板填写</p>
+<p>crucial information</p>
+<ul>
+<li><p>its registered name </p>
+</li>
+<li><p>version number<br>To User: </p>
+</li>
+<li><p>a user-friendly name that appears in the list view on the Package Manager window.</p>
+</li>
+<li><p>a brief description of the package</p>
+</li>
+<li><p>the earliest version of Unity the package is compatible with.</p>
+</li>
+</ul>
+<h4 id="Name"><a href="#Name" class="headerlink" title="Name"></a>Name</h4><p>This name must conform to the Unity Package Manager naming convention, which uses reverse domain name notation.</p>
+<ul>
+<li><p>Start with <code>com.&lt;company-name&gt;.</code></p>
+</li>
+<li><p>Contain <strong>only lowercase letters</strong> , digits, hyphens (-), underscores (_), and periods (.)</p>
+</li>
+</ul>
+<h4 id="Display-Name"><a href="#Display-Name" class="headerlink" title="Display Name"></a>Display Name</h4><p>是在Package Manager窗口显示给用户的名称，也是在Project窗口显示的包的Root文件夹的名称。</p>
+<h4 id="版本号规范"><a href="#版本号规范" class="headerlink" title="版本号规范"></a>版本号规范</h4><p>Major.Minor.Patch</p>
+<h4 id="the-lowest-Unity-version"><a href="#the-lowest-Unity-version" class="headerlink" title="the lowest Unity version"></a>the lowest Unity version</h4><p>If omitted, the package is considered compatible with all Unity versions.<br>A package that is not compatible with Unity will not appear in the Package Manager window.</p>
+<h4 id="Package-manifest-example"><a href="#Package-manifest-example" class="headerlink" title="Package manifest example"></a>Package manifest example</h4><p>在包的根目录下创建文件<code>package.json</code>，只要格式符合规范，就能被UPM识别</p>
+<pre><code class="lang-csharp">
+{
+
+&quot;name&quot;: &quot;com.unity.example&quot;,
+
+&quot;version&quot;: &quot;1.2.3&quot;,
+
+&quot;displayName&quot;: &quot;Package Example&quot;,
+
+&quot;description&quot;: &quot;This is an example package&quot;,
+
+&quot;unity&quot;: &quot;2019.1&quot;,
+
+&quot;unityRelease&quot;: &quot;0b5&quot;,
+
+&quot;dependencies&quot;: {
+
+&quot;com.unity.some-package&quot;: &quot;1.0.0&quot;,
+
+&quot;com.unity.other-package&quot;: &quot;2.0.0&quot;
+
+},
+
+&quot;keywords&quot;: [
+
+&quot;keyword1&quot;,
+
+&quot;keyword2&quot;,
+
+&quot;keyword3&quot;
+
+],
+
+&quot;author&quot;: {
+
+&quot;name&quot;: &quot;Unity&quot;,
+
+&quot;email&quot;: &quot;unity@example.com&quot;,
+
+&quot;url&quot;: &quot;https://www.unity3d.com&quot;
+
+}
+
+}
+</code></pre>
+<h3 id="Assembly-definition"><a href="#Assembly-definition" class="headerlink" title="Assembly definition"></a>Assembly definition</h3><p>Assembly definition files are the Unity equivalent to a C# project in the .NET ecosystem. You must set explicit references in the assembly definition file to other assemblies (whether in the same package or in external packages).</p>
+<p>命名规则：<br>Editor/MyCompany.MyFeature.Editor.asmdef<br>Runtime/MyCompany.MyFeature.Runtime.asmdef</p>
+<p>CompanyName.FeatureName与package.json文件一致<br>文件的名称与文件中的”name”一致</p>
+<blockquote>
+<p>使用asmdef的优势</p>
+<ul>
+<li><p>更短的编译时间</p>
+</li>
+<li><p>发挥访问修饰符”internal”的作用</p>
+</li>
+<li><p>允许使用 unsafe code</p>
+</li>
+<li><p>.dll 文件可以指定特定的程序集引用。</p>
+</li>
+</ul>
+</blockquote>
+<p>一些注意事项：</p>
+<ol>
+<li>Editor 文件夹下的 AssemblyDefinition 中 Platform 只能选择 Editor，并且 Reference 必须添加上 Runtime 中的那个 AssemblyDefiniion</li>
+</ol>
+<h3 id="LICENSE相关（暂时忽略）"><a href="#LICENSE相关（暂时忽略）" class="headerlink" title="LICENSE相关（暂时忽略）"></a>LICENSE相关（暂时忽略）</h3><p>推荐添加Third Party Notices.md 和 LICENSE.md </p>
+<ul>
+<li>LICENSE.md：例如以MIT许可证为准的开源许可证MD文件</li>
+</ul>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><h3 id="1-按照规范创建Package"><a href="#1-按照规范创建Package" class="headerlink" title="1. 按照规范创建Package"></a>1. 按照规范创建Package</h3><h3 id="分发"><a href="#分发" class="headerlink" title="分发"></a>分发</h3><h4 id="zip"><a href="#zip" class="headerlink" title="zip"></a>zip</h4><p>压缩为zip文件<br>Unity Package Manager窗口通过Add Package from Disk添加</p>
+<h4 id="Git代码库分发"><a href="#Git代码库分发" class="headerlink" title="Git代码库分发"></a>Git代码库分发</h4><p>添加到Git仓库中，包括meta文件</p>
+<p>下载方式（使用者必须安装git）</p>
+<ul>
+<li>在PackageManager中通过Git URL直接下载</li>
+</ul>
+<pre><code class="lang-csharp">
+git tag 1.0.0 upm 
+
+git push origin upm --tags
+</code></pre>
+<h2 id="README文档"><a href="#README文档" class="headerlink" title="README文档"></a>README文档</h2><p>Developer package documentation. This is generally documentation to help developers who want to modify the package or push a new change on the package master source repository.</p>
+<h2 id="Changelog规范"><a href="#Changelog规范" class="headerlink" title="Changelog规范"></a>Changelog规范</h2><p>You can update the CHANGELOG.md file every time you publish a new version. Every new feature or bug fix should have a trace in this file.</p>
+<p><strong>Added</strong> for new features.<br><strong>Changed</strong> for changes in existing functionality.<br><strong>Deprecated</strong> for soon-to-be removed features.<br><strong>Removed</strong> for now removed features.<br><strong>Fixed</strong> for any bug fixes.<br><strong>Security</strong> in case of vulnerabilities.</p>
+<blockquote>
+<p>轻量级的使用Fixed和Features就足够了</p>
+</blockquote>
+<p>例如：</p>
+<pre><code class="lang-csharp">
+## [3.0.3] - 2018-04-05 
+
+### Changed 
+
+\- API Examples are now published on [Github](https://github.com/Unity-Technologies/ProBuilder-API-Examples). 
+
+### Added 
+
+\- Expose poly shape creation methods. Add API example. 
+
+colors. 
+
+\- New option to set edge and wireframe line width (not available on Metal). 
+
+### Fixed 
+
+\- Fix scene info not updating with selection changes. 
+
+\- Fix `Apply Material` only applying to parent gameobjects if children are also selected. 
+
+\- Fix `pb_Object.SetSelectedFaces` setting duplicate vertex indices. 
+
+### Removed 
+
+\- Remove update checking.
+</code></pre>
+<blockquote>
+<p>原则<br> Changelogs are for humans, not machines. </p>
+<ul>
+<li><p>There should be an entry for every single version.</p>
+</li>
+<li><p>The same types of changes should be grouped.</p>
+</li>
+<li><p>Versions and sections should be linkable.</p>
+</li>
+<li><p>The latest version comes first.</p>
+</li>
+<li><p>The release date of each version is displayed.</p>
+</li>
+<li><p>Mention whether you follow Semantic Versioning.</p>
+</li>
+</ul>
+</blockquote>
+<h2 id="Semantic-Versioning规范"><a href="#Semantic-Versioning规范" class="headerlink" title="Semantic Versioning规范"></a>Semantic Versioning规范</h2><p>MAJOR.MINOR.PATCH</p>
+<ul>
+<li><p>MAJOR introduces one or more breaking changes</p>
+</li>
+<li><p>MINOR introduces one or more <strong>backward-compatible API changes</strong></p>
+</li>
+<li><p>PATCH only introduces bug fixes with no API changes at all</p>
+</li>
+</ul>
+<blockquote>
+<p>When you begin to develop a package, start the version number at <strong>0.1.0.</strong> The MAJOR version number 0 is reserved for packages in their initial development phase. During initial development, package APIs change often, frequently in a breaking manner, so keep the MAJOR version number at 0 until you consider your package stable enough and ready for use in production.</p>
+</blockquote>
+<p>PS: 该规范主要在开发提供给用户的API时有重要作用。先不深究，大致按照此标准进行即可。</p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://docs.unity.cn/2019.4/Documentation/Manual/CustomPackages.html" target="_blank" rel="noopener">https://docs.unity.cn/2019.4/Documentation/Manual/CustomPackages.html</a><br><a href="https://keepachangelog.com/en/1.0.0/" target="_blank" rel="noopener">https://keepachangelog.com/en/1.0.0/</a><br><a href="https://semver.org/" target="_blank" rel="noopener">https://semver.org/</a><br><a href="https://www.jianshu.com/p/153841d65846" target="_blank" rel="noopener">https://www.jianshu.com/p/153841d65846</a></p>
+ 
       <!-- reward -->
       
     </div>
@@ -1771,7 +1871,7 @@ Log.v( TAG, &quot;native library dir &quot; \+ ainfo.nativeLibraryDir );
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-UGUI/"
+  <a class="article-title" href="/2023/07/25/Unity3D-UGUI/"
     >UGUI</a> 
 </h2>
  
@@ -1780,8 +1880,8 @@ Log.v( TAG, &quot;native library dir &quot; \+ ainfo.nativeLibraryDir );
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-UGUI/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.351Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-UGUI/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.278Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1824,8 +1924,60 @@ Log.v( TAG, &quot;native library dir &quot; \+ ainfo.nativeLibraryDir );
 <p>一般是Match Height，保持Canvas的高度不变，背景图的宽度画的长一点，用来适配不用的屏幕。UI元素的锚点设置为四个角即可。</p>
 <p><img src="UGUI/1620900142626.png" alt="Alt text"></p>
 <h4 id="Expand-amp-Shrink"><a href="#Expand-amp-Shrink" class="headerlink" title="Expand &amp; Shrink"></a>Expand &amp; Shrink</h4><p>Expand - Expand the canvas area either horizontally or vertically, so the size of the canvas will never be smaller than the reference.<br>Shrink - Crop the canvas area either horizontally or vertically, so the size of the canvas will never be larger than the reference.</p>
-<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="&#109;&#x61;&#105;&#108;&#x74;&#x6f;&#x3a;&#x68;&#x74;&#x74;&#112;&#x73;&#58;&#x2f;&#47;&#100;&#111;&#x63;&#x73;&#46;&#117;&#110;&#x69;&#x74;&#121;&#x33;&#x64;&#46;&#99;&#x6f;&#x6d;&#x2f;&#x50;&#x61;&#99;&#107;&#x61;&#103;&#101;&#x73;&#47;&#x63;&#111;&#109;&#x2e;&#x75;&#110;&#105;&#116;&#x79;&#x2e;&#117;&#x67;&#x75;&#x69;&#x40;&#49;&#46;&#48;&#x2f;&#x6d;&#97;&#110;&#117;&#97;&#x6c;&#x2f;&#99;&#108;&#97;&#x73;&#x73;&#x2d;&#67;&#97;&#x6e;&#x76;&#x61;&#115;&#x2e;&#104;&#x74;&#109;&#108;">&#x68;&#x74;&#x74;&#112;&#x73;&#58;&#x2f;&#47;&#100;&#111;&#x63;&#x73;&#46;&#117;&#110;&#x69;&#x74;&#121;&#x33;&#x64;&#46;&#99;&#x6f;&#x6d;&#x2f;&#x50;&#x61;&#99;&#107;&#x61;&#103;&#101;&#x73;&#47;&#x63;&#111;&#109;&#x2e;&#x75;&#110;&#105;&#116;&#x79;&#x2e;&#117;&#x67;&#x75;&#x69;&#x40;&#49;&#46;&#48;&#x2f;&#x6d;&#97;&#110;&#117;&#97;&#x6c;&#x2f;&#99;&#108;&#97;&#x73;&#x73;&#x2d;&#67;&#97;&#x6e;&#x76;&#x61;&#115;&#x2e;&#104;&#x74;&#109;&#108;</a></p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#104;&#116;&#116;&#x70;&#x73;&#58;&#x2f;&#x2f;&#x64;&#111;&#99;&#115;&#x2e;&#117;&#x6e;&#x69;&#x74;&#121;&#51;&#x64;&#x2e;&#99;&#x6f;&#109;&#47;&#80;&#97;&#x63;&#107;&#x61;&#103;&#x65;&#x73;&#x2f;&#x63;&#111;&#x6d;&#46;&#117;&#x6e;&#x69;&#x74;&#x79;&#x2e;&#x75;&#x67;&#117;&#x69;&#64;&#49;&#x2e;&#x30;&#x2f;&#x6d;&#97;&#110;&#117;&#97;&#x6c;&#x2f;&#x63;&#x6c;&#x61;&#x73;&#x73;&#45;&#x43;&#97;&#110;&#x76;&#97;&#x73;&#x2e;&#104;&#x74;&#109;&#108;">&#104;&#116;&#116;&#x70;&#x73;&#58;&#x2f;&#x2f;&#x64;&#111;&#99;&#115;&#x2e;&#117;&#x6e;&#x69;&#x74;&#121;&#51;&#x64;&#x2e;&#99;&#x6f;&#109;&#47;&#80;&#97;&#x63;&#107;&#x61;&#103;&#x65;&#x73;&#x2f;&#x63;&#111;&#x6d;&#46;&#117;&#x6e;&#x69;&#x74;&#x79;&#x2e;&#x75;&#x67;&#117;&#x69;&#64;&#49;&#x2e;&#x30;&#x2f;&#x6d;&#97;&#110;&#117;&#97;&#x6c;&#x2f;&#x63;&#x6c;&#x61;&#x73;&#x73;&#45;&#x43;&#97;&#110;&#x76;&#97;&#x73;&#x2e;&#104;&#x74;&#109;&#108;</a></p>
  
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-U3D工具链积累"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-U3D%E5%B7%A5%E5%85%B7%E9%93%BE%E7%A7%AF%E7%B4%AF/"
+    >U3D工具链积累</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-U3D%E5%B7%A5%E5%85%B7%E9%93%BE%E7%A7%AF%E7%B4%AF/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.277Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+   
       <!-- reward -->
       
     </div>
@@ -1857,7 +2009,7 @@ Log.v( TAG, &quot;native library dir &quot; \+ ainfo.nativeLibraryDir );
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-U3D%E8%B5%84%E6%BA%90%E4%BC%98%E5%8C%96%EF%BC%88%E9%9B%B6%E7%A2%8E%EF%BC%89%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"
+  <a class="article-title" href="/2023/07/25/Unity3D-U3D%E8%B5%84%E6%BA%90%E4%BC%98%E5%8C%96%EF%BC%88%E9%9B%B6%E7%A2%8E%EF%BC%89%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/"
     >U3D资源优化（零碎）知识点汇总</a> 
 </h2>
  
@@ -1866,8 +2018,8 @@ Log.v( TAG, &quot;native library dir &quot; \+ ainfo.nativeLibraryDir );
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-U3D%E8%B5%84%E6%BA%90%E4%BC%98%E5%8C%96%EF%BC%88%E9%9B%B6%E7%A2%8E%EF%BC%89%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.334Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-U3D%E8%B5%84%E6%BA%90%E4%BC%98%E5%8C%96%EF%BC%88%E9%9B%B6%E7%A2%8E%EF%BC%89%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.277Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1980,58 +2132,6 @@ audioImporter.SetOverrideSampleSettings(&quot;iOS&quot;, iOSSettings);
 <p>Ref:<br> <a href="https://twitter.com/dmitriy_focus/status/1166706421389496321?lang=en" target="_blank" rel="noopener">https://twitter.com/dmitriy_focus/status/1166706421389496321?lang=en</a><br> <a href="https://docs.unity3d.com/ScriptReference/CanvasRenderer-cullTransparentMesh.html" target="_blank" rel="noopener">https://docs.unity3d.com/ScriptReference/CanvasRenderer-cullTransparentMesh.html</a><br> <a href="https://forum.unity.com/threads/practical-effect-of-cull-transparent-mesh.746711/" target="_blank" rel="noopener">https://forum.unity.com/threads/practical-effect-of-cull-transparent-mesh.746711/</a></p>
 </blockquote>
  
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-U3D工具链积累"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-U3D%E5%B7%A5%E5%85%B7%E9%93%BE%E7%A7%AF%E7%B4%AF/"
-    >U3D工具链积累</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-U3D%E5%B7%A5%E5%85%B7%E9%93%BE%E7%A7%AF%E7%B4%AF/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.332Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-   
       <!-- reward -->
       
     </div>

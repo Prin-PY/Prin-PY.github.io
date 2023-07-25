@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Camera &amp; Screen |  半个出家人</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/circle_image.png" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="半个出家人" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Unity3D-Camera-Screen"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Camera &amp; Screen
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-Camera-Screen/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.239Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">4.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">21 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Screen"><a href="#Screen" class="headerlink" title="Screen"></a>Screen</h2><pre><code class="lang-csharp">
+Screen.autorotateToLandscapeLeft = true; //自动旋转屏幕为向左 
+
+Screen.autorotateToLandscapeRight = false; //自动旋转屏幕向右 
+
+Screen.autorotateToPortrait = true; //自动旋转为纵向 
+
+Screen.autorotateToPortraitUpsideDown = true; //自动旋转为纵向倒置 
+
+print(Screen.currentResolution); //当前屏幕分辨率 
+
+Screen.fullScreen = !Screen.fullScreen; //是否全屏 
+
+print(Screen.height); //屏幕分辨率的高度 
+
+Screen.lockCursor = !Screen.lockCursor; //是否锁定光标 
+
+Screen.showCursor = !Screen.showCursor; //是否显示光标 
+
+Screen.orientation = ScreenOrientation.Landscape; //屏幕取向 
+
+Resolution[] resolutions = Screen.resolutions; //显示器支持的所有全屏分辨率 
+
+foreach (Resolution res in resolutions) 
+
+{ 
+
+print(res.width + &quot; &quot; \+ res.height); 
+
+} 
+
+//参数1宽， 参数 2高， 参数3是否全屏 
+
+Screen.SetResolution(resolutions[0].width, resolutions[0].height, true);
+</code></pre>
+<h2 id="Camera"><a href="#Camera" class="headerlink" title="Camera"></a>Camera</h2><h3 id="View-Frustum-视锥体-相关参数图解"><a href="#View-Frustum-视锥体-相关参数图解" class="headerlink" title="View Frustum(视锥体)相关参数图解"></a>View Frustum(视锥体)相关参数图解</h3><h4 id="透视相机-Perspective"><a href="#透视相机-Perspective" class="headerlink" title="透视相机(Perspective)"></a>透视相机(Perspective)</h4><p><img src="assets/Camera%20&amp;%20Screen/20180524230527942.jpg" alt="Alt text"></p>
+<p><img src="assets/Camera%20&amp;%20Screen/20180524232513244.jpg" alt="Alt text"></p>
+<p>nearClipPalneHeight(近截平面的高)=2<em>Near</em>tan(FOV/2)<br>farClipPlaneHeight(远截平面)=2<em>Far</em>tan(FOV/2)<br>Aspect(摄像机的纵横比)=nearClipPlaneWidth/nearClipPalneHeight=farClipPlaneWidth/farClipPlaneHeight</p>
+<h4 id="正交相机-Orthographic"><a href="#正交相机-Orthographic" class="headerlink" title="正交相机(Orthographic)"></a>正交相机(Orthographic)</h4><p><img src="assets/Camera%20&amp;%20Screen/20180524230615918.jpg" alt="Alt text"></p>
+<p><img src="assets/Camera%20&amp;%20Screen/20180524231957314.jpg" alt="Alt text"></p>
+<p>nearClipPlaneHeight=2*Size<br>farClipPlaneHeight=nearClipPlaneHeight<br>Aspect=nearClipPlaneHeight/farClipPlaneWidth=nearClipPlaneHeight/nearClipPalneWidth</p>
+<h3 id="属性（Inspector可见）"><a href="#属性（Inspector可见）" class="headerlink" title="属性（Inspector可见）"></a>属性（Inspector可见）</h3><h4 id="Clear-Flags"><a href="#Clear-Flags" class="headerlink" title="Clear Flags"></a>Clear Flags</h4><p>清除标识：确定了屏幕哪些部分将被清除，方便多个摄像机画不同的游戏元素</p>
+<p>Skybox ：<br>天空盒：这是默认设置。屏幕上的任何空的部分将显示当前相机的天空盒。<br>如果当前的相机没有设置天空盒，它会默认在渲染设置（Render Settings ）选择天空盒<br>Solid Color ：<br>纯色，屏幕上的空白部分将显示当前摄像机的背景色<br>Depth Only ：<br>深度相机，只渲染采集到的画面<br>如果你想绘制一个玩家的枪，又不让它内部环境被裁剪，你会设置深度为0的相机绘制环境，<br>和另一个深度为1的相机单独绘制武器。武器相机的清除标志（Clear Flags ）应设置 为depth only。<br>Don’t Clear ：<br>不清除，此模式不清除颜色或深度缓存。每帧的渲染画面叠加在上一帧画面之上。</p>
+<h4 id="Background-背景色"><a href="#Background-背景色" class="headerlink" title="Background:背景色"></a>Background:背景色</h4><h4 id="Culling-Mask"><a href="#Culling-Mask" class="headerlink" title="Culling Mask"></a>Culling Mask</h4><p>Culling Mask:包含或省略要由相机呈现的对象层。在检查器中将图层分配给您的对象。<br>Nothing:什么层都不剔除<br>Everything:什么层都剔除<br>Default:默认层剔除<br>TransparentFX:隐形层,系统不会渲染贴图和模型<br>Ignore Raycast:射线层剔除<br>Water:水层剔除<br>UI：UI层剔除</p>
+<p>原理：<br>清除标记至少与渲染管线的两个步骤有关：深度测试和颜色混合。屏幕上每一个像素都至少有两个信息， <strong>颜色信息</strong> 和 <strong>深度信息</strong> ，当新的一帧的像素信息在屏幕呈现之前，先会将 <strong>上一帧的缓存信息清除</strong> 某些部分（或者不清除任何信息），然后和 <strong>剩下的信息做深度测试和颜色混合得到最终结果</strong> （还有其他步骤，这里只讨论着两个），把结果放在帧缓存区并显示在屏幕上。</p>
+<p>深入理解见：<a href="https://blog.csdn.net/mingyi2106/article/details/81606959" target="_blank" rel="noopener">https://blog.csdn.net/mingyi2106/article/details/81606959</a></p>
+<h4 id="Projection"><a href="#Projection" class="headerlink" title="Projection"></a>Projection</h4><p>切换相机的功能来模拟透视。</p>
+<p>Perspective(透视): 相机将完整地呈现透视物体。拍摄角度为0-180°（最高）<br>透视模式下，有远小近大的效果。呈现3D效果<br><strong>Field of View</strong> : 设置为“透视”时，“相机”的视口大小。</p>
+<p>Orthographic(正交): 相机将统一渲染对象，没有视角。注：正交模式下不支持延迟渲染。正向渲染总是被使用。<br>物体在视口的代销只与正交视口的大小有关，与摄像机到物体的距离无关，主要呈现2D效果。<br><strong>Size</strong> :设置为“正交”时，“相机”的视口大小。</p>
+<p>orthographic :摄像机投影模式。若值为true,正交模式，反之投影模式。</p>
+<h4 id="Clipping-Planes"><a href="#Clipping-Planes" class="headerlink" title="Clipping Planes"></a>Clipping Planes</h4><p>剪切平面，从相机到开始和停止渲染的距离。<br>Near ：相对于相机的最近点将出现绘图。<br>Far ：相对于相机的最远点将出现绘图。</p>
+<h4 id="ViewportRect"><a href="#ViewportRect" class="headerlink" title="ViewportRect"></a>ViewportRect</h4><p>视口矩形 四个值指示屏幕上的相机视图将被绘制的位置。在视口坐标中测量（值为0-1）。</p>
+<h4 id="Depth"><a href="#Depth" class="headerlink" title="Depth"></a>Depth</h4><p>相机的位置按照画图顺序。具有较大值的相机将被绘制在具有较小值的相机之上。</p>
+<h4 id="Rendering-Path"><a href="#Rendering-Path" class="headerlink" title="Rendering Path"></a>Rendering Path</h4><p>渲染路径 ：定义什么绘制方法被用于相机的选项<br>Use Graphics Settings 使用玩家设置：在玩家设置（Player Settings.）相机使用哪个渲染路径。<br>Forward 用正向光照渲染：所有对象每材质渲染只渲染一次,快速渲染。基于着色器的渲染路径。支持逐像素计算光照（包括法线贴图和灯光Cookies）和来自一个平行光的实时阴影。<br>Deferred 延迟照明：所有物体将在无光照的环境渲染一次，然后在渲染队列尾部将物体的光照一起渲染出来。支持实时阴影，计算消耗大，对硬件要求高，不支持移动设备，仅专业版可用。<br>Legacy Vertex Lit :使用顶点光照。最低消耗的渲染路径，不支持实时阴影，适用于移动及老式设备。<br>Legacy Deferred : 旧的延迟光照 </p>
+<h4 id="Target-Texture"><a href="#Target-Texture" class="headerlink" title="Target Texture"></a>Target Texture</h4><p>目标纹理:渲染纹理 （Render Texture）包含相机视图输出。这会使相机渲染在屏幕上的能力被禁止。可用于实现画中画或者画面特效。</p>
+<h4 id="Occlusion-Culling（遮挡剔除）"><a href="#Occlusion-Culling（遮挡剔除）" class="headerlink" title="Occlusion Culling（遮挡剔除）"></a>Occlusion Culling（遮挡剔除）</h4><p>是否剔除物体背向摄像机的部分</p>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><ul>
+<li><p>Allow HDR:高动态光照渲染，启动相机高动态范围渲染功能。让场景更真实。</p>
+</li>
+<li><p>Allow MSAA: 这台相机应该使用MSAA渲染目标吗？如果当前质量设置MSAA级别支持，将只使用MSAA。</p>
+</li>
+<li><p>Allow Dynamic Resolution：动态分辨率缩放。<br>如果相机使用动态分辨率渲染，则为true，否则为false。即使此属性为true，动态分辨率也只能在当前图形设备支持的情况下使用。</p>
+</li>
+<li><p>Target Display:设置此摄像机的目标显示。<br>此设置使摄像机呈现在指定的显示中。显示器（例如监视器）支持的最大数目是8. </p>
+</li>
+</ul>
+<h3 id="属性（Inspector不可见）"><a href="#属性（Inspector不可见）" class="headerlink" title="属性（Inspector不可见）"></a>属性（Inspector不可见）</h3><h4 id="aspect-：Camera视口的宽高比（可获取，可设置）"><a href="#aspect-：Camera视口的宽高比（可获取，可设置）" class="headerlink" title="aspect ：Camera视口的宽高比（可获取，可设置）"></a>aspect ：Camera视口的宽高比（可获取，可设置）</h4><p>获取或者设置Camera视口的宽高比例值。例如：camera.aspect =2.0f,则视口的宽度、高度 = 2.0f，当硬件显示器屏幕的宽度与高度比例不为2.0f时,视图的显示将会发生变形。aspect只处理摄像机camera可以看到的视图的宽高比例，而硬件显示屏的作用只是把摄像机camera看到的内容显示出来，当硬件显示屏的宽高比例与aspect的比例值不同时，视图将发生变形。</p>
+<h4 id="pixelRect"><a href="#pixelRect" class="headerlink" title="pixelRect"></a>pixelRect</h4><p>设置Camera被渲染到屏幕中的坐标位置。以实际像素大小来设置显示视口的位置。如下图：A为原始平面大小，B为变换后的视口大小，则X0的值为视口右移的像素大小，Y0的值为视口上移的像素大小，w为Camera.pixelWidth,h的值为Camera.pixelHeight。这里要注意：Screen.width和Screen.height为模拟硬件屏幕的宽高值，不随Camera.pixelWidth和Camera.pixelHeight的改变而改变。</p>
+<pre><code class="lang-csharp">
+public class PixelRect : MonoBehaviour
+
+{ 
+
+int which_change = -1; 
+
+float temp_x = 0.0f, temp_y = 0.0f; 
+
+void Update()
+
+{ 
+
+//Screen.width和Screen.height为模拟硬件屏幕的宽高值,
+
+//其返回值不随camera.pixelWidth和camera.pixelHeight的改变而改变
+
+Debug.Log(&quot;Screen.width:&quot; \+ Screen.width); 
+
+Debug.Log(&quot;Screen.height:&quot; \+ Screen.height); 
+
+Debug.Log(&quot;pixelWidth:&quot; \+ Camera.main.pixelWidth); 
+
+Debug.Log(&quot;pixelHeight:&quot; \+ Camera.main.pixelHeight); 
+
+//通过改变Camera的坐标位置而改变视口的区间
+
+if (which_change == 0) 
+
+{ 
+
+if (Camera.main.pixelWidth &gt; 1.0f) 
+
+{ 
+
+temp_x += Time.deltaTime * 20.0f; 
+
+} 
+
+//取消以下注释察看平移状况
+
+//if (Camera.main.pixelHeight &gt; 1.0f)
+
+//{
+
+// temp_y += Time.deltaTime * 20.0f;
+
+//}
+
+Camera.main.pixelRect = new Rect(temp_x, temp_y, Camera.main.pixelWidth, Camera.main.pixelHeight); 
+
+} 
+
+//通过改变Camera的视口宽度和高度来改变视口的区间
+
+else if (which_change == 1)
+
+{ 
+
+if (Camera.main.pixelWidth &gt; 1.0f) 
+
+{ 
+
+temp_x = Camera.main.pixelWidth - Time.deltaTime * 20.0f; 
+
+} 
+
+//取消以下注释察看平移状况
+
+//if (camera.pixelHeight &gt; 1.0f)
+
+//{
+
+// temp_y = camera.pixelHeight - Time.deltaTime * 20.0f;
+
+//}
+
+Camera.main.pixelRect = new Rect(0, 0, temp_x, temp_y); 
+
+} 
+
+} 
+
+void OnGUI()
+
+{ 
+
+if (GUI.Button(new Rect(10.0f, 10.0f, 200.0f, 45.0f), &quot;视口改变方式1&quot;)) 
+
+{ 
+
+Camera.main.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f); 
+
+which_change = 0; 
+
+temp_x = 0.0f; 
+
+temp_y = 0.0f; 
+
+} 
+
+if (GUI.Button(new Rect(10.0f, 60.0f, 200.0f, 45.0f), &quot;视口改变方式2&quot;)) 
+
+{ 
+
+Camera.main.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f); 
+
+which_change = 1; 
+
+temp_x = 0.0f; 
+
+temp_y = Camera.main.pixelHeight; 
+
+} 
+
+if (GUI.Button(new Rect(10.0f, 110.0f, 200.0f, 45.0f), &quot;视口还原&quot;)) 
+
+{ 
+
+Camera.main.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f); 
+
+which_change = -1; 
+
+} 
+
+} 
+
+}
+</code></pre>
+<h3 id="实用案例"><a href="#实用案例" class="headerlink" title="实用案例"></a>实用案例</h3><h4 id="cameraToWorldMatrix-变换矩阵"><a href="#cameraToWorldMatrix-变换矩阵" class="headerlink" title="cameraToWorldMatrix : 变换矩阵"></a>cameraToWorldMatrix : 变换矩阵</h4><pre><code class="lang-csharp">
+using UnityEngine; 
+
+public class cameratoworldmatrix : MonoBehaviour { 
+
+// Use this for initialization
+
+void Start () { 
+
+Debug.Log(&quot;Camera旋转前位置&quot; \+ transform.position); 
+
+Matrix4x4 m = Camera.main.cameraToWorldMatrix; 
+
+// 向量的位置转换为世界坐标中的位置
+
+//v3 的值为沿着Camera局部坐标系的-z轴方向前移5个单位的位置在世界坐标系中的位置
+
+Vector3 v3 = m.MultiplyPoint(Vector3.forward * 5.0f); 
+
+//v4 的值为沿着Camera世界坐标系的-z轴方向前移5个单位的位置在世界坐标系中的位置
+
+Vector3 v4 = m.MultiplyPoint(transform.forward * 5.0f); 
+
+Debug.Log(&quot;旋转前，V3坐标值：&quot;+v3); 
+
+Debug.Log(&quot;旋转前，V4坐标值：&quot;+v4); 
+
+// 将摄像机沿着Y轴正向旋转90度（此时摄像机局部坐标系的z轴方向和世界坐标的X轴方向一致），
+
+transform.Rotate(Vector3.up * 90f); 
+
+m = Camera.main.cameraToWorldMatrix; 
+
+v3 = m.MultiplyPoint(Vector3.forward * 5.0f); 
+
+v4 = m.MultiplyPoint(transform.forward * 5.0f); 
+
+Debug.Log(&quot;旋转后， v3坐标值&quot;+v3); 
+
+Debug.Log(&quot;旋转后， v4坐标值&quot;+v4); 
+
+} 
+
+}
+</code></pre>
+<h4 id="CullingMask设置"><a href="#CullingMask设置" class="headerlink" title="CullingMask设置"></a>CullingMask设置</h4><p>CullingMask 按层渲染，此属性用于按层（GameObject.layer）有选择性地渲染场景中的物体。通过cullingMask可以使得当前摄像机有选择性地渲染场景中的部分物体，默认cullingMask =-1即渲染场景中的任何物体，cullingMask = 0时不渲染场景中的任何物体。若只渲染2,3,4，可以使用cullingMask = （1&lt;&lt;2）+ (1&lt;&lt;3)+(1&lt;&lt;4)来进行。</p>
+<h4 id="eventMask属性（待研究）"><a href="#eventMask属性（待研究）" class="headerlink" title="eventMask属性（待研究）"></a>eventMask属性（待研究）</h4><p>按层响应事件，选择哪个层（layer）的物体可以响应鼠标事件</p>
+<p>必须满足两个条件：</p>
+<ol>
+<li><p>物体在摄像机的视野范围内。</p>
+</li>
+<li><p>在2的layer次方的值与eventMask进行运算（&amp;）后结果仍为2的layer次方的值，如：defalult ,layer值为0，2的0次方=1，如果1与eventMask进行与运算后扔为1，则此物体响应鼠标事件。由于EventMask为奇数时，与1的与运算结果都为1，所以若物体层为defalut并且eventMask为奇数时物体会响应鼠标事件。</p>
+</li>
+</ol>
+<p>如果想要多个不同层的物体响应鼠标事件，则需要把所有层的2的layer次方值相加，再与eventMask做与运算。例如，2个物体，layer值分贝为1,3，当event与9进行与运算后结果仍为9，则这两个物体都会响应鼠标事件。</p>
+<p>此属性有一个特殊情况，但固体layer选择IgnoreRaycast(其为系统内置，值为2)时，无论EventMask值为多少，物体都无法响应鼠标事件。</p>
+<pre><code class="lang-csharp">
+using UnityEngine; 
+
+using System.Collections; 
+
+public class EventMask_ts : MonoBehaviour
+
+{ 
+
+bool is_rotate = false;//控制物体旋转
+
+public Camera c;//指向场景中摄像机
+
+//记录摄像机的eventMask值，可以在程序运行时在Inspector面板中修改其值的大小
+
+public int eventMask_now = -1; 
+
+//记录当前物体的层
+
+int layer_now; 
+
+int layerTemp;//记录2的layer次方的值
+
+int ad;//记录与运算（&amp;）的结果
+
+string str = null; 
+
+void Update()
+
+{ 
+
+//记录当前对象的层，可以在程序运行时在Inspector面板中选择不同的层
+
+layer_now = gameObject.layer; 
+
+//求2的layer_now次方的值
+
+layerTemp= (int)Mathf.Pow(2.0f, layer_now); 
+
+//与运算（&amp;）
+
+ad = eventMask_now &amp; layerTemp; 
+
+c.eventMask = eventMask_now; 
+
+//当is_rotate为true时旋转物体
+
+if (is_rotate) 
+
+{ 
+
+transform.Rotate(Vector3.up * 15.0f * Time.deltaTime); 
+
+} 
+
+} 
+
+//当鼠标左键按下时，物体开始旋转
+
+void OnMouseDown()
+
+{ 
+
+is_rotate = true; 
+
+} 
+
+//当鼠标左键抬起时，物体结束旋转
+
+void OnMouseUp()
+
+{ 
+
+is_rotate = false; 
+
+} 
+
+void OnGUI()
+
+{ 
+
+GUI.Label(new Rect(10.0f, 10.0f, 300.0f, 45.0f), &quot;当前对象的layer值为：&quot; \+ layer_now + &quot; , 2的layer次方的值为&quot; \+ layerTemp); 
+
+GUI.Label(new Rect(10.0f, 60.0f, 300.0f, 45.0f), &quot;当前摄像机eventMask的值为：&quot; \+ eventMask_now); 
+
+GUI.Label(new Rect(10.0f, 110.0f, 500.0f, 45.0f), &quot;根据算法，当eventMask的值与&quot; \+ layerTemp+ &quot;进行与运算（&amp;）后， 若结果为&quot; \+ tp + &quot;，则物体相应OnMousexxx方法，否则不响应！&quot;); 
+
+if (ad == tp) 
+
+{ 
+
+str = &quot; ,所以物体会相应OnMouseDown方法！&quot;; 
+
+} 
+
+else
+
+{ 
+
+str = &quot; ,所以物体不会相应OnMouseDown方法！&quot;; 
+
+} 
+
+GUI.Label(new Rect(10.0f, 160.0f, 500.0f, 45.0f), &quot;而当前eventMask与&quot; \+ layerTemp+ &quot;进行与运算（&amp;）的结果为&quot; \+ ad + str); 
+
+} 
+
+}
+</code></pre>
+<h4 id="LayerCullDistances-层消隐的距离"><a href="#LayerCullDistances-层消隐的距离" class="headerlink" title="LayerCullDistances:层消隐的距离"></a>LayerCullDistances:层消隐的距离</h4><p>摄像机可以通过基于层（GameObject.layer）的方式来设置不同层物体的消隐距离，但这个距离必须小于或者等于摄像机的farClipPlane才有效。</p>
+<h4 id="layerCullSpherical-基于球面距离剔除"><a href="#layerCullSpherical-基于球面距离剔除" class="headerlink" title="layerCullSpherical:基于球面距离剔除"></a>layerCullSpherical:基于球面距离剔除</h4><p>基于球面距离的剔除方式。属性默认为false，即不使用球面剔除，表示只要有一点没有超出物体所在层的远视口平面，物体就是可见的。当设置此属性为True时，只要物体的世界坐标点Position与摄像机的距离大于所在层的剔除距离，物体就不可见。</p>
+<h4 id="Shader相关"><a href="#Shader相关" class="headerlink" title="Shader相关"></a>Shader相关</h4><ul>
+<li><p>RenderWithShader:使用其他shader渲染<br>使用指定shader来代替当前物体的shader渲染一帧。当replacementTag为空时会替换视口中所有物体的shader</p>
+</li>
+<li><p>SetReplacementShader 使用指定的shader来替换物体当前的shader,被替换后每一帧都会替换shader来渲染物体,与上面的方法刚好不同。</p>
+</li>
+</ul>
+<pre><code class="lang-csharp">
+public class RenderWithShader : MonoBehaviour
+
+{ 
+
+bool is_use = false; 
+
+void OnGUI()
+
+{ 
+
+if (is_use) 
+
+{ 
+
+//使用高光shader：Specular来渲染Camera
+
+Camera.main.RenderWithShader(Shader.Find(&quot;Specular&quot;), &quot;RenderType&quot;); 
+
+} 
+
+if (GUI.Button(new Rect(10.0f, 10.0f, 300.0f, 45.0f), &quot;使用RenderWithShader启用高光&quot;)) 
+
+{ 
+
+//RenderWithShader每调用一次只渲染一帧，所以不可将其直接放到这儿
+
+//camera.RenderWithShader(Shader.Find(&quot;Specular&quot;), &quot;RenderType&quot;);
+
+is_use = true; 
+
+} 
+
+if (GUI.Button(new Rect(10.0f, 60.0f, 300.0f, 45.0f), &quot;使用SetReplacementShader启用高光&quot;)) 
+
+{ 
+
+//SetReplacementShader方法用来替换已有shader，调用一次即可
+
+Camera.main.SetReplacementShader(Shader.Find(&quot;Specular&quot;), &quot;RenderType&quot;); 
+
+is_use = false; 
+
+} 
+
+if (GUI.Button(new Rect(10.0f, 110.0f, 300.0f, 45.0f), &quot;关闭高光&quot;)) 
+
+{ 
+
+Camera.main.ResetReplacementShader(); 
+
+is_use = false; 
+
+} 
+
+} 
+
+}
+</code></pre>
+<h4 id="更多"><a href="#更多" class="headerlink" title="更多"></a>更多</h4><p>见：<a href="https://www.jianshu.com/p/547ef7f4a313" target="_blank" rel="noopener">https://www.jianshu.com/p/547ef7f4a313</a></p>
+<h2 id="编辑器模式下修改屏幕分辨率"><a href="#编辑器模式下修改屏幕分辨率" class="headerlink" title="编辑器模式下修改屏幕分辨率"></a>编辑器模式下修改屏幕分辨率</h2><pre><code class="lang-csharp">
+#if UNITY_EDITOR
+
+using System; 
+
+using System.Reflection; 
+
+using UnityEditor; 
+
+using UnityEngine; 
+
+public static class GameViewUtils
+
+{ 
+
+static object gameViewSizesInstance; 
+
+static MethodInfo getGroup; 
+
+static GameViewUtils()
+
+{ 
+
+// gameViewSizesInstance = ScriptableSingleton&lt;GameViewSizes&gt;.instance;
+
+var sizesType = typeof(Editor).Assembly.GetType(&quot;UnityEditor.GameViewSizes&quot;); 
+
+var singleType = typeof(ScriptableSingleton&lt;&gt;).MakeGenericType(sizesType); 
+
+var instanceProp = singleType.GetProperty(&quot;instance&quot;); 
+
+getGroup = sizesType.GetMethod(&quot;GetGroup&quot;); 
+
+gameViewSizesInstance = instanceProp.GetValue(null, null); 
+
+} 
+
+public enum GameViewSizeType 
+
+{ 
+
+AspectRatio, FixedResolution 
+
+} 
+
+[MenuItem(&quot;Test/AddSize&quot;)] 
+
+public static void AddTestSize()
+
+{ 
+
+AddCustomSize(GameViewSizeType.AspectRatio, GameViewSizeGroupType.Standalone, 123, 456, &quot;Test size&quot;); 
+
+} 
+
+[MenuItem(&quot;Test/SizeTextQuery&quot;)] 
+
+public static void SizeTextQueryTest()
+
+{ 
+
+Debug.Log(SizeExists(GameViewSizeGroupType.Standalone, &quot;Test size&quot;)); 
+
+} 
+
+[MenuItem(&quot;Test/Query16:9Test&quot;)] 
+
+public static void WidescreenQueryTest()
+
+{ 
+
+Debug.Log(SizeExists(GameViewSizeGroupType.Standalone, &quot;16:9&quot;)); 
+
+} 
+
+[MenuItem(&quot;Test/Set16:9&quot;)] 
+
+public static void SetWidescreenTest()
+
+{ 
+
+SetSize(FindSize(GameViewSizeGroupType.Standalone, &quot;16:9&quot;)); 
+
+} 
+
+[MenuItem(&quot;Test/SetTestSize&quot;)] 
+
+public static void SetTestSize()
+
+{ 
+
+int idx = FindSize(GameViewSizeGroupType.Standalone, 123, 456); 
+
+if (idx != -1) 
+
+SetSize(idx); 
+
+} 
+
+public static void SetSize(int index)
+
+{ 
+
+var gvWndType = typeof(Editor).Assembly.GetType(&quot;UnityEditor.GameView&quot;); 
+
+var selectedSizeIndexProp = gvWndType.GetProperty(&quot;selectedSizeIndex&quot;, 
+
+BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic); 
+
+var gvWnd = EditorWindow.GetWindow(gvWndType); 
+
+selectedSizeIndexProp.SetValue(gvWnd, index, null); 
+
+} 
+
+[MenuItem(&quot;Test/SizeDimensionsQuery&quot;)] 
+
+public static void SizeDimensionsQueryTest()
+
+{ 
+
+Debug.Log(SizeExists(GameViewSizeGroupType.Standalone, 123, 456)); 
+
+} 
+
+public static void AddCustomSize(GameViewSizeType viewSizeType, GameViewSizeGroupType sizeGroupType, int width, int height, string text)
+
+{ 
+
+// GameViewSizes group = gameViewSizesInstance.GetGroup(sizeGroupTyge);
+
+// group.AddCustomSize(new GameViewSize(viewSizeType, width, height, text);
+
+var group = GetGroup(sizeGroupType); 
+
+var addCustomSize = getGroup.ReturnType.GetMethod(&quot;AddCustomSize&quot;); // or group.GetType().
+
+var gvsType = typeof(Editor).Assembly.GetType(&quot;UnityEditor.GameViewSize&quot;); 
+
+var ctor = gvsType.GetConstructor(new Type[] { typeof(int), typeof(int), typeof(int), typeof(string) }); 
+
+var newSize = ctor.Invoke(new object[] { (int)viewSizeType, width, height, text }); 
+
+addCustomSize.Invoke(group, new object[] { newSize }); 
+
+} 
+
+public static bool SizeExists(GameViewSizeGroupType sizeGroupType, string text)
+
+{ 
+
+return FindSize(sizeGroupType, text) != -1; 
+
+} 
+
+public static int FindSize(GameViewSizeGroupType sizeGroupType, string text)
+
+{ 
+
+// GameViewSizes group = gameViewSizesInstance.GetGroup(sizeGroupType);
+
+// string[] texts = group.GetDisplayTexts();
+
+// for loop...
+
+var group = GetGroup(sizeGroupType); 
+
+var getDisplayTexts = group.GetType().GetMethod(&quot;GetDisplayTexts&quot;); 
+
+var displayTexts = getDisplayTexts.Invoke(group, null) as string[]; 
+
+for (int i = 0; i &lt; displayTexts.Length; i++) 
+
+{ 
+
+string display = displayTexts[i]; 
+
+// the text we get is &quot;Name (W:H)&quot; if the size has a name, or just &quot;W:H&quot; e.g. 16:9
+
+// so if we&#39;re querying a custom size text we substring to only get the name
+
+// You could see the outputs by just logging
+
+// Debug.Log(display);
+
+int pren = display.IndexOf(&#39;(&#39;); 
+
+if (pren != -1) 
+
+display = display.Substring(0, pren - 1); // -1 to remove the space that&#39;s before the prens. This is very implementation-depdenent
+
+if (display == text) 
+
+return i; 
+
+} 
+
+return -1; 
+
+} 
+
+public static bool SizeExists(GameViewSizeGroupType sizeGroupType, int width, int height)
+
+{ 
+
+return FindSize(sizeGroupType, width, height) != -1; 
+
+} 
+
+public static int FindSize(GameViewSizeGroupType sizeGroupType, int width, int height)
+
+{ 
+
+// goal:
+
+// GameViewSizes group = gameViewSizesInstance.GetGroup(sizeGroupType);
+
+// int sizesCount = group.GetBuiltinCount() + group.GetCustomCount();
+
+// iterate through the sizes via group.GetGameViewSize(int index)
+
+var group = GetGroup(sizeGroupType); 
+
+var groupType = group.GetType(); 
+
+var getBuiltinCount = groupType.GetMethod(&quot;GetBuiltinCount&quot;); 
+
+var getCustomCount = groupType.GetMethod(&quot;GetCustomCount&quot;); 
+
+int sizesCount = (int)getBuiltinCount.Invoke(group, null) + (int)getCustomCount.Invoke(group, null); 
+
+var getGameViewSize = groupType.GetMethod(&quot;GetGameViewSize&quot;); 
+
+var gvsType = getGameViewSize.ReturnType; 
+
+var widthProp = gvsType.GetProperty(&quot;width&quot;); 
+
+var heightProp = gvsType.GetProperty(&quot;height&quot;); 
+
+var indexValue = new object[1]; 
+
+for (int i = 0; i &lt; sizesCount; i++) 
+
+{ 
+
+indexValue[0] = i; 
+
+var size = getGameViewSize.Invoke(group, indexValue); 
+
+int sizeWidth = (int)widthProp.GetValue(size, null); 
+
+int sizeHeight = (int)heightProp.GetValue(size, null); 
+
+if (sizeWidth == width &amp;&amp; sizeHeight == height) 
+
+return i; 
+
+} 
+
+return -1; 
+
+} 
+
+static object GetGroup(GameViewSizeGroupType type)
+
+{ 
+
+return getGroup.Invoke(gameViewSizesInstance, new object[] { (int)type }); 
+
+} 
+
+//[MenuItem(&quot;Test/LogCurrentGroupType&quot;)]
+
+//public static void LogCurrentGroupType()
+
+//{
+
+// Debug.Log(GetCurrentGroupType());
+
+//}
+
+public static GameViewSizeGroupType GetCurrentGroupType()
+
+{ 
+
+var getCurrentGroupTypeProp = gameViewSizesInstance.GetType().GetProperty(&quot;currentGroupType&quot;); 
+
+return (GameViewSizeGroupType)(int)getCurrentGroupTypeProp.GetValue(gameViewSizesInstance, null); 
+
+} 
+
+public static void switchOrientation()
+
+{ 
+
+int width = Screen.height; 
+
+int height = Screen.width; 
+
+int index = FindSize(GetCurrentGroupType(), width, height); 
+
+if (index == -1) 
+
+{ 
+
+AddCustomSize(GameViewSizeType.FixedResolution, GetCurrentGroupType(), width, height, &quot;&quot;); 
+
+index = FindSize(GetCurrentGroupType(), width, height); 
+
+} 
+
+if (index != -1) 
+
+{ 
+
+SetSize(index); 
+
+} 
+
+else
+
+{ 
+
+Debug.LogError(&quot;switchOrientation failed, can not find or add resoulution for &quot; \+ width.ToString() + &quot;*&quot; \+ height.ToString()); 
+
+} 
+
+} 
+
+} 
+
+#endif
+</code></pre>
+<h2 id="屏幕比例与摄像机设置"><a href="#屏幕比例与摄像机设置" class="headerlink" title="屏幕比例与摄像机设置"></a>屏幕比例与摄像机设置</h2><h3 id="宽高比（aspect）"><a href="#宽高比（aspect）" class="headerlink" title="宽高比（aspect）"></a>宽高比（aspect）</h3><p>Screen.witdh和Screen.heigh表示模拟硬件设备的宽高值，不受camera等相关组件在软件层面的代码影响。<br>Unity在Screen界面可以设置Screen的比例和像素，但是没有提供相应的接口用代码设置屏幕比例，因为硬件的屏幕就是不可设置的。</p>
+<p><strong>aspect</strong> ：获取和设置屏幕的 <strong>宽高比</strong> 。</p>
+<p>Viewport Rect：视口框。指的是在Screen上，显示图像的方框。X、Y为偏移值，W、H为实际视口宽/高与Screen宽/高的比例值。</p>
+<p>aspect默认和screen的宽高比保持一致，摄像机渲染的图像填满screen。<br>当Viewport Rect宽高比发生变化时，aspect与之保持一致。<br>即默认情况下，aspect是由屏幕的宽高比以及Viewport Rect一起决定的。</p>
+<p>当在脚本中手动更改aspect的值时，aspect的值即为手动设置的值，相机的宽高比也就是人手动设置的。</p>
+<p>此时，Viewport宽高比不变，相机会把自己的视口当中的图像渲染到Viewport当中，由于宽高比不一致会导致变形。</p>
+<h3 id="可见区域形状"><a href="#可见区域形状" class="headerlink" title="可见区域形状"></a>可见区域形状</h3><h4 id="Perspective"><a href="#Perspective" class="headerlink" title="Perspective"></a>Perspective</h4><p>透视视图下，可见区域是一个四棱台。<br>Aspect决定了宽高比，即棱台上下底、截面的宽高比。<br>Field of View：相机视野角度，由FOV Axis确定的轴向上的角度值(degree)</p>
+<blockquote>
+<p>宽高比决定了，改变Field of View，视口截面的形状会成比例缩放。从角度的层面来看，棱台的侧棱与高之间的夹角随FoV的变大而变大，直观来看，就是视角的放大与缩小。<br> （调整Screen或Viewport或aspect，只能改变相机视口的宽度，不能改变高度，就是因为Field of View把高度值定死了）<br> Clipping Planes：剪裁面片，指的是可视区域棱台的上下底面 距离camera坐标点的位置（近截面和远截面）</p>
+</blockquote>
+<p>以上所有参数，共同决定了camera可见范围的形状以及它与屏幕渲染的图像的关系。</p>
+<blockquote>
+<p><strong>aspect值在代码中设置过一次，就会固定。如果没有设置过，就默认与Screen宽高比一致。</strong></p>
+</blockquote>
+<h4 id="Orthographic"><a href="#Orthographic" class="headerlink" title="Orthographic"></a>Orthographic</h4><p>较容易理解。size参数相当于Perspective模式下的FoV。</p>
+<p>摄像机高度 = 摄像机orthographicSize <em> 2<br>摄像机实际宽度 = 摄像机高度 </em> 屏幕宽高比<br>摄像机实际宽度 = 摄像机orthographicSize <em> 2 </em> 屏幕宽高比</p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.cnblogs.com/unity-carry/p/9512662.html" target="_blank" rel="noopener">https://www.cnblogs.com/unity-carry/p/9512662.html</a><br><a href="https://www.jianshu.com/p/547ef7f4a313" target="_blank" rel="noopener">https://www.jianshu.com/p/547ef7f4a313</a><br><a href="https://www.jianshu.com/p/95cb4621206e" target="_blank" rel="noopener">https://www.jianshu.com/p/95cb4621206e</a></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.prince-y-p.com/2023/07/25/Unity3D-Camera-Screen/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/25/Unity3D-CSharp%E8%B0%83%E7%94%A8Java-%E4%B8%8EAndroid%E4%BA%A4%E4%BA%92/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            CSharp调用Java&amp;与Android交互
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/25/Unity3D-Atlas-%E5%9B%BE%E9%9B%86/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Atlas(图集)</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> Prin
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/circle_image.png" alt="半个出家人"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/Unreal">虚幻引擎</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

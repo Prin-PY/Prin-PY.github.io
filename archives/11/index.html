@@ -171,7 +171,7 @@
     
     
     <article
-  id="post-Unity3D-Collider"
+  id="post-Unity3D-BatchMode"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -182,8 +182,8 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-Collider/"
-    >Collider</a> 
+  <a class="article-title" href="/2023/07/25/Unity3D-BatchMode/"
+    >BatchMode</a> 
 </h2>
  
 
@@ -191,8 +191,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-Collider/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.155Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-BatchMode/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.239Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -202,7 +202,292 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="MeshCollider"><a href="#MeshCollider" class="headerlink" title="MeshCollider"></a>MeshCollider</h1><p>网格碰撞体 (Mesh Collider) 采用网格资源 (Mesh Asset) 并基于该网格构建其碰撞体 (Collider)。</p>
+  <h2 id="使用原理"><a href="#使用原理" class="headerlink" title="使用原理"></a>使用原理</h2><h3 id="DOS"><a href="#DOS" class="headerlink" title="DOS"></a>DOS</h3><p>DOS是Disk Operation System(磁盘操作系统）的简称，是个人计算机上的一类操作系统。它直接操纵管理硬盘的文件，一般都是黑底白色文字的界面。<br>DOS就是人与机器的一座桥梁，是罩在机器硬件外面的一层“外壳”，只需通过一些接近于自然语言的DOS命令，就可以轻松地完成绝大多数对机器的日常操作。<br>此外，DOS还能有效地管理各种软硬件资源，对它们进行合理的调度，所有的软件和硬件都在DOS的监控和管理之下，有条不紊地进行着自己的工作，但是在操作不慎情况下也会死机。<br><strong>MS-DOS</strong> 是MicroSoft-dos，它不是纯DOS，是基于Windows的DOS程序，在功能上类似于DOS，但是不一样。<br>最新的Windows操作系统中，MS-dos的核心依然存在，只是加上Windows当作系统的图形界面。<br>微软图形界面操作系统 Windows NT 问世以来，DOS是一个 <strong>后台程序</strong> 的形式出现的。名为 <strong>Windows命令提示符</strong> 。可以通过点击运行- <strong>CMD</strong> 进入。</p>
+<h4 id="DOS命令"><a href="#DOS命令" class="headerlink" title="DOS命令"></a>DOS命令</h4><p>DOS命令行不许要去专门当做一门语言学习，你只需要根据自己的需求百度一下命令行的使用方式即可。</p>
+<h3 id="Batch-bat文件"><a href="#Batch-bat文件" class="headerlink" title="Batch(.bat文件)"></a>Batch(.bat文件)</h3><p><strong>批处理(Batch)</strong> ，也称为 <strong>批处理脚本</strong> 。通常被认为是一种简化的脚本语言，也称作宏。它应用于DOS和Windows系统中。<br>它是由DOS或者Windows系统内嵌的命令解释器（通常是COMMAND. COM或者CMD.EXE）解释运行。类似于Unix中的Shell脚本。批处理文件具有.bat或者.cmd的扩展名，其最简单的例子，是逐行书写在命令行中会用到的各种命令。<br><strong>使用</strong> ：在“命令提示”下键入批处理文件的名称，或者双击该批处理文件，系统就会调用Cmd.exe运行该批处理程序。<br><strong>运行</strong> ：运行批处理程序时，首先扫描整个批处理程序，然后从第一行代码开始向下逐句执行所有的命令，直至程序结尾或遇见exit命令或出错意外退出。</p>
+<blockquote>
+<p>批处理程序虽然是在命令行环境中运行，但不仅仅能使用命令行软件，任何当前系统下可运行的程序都可以放在批处理文件中运行。</p>
+</blockquote>
+<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><h5 id="echo-命令"><a href="#echo-命令" class="headerlink" title="echo 命令"></a>echo 命令</h5><p>语法: echo [{on|off}] [message]<br>Sample：@echo off / echo hello world</p>
+<p>打开回显或关闭请求回显功能，或显示消息。如果没有任何参数，echo命令将显示当前回显设置。<br>在实际应用中我们会把这条命令和重定向符号（也称为管道符号，一般用&gt; &gt;&gt; ^）结合来实现输入一些命令到特定的文件中，例如：</p>
+<pre><code class="lang-csharp">
+echo test&gt;test.txt 
+
+# 会创建一个名为&quot;test&quot;的文本文件，并将&quot;test&quot;输入到文本文件中。
+</code></pre>
+<p>在批处理文件的开头，通常有：<br>echo off<br>原因是”@”可以将本行的命令关闭回显，搭配”echo off”就可以不显示”echo off”的回显了。</p>
+<h5 id="rem-命令"><a href="#rem-命令" class="headerlink" title="rem 命令"></a>rem 命令</h5><p>语法：Rem [注释内容]<br>Sample：Rem 你好。</p>
+<p>注释命令，类似于在C语言中的/ <em>——–</em> /，它并不会被执行，只是起一个注释的作用，只有在编辑批处理时才会被看到，主要用于方便修改。<br>:: 也具有rem的功能<br>但::和rem还是有区别的，当关闭回显时，rem和::后的内容都不会显示。<br>但是当打开回显时，rem后的内容会显示出来，然而::后的内容仍然不会显示。</p>
+<h5 id="pause"><a href="#pause" class="headerlink" title="pause"></a>pause</h5><p>暂停命令。运行 Pause 命令时，将显示下面的消息：<br>Press any key to continue…（或：请按任意键继续…)</p>
+<h5 id="call"><a href="#call" class="headerlink" title="call"></a>call</h5><h5 id="start"><a href="#start" class="headerlink" title="start"></a>start</h5><h5 id="goto"><a href="#goto" class="headerlink" title="goto"></a>goto</h5><h5 id="set"><a href="#set" class="headerlink" title="set"></a>set</h5><h4 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h4><h3 id="其他概念"><a href="#其他概念" class="headerlink" title="其他概念"></a>其他概念</h3><p>Bash(Bourne-Again SHell): Unix shell的一种，能运行于大多数类Unix系统的操作系统之上，包括Linux与Mac OS X v10.4都将它作为默认shell。<br>是一个命令处理器，通常运行于文本窗口中，并能执行用户直接输入的命令。Bash还能从文件中读取命令，这样的文件称为脚本。</p>
+<h3 id="Unity-Editor拓展"><a href="#Unity-Editor拓展" class="headerlink" title="Unity Editor拓展"></a>Unity Editor拓展</h3><p>放在工程目录下Assets/Editor文件下的方法都是对Unity引擎编辑器的拓展，一般常见的插件都会编写一部分编辑器拓展代码来自定义插件的Inspector面板等其他操作。</p>
+<h3 id="Editor方法触发方式"><a href="#Editor方法触发方式" class="headerlink" title="Editor方法触发方式"></a>Editor方法触发方式</h3><h4 id="MenuItem"><a href="#MenuItem" class="headerlink" title="MenuItem"></a>MenuItem</h4><h4 id="EditorWindow-gt-Button"><a href="#EditorWindow-gt-Button" class="headerlink" title="EditorWindow-&gt;Button"></a>EditorWindow-&gt;Button</h4><pre><code class="lang-csharp">
+using UnityEditor; 
+
+using UnityEngine; 
+
+public class MyClass : EditorWindow
+
+{ 
+
+// 重写window面板
+
+private void OnGUI()
+
+{ 
+
+if(GUILayout.Button(&quot;MyFunc1&quot;)) 
+
+{ 
+
+MyFunc1(); 
+
+} 
+
+} 
+
+// 打开窗口
+
+[MenuItem(&quot;My Tools/My Window&quot;)] 
+
+private static void OpenMyWindow()
+
+{ 
+
+GetWindow&lt;MyClass&gt; (true, &quot;My Window&quot;); 
+
+} 
+
+[MenuItem(&quot;My Tools/MyFunc1&quot;)] 
+
+private static void MyFunc1()
+
+{ 
+
+//..你的操作
+
+Debug.Log (&quot;你的操作&quot;); 
+
+} 
+
+}
+</code></pre>
+<h4 id="利用批处理来调用"><a href="#利用批处理来调用" class="headerlink" title="利用批处理来调用"></a>利用批处理来调用</h4><p>更多Unity Command line arguments：<a href="https://docs.unity3d.com/Manual/CommandLineArguments.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/CommandLineArguments.html</a></p>
+<blockquote>
+<p>最新Unity支持直接用.bat脚本直接导出linux、MacOS、Window的应用，暂时不支持Android和IOS等其它终端的输出。</p>
+</blockquote>
+<pre><code class="lang-csharp">
+using UnityEditor; 
+
+public class MyWindow : EditorWindow
+
+{ 
+
+public static void MyFunc1()
+
+{ 
+
+Debug.Log(&quot;MyFunc1 Operation&quot;); 
+
+} 
+
+} 
+
+``` ```csharp 
+
+rem 发布工具
+
+@echo off 
+
+echo 启动 Unity.exe 请稍后... 
+
+start /min D:\Unity\Editor\Unity.exe -batchmode -projectPath D:\MyProject\BatchProject -executeMethod MyClass.MyFunc1 
+
+Pause
+
+taskkill /f /im unity.exe
+</code></pre>
+<h5 id="命令介绍"><a href="#命令介绍" class="headerlink" title="命令介绍"></a>命令介绍</h5><p>echo 为DOS编程中一种显示消息的方法</p>
+<p>start DOS编程中用于启动应用程序的命令<br>-batchmode 是Unity提供的Command line arguments中较为常用的一种，它是后台运行Unity，不显示Unity界面，这对于把机械的工作交给策划？美术？是极其重要的。<br>在-batchmode下运行Unity。这应该始终与其他命令行参数一起使用，因为 <strong>它确保没有出现弹出窗口，并且不需要任何人为干预</strong> 。执行脚本代码期间发生异常时，资产服务器更新失败或其他失败的操作，Unity立即退出并返回代码1。<br>请注意，在批处理模式下，Unity将其日志输出的最小版本发送到控制台。但是，日志文件仍然包含完整的日志信息。在编辑器打开相同的项目时以批处理模式打开项目不受支持; Unity的一个实例只能一次运行。</p>
+<p>-projectPath 指定项目的路径</p>
+<p>-executeMethod(ClassName.MethodName) 调用Unity编辑器某个类型中的某个方法</p>
+<p>一旦Unity启动，项目打开，并且执行了可选的Asset Server更新之后，执行静态方法。这可以用于执行持续集成，执行单元测试，构建或准备数据等任务。要从命令行进程返回错误，请抛出异常，导致Unity退出代码1，或者使用非零返回代码调用EditorApplication.Exit。要传递参数，将它们添加到命令行并使用函数检索它们System.Environment.GetCommandLineArgs。要使用-executeMethod，您需要将封闭的脚本放在编辑器文件夹中。要执行的方法必须定义为static。</p>
+<p>Ref: <a href="https://blog.csdn.net/qq_29579137/article/details/76598929" target="_blank" rel="noopener">https://blog.csdn.net/qq_29579137/article/details/76598929</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-CSharp调用Java-与Android交互"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-CSharp%E8%B0%83%E7%94%A8Java-%E4%B8%8EAndroid%E4%BA%A4%E4%BA%92/"
+    >CSharp调用Java&amp;与Android交互</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-CSharp%E8%B0%83%E7%94%A8Java-%E4%B8%8EAndroid%E4%BA%A4%E4%BA%92/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.239Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Heading"><a href="#Heading" class="headerlink" title="Heading"></a>Heading</h2><p><a href="https://www.jb51.net/article/134135.htm" target="_blank" rel="noopener">https://www.jb51.net/article/134135.htm</a><br><a href="https://blog.csdn.net/m0_38096376/article/details/69567409" target="_blank" rel="noopener">https://blog.csdn.net/m0_38096376/article/details/69567409</a><br><a href="https://www.jianshu.com/p/b5e3cfcdf081" target="_blank" rel="noopener">https://www.jianshu.com/p/b5e3cfcdf081</a><br><a href="https://www.cnblogs.com/wufeng0927/p/5178216.html" target="_blank" rel="noopener">https://www.cnblogs.com/wufeng0927/p/5178216.html</a></p>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><pre><code class="lang-csharp">
+using UnityEngine; 
+
+public class NewBehaviourScript : MonoBehaviour
+
+{ 
+
+float e = 0; 
+
+private void OnGUI()
+
+{ 
+
+GUILayout.Label(string.Format($&quot;&lt;size=80&gt;电池总容量{Power.capacity}毫安,电压{Power.voltage}伏&lt;/size&gt;&quot;)); 
+
+GUILayout.Label(string.Format($&quot;&lt;size=80&gt;实时电流{e}毫安,实时功率{(int)(e * Power.voltage)},满电量能玩{((Power.capacity /e).ToString(&quot;f2&quot;))}小时&lt;/size&gt;&quot;)); 
+
+} 
+
+float t = 0f; 
+
+private void Update()
+
+{ 
+
+if(Time.time - t &gt; 1f) 
+
+{ 
+
+t = Time.time; 
+
+e = Power.electricity; 
+
+} 
+
+} 
+
+} 
+
+public class Power
+
+{ 
+
+static public float electricity 
+
+{ 
+
+get { 
+
+#if UNITY_ANDROID
+
+//获取电流（微安），避免频繁获取，取一次大概2毫秒
+
+float electricity = (float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, PARAM_BATTERY); 
+
+//小于1W就认为它的单位是毫安，否则认为是微安
+
+return ToMA(electricity); 
+
+#else
+
+return -1f; 
+
+#endif
+
+} 
+
+} 
+
+//获取电压 伏
+
+static public float voltage { get; private set; } 
+
+//获取电池总容量 毫安
+
+static public int capacity { get; private set; } 
+
+//获取实时电流参数
+
+static object[] PARAM_BATTERY = new object[] { 2 }; //BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
+
+static AndroidJavaObject manager; 
+
+static Power()
+
+{ 
+
+#if UNITY_ANDROID
+
+AndroidJavaClass unityPlayer = new AndroidJavaClass(&quot;com.unity3d.player.UnityPlayer&quot;); 
+
+AndroidJavaObject currActivity = unityPlayer.GetStatic&lt;AndroidJavaObject&gt;(&quot;currentActivity&quot;); 
+
+manager = currActivity.Call&lt;AndroidJavaObject&gt;(&quot;getSystemService&quot;, new object[] { &quot;batterymanager&quot; }); 
+
+capacity = (int)(ToMA((float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, new object[] { 1 })) / ((float)manager.Call&lt;int&gt;(&quot;getIntProperty&quot;, new object[] { 4 })/100f)); //BATTERY_PROPERTY_CHARGE_COUNTER 1 BATTERY_PROPERTY_CAPACITY 4
+
+AndroidJavaObject receive = currActivity.Call&lt;AndroidJavaObject&gt;(&quot;registerReceiver&quot;, new object[] { null,new AndroidJavaObject(&quot;android.content.IntentFilter&quot;, new object[] { &quot;android.intent.action.BATTERY_CHANGED&quot; }) }); 
+
+if (receive != null) 
+
+{ 
+
+voltage = (float)receive.Call&lt;int&gt;(&quot;getIntExtra&quot;, new object[] { &quot;voltage&quot;,0 })/1000f; //BatteryManager.EXTRA_VOLTAGE
+
+} 
+
+#endif
+
+} 
+
+static float ToMA(float maOrua)
+
+{ 
+
+return maOrua &lt; 10000 ? maOrua : maOrua / 1000f; 
+
+} 
+
+}
+</code></pre>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.xuanyusong.com/archives/4753" target="_blank" rel="noopener">https://www.xuanyusong.com/archives/4753</a></p>
  
       <!-- reward -->
       
@@ -235,7 +520,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-Camera-Screen/"
+  <a class="article-title" href="/2023/07/25/Unity3D-Camera-Screen/"
     >Camera &amp; Screen</a> 
 </h2>
  
@@ -244,8 +529,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-Camera-Screen/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.152Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-Camera-Screen/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.239Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1056,319 +1341,6 @@ Debug.LogError(&quot;switchOrientation failed, can not find or add resoulution f
 
     
     <article
-  id="post-Unity3D-BatchMode"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-BatchMode/"
-    >BatchMode</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-BatchMode/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.144Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="使用原理"><a href="#使用原理" class="headerlink" title="使用原理"></a>使用原理</h2><h3 id="DOS"><a href="#DOS" class="headerlink" title="DOS"></a>DOS</h3><p>DOS是Disk Operation System(磁盘操作系统）的简称，是个人计算机上的一类操作系统。它直接操纵管理硬盘的文件，一般都是黑底白色文字的界面。<br>DOS就是人与机器的一座桥梁，是罩在机器硬件外面的一层“外壳”，只需通过一些接近于自然语言的DOS命令，就可以轻松地完成绝大多数对机器的日常操作。<br>此外，DOS还能有效地管理各种软硬件资源，对它们进行合理的调度，所有的软件和硬件都在DOS的监控和管理之下，有条不紊地进行着自己的工作，但是在操作不慎情况下也会死机。<br><strong>MS-DOS</strong> 是MicroSoft-dos，它不是纯DOS，是基于Windows的DOS程序，在功能上类似于DOS，但是不一样。<br>最新的Windows操作系统中，MS-dos的核心依然存在，只是加上Windows当作系统的图形界面。<br>微软图形界面操作系统 Windows NT 问世以来，DOS是一个 <strong>后台程序</strong> 的形式出现的。名为 <strong>Windows命令提示符</strong> 。可以通过点击运行- <strong>CMD</strong> 进入。</p>
-<h4 id="DOS命令"><a href="#DOS命令" class="headerlink" title="DOS命令"></a>DOS命令</h4><p>DOS命令行不许要去专门当做一门语言学习，你只需要根据自己的需求百度一下命令行的使用方式即可。</p>
-<h3 id="Batch-bat文件"><a href="#Batch-bat文件" class="headerlink" title="Batch(.bat文件)"></a>Batch(.bat文件)</h3><p><strong>批处理(Batch)</strong> ，也称为 <strong>批处理脚本</strong> 。通常被认为是一种简化的脚本语言，也称作宏。它应用于DOS和Windows系统中。<br>它是由DOS或者Windows系统内嵌的命令解释器（通常是COMMAND. COM或者CMD.EXE）解释运行。类似于Unix中的Shell脚本。批处理文件具有.bat或者.cmd的扩展名，其最简单的例子，是逐行书写在命令行中会用到的各种命令。<br><strong>使用</strong> ：在“命令提示”下键入批处理文件的名称，或者双击该批处理文件，系统就会调用Cmd.exe运行该批处理程序。<br><strong>运行</strong> ：运行批处理程序时，首先扫描整个批处理程序，然后从第一行代码开始向下逐句执行所有的命令，直至程序结尾或遇见exit命令或出错意外退出。</p>
-<blockquote>
-<p>批处理程序虽然是在命令行环境中运行，但不仅仅能使用命令行软件，任何当前系统下可运行的程序都可以放在批处理文件中运行。</p>
-</blockquote>
-<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><h5 id="echo-命令"><a href="#echo-命令" class="headerlink" title="echo 命令"></a>echo 命令</h5><p>语法: echo [{on|off}] [message]<br>Sample：@echo off / echo hello world</p>
-<p>打开回显或关闭请求回显功能，或显示消息。如果没有任何参数，echo命令将显示当前回显设置。<br>在实际应用中我们会把这条命令和重定向符号（也称为管道符号，一般用&gt; &gt;&gt; ^）结合来实现输入一些命令到特定的文件中，例如：</p>
-<pre><code class="lang-csharp">
-echo test&gt;test.txt 
-
-# 会创建一个名为&quot;test&quot;的文本文件，并将&quot;test&quot;输入到文本文件中。
-</code></pre>
-<p>在批处理文件的开头，通常有：<br>echo off<br>原因是”@”可以将本行的命令关闭回显，搭配”echo off”就可以不显示”echo off”的回显了。</p>
-<h5 id="rem-命令"><a href="#rem-命令" class="headerlink" title="rem 命令"></a>rem 命令</h5><p>语法：Rem [注释内容]<br>Sample：Rem 你好。</p>
-<p>注释命令，类似于在C语言中的/ <em>——–</em> /，它并不会被执行，只是起一个注释的作用，只有在编辑批处理时才会被看到，主要用于方便修改。<br>:: 也具有rem的功能<br>但::和rem还是有区别的，当关闭回显时，rem和::后的内容都不会显示。<br>但是当打开回显时，rem后的内容会显示出来，然而::后的内容仍然不会显示。</p>
-<h5 id="pause"><a href="#pause" class="headerlink" title="pause"></a>pause</h5><p>暂停命令。运行 Pause 命令时，将显示下面的消息：<br>Press any key to continue…（或：请按任意键继续…)</p>
-<h5 id="call"><a href="#call" class="headerlink" title="call"></a>call</h5><h5 id="start"><a href="#start" class="headerlink" title="start"></a>start</h5><h5 id="goto"><a href="#goto" class="headerlink" title="goto"></a>goto</h5><h5 id="set"><a href="#set" class="headerlink" title="set"></a>set</h5><h4 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h4><h3 id="其他概念"><a href="#其他概念" class="headerlink" title="其他概念"></a>其他概念</h3><p>Bash(Bourne-Again SHell): Unix shell的一种，能运行于大多数类Unix系统的操作系统之上，包括Linux与Mac OS X v10.4都将它作为默认shell。<br>是一个命令处理器，通常运行于文本窗口中，并能执行用户直接输入的命令。Bash还能从文件中读取命令，这样的文件称为脚本。</p>
-<h3 id="Unity-Editor拓展"><a href="#Unity-Editor拓展" class="headerlink" title="Unity Editor拓展"></a>Unity Editor拓展</h3><p>放在工程目录下Assets/Editor文件下的方法都是对Unity引擎编辑器的拓展，一般常见的插件都会编写一部分编辑器拓展代码来自定义插件的Inspector面板等其他操作。</p>
-<h3 id="Editor方法触发方式"><a href="#Editor方法触发方式" class="headerlink" title="Editor方法触发方式"></a>Editor方法触发方式</h3><h4 id="MenuItem"><a href="#MenuItem" class="headerlink" title="MenuItem"></a>MenuItem</h4><h4 id="EditorWindow-gt-Button"><a href="#EditorWindow-gt-Button" class="headerlink" title="EditorWindow-&gt;Button"></a>EditorWindow-&gt;Button</h4><pre><code class="lang-csharp">
-using UnityEditor; 
-
-using UnityEngine; 
-
-public class MyClass : EditorWindow
-
-{ 
-
-// 重写window面板
-
-private void OnGUI()
-
-{ 
-
-if(GUILayout.Button(&quot;MyFunc1&quot;)) 
-
-{ 
-
-MyFunc1(); 
-
-} 
-
-} 
-
-// 打开窗口
-
-[MenuItem(&quot;My Tools/My Window&quot;)] 
-
-private static void OpenMyWindow()
-
-{ 
-
-GetWindow&lt;MyClass&gt; (true, &quot;My Window&quot;); 
-
-} 
-
-[MenuItem(&quot;My Tools/MyFunc1&quot;)] 
-
-private static void MyFunc1()
-
-{ 
-
-//..你的操作
-
-Debug.Log (&quot;你的操作&quot;); 
-
-} 
-
-}
-</code></pre>
-<h4 id="利用批处理来调用"><a href="#利用批处理来调用" class="headerlink" title="利用批处理来调用"></a>利用批处理来调用</h4><p>更多Unity Command line arguments：<a href="https://docs.unity3d.com/Manual/CommandLineArguments.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/CommandLineArguments.html</a></p>
-<blockquote>
-<p>最新Unity支持直接用.bat脚本直接导出linux、MacOS、Window的应用，暂时不支持Android和IOS等其它终端的输出。</p>
-</blockquote>
-<pre><code class="lang-csharp">
-using UnityEditor; 
-
-public class MyWindow : EditorWindow
-
-{ 
-
-public static void MyFunc1()
-
-{ 
-
-Debug.Log(&quot;MyFunc1 Operation&quot;); 
-
-} 
-
-} 
-
-``` ```csharp 
-
-rem 发布工具
-
-@echo off 
-
-echo 启动 Unity.exe 请稍后... 
-
-start /min D:\Unity\Editor\Unity.exe -batchmode -projectPath D:\MyProject\BatchProject -executeMethod MyClass.MyFunc1 
-
-Pause
-
-taskkill /f /im unity.exe
-</code></pre>
-<h5 id="命令介绍"><a href="#命令介绍" class="headerlink" title="命令介绍"></a>命令介绍</h5><p>echo 为DOS编程中一种显示消息的方法</p>
-<p>start DOS编程中用于启动应用程序的命令<br>-batchmode 是Unity提供的Command line arguments中较为常用的一种，它是后台运行Unity，不显示Unity界面，这对于把机械的工作交给策划？美术？是极其重要的。<br>在-batchmode下运行Unity。这应该始终与其他命令行参数一起使用，因为 <strong>它确保没有出现弹出窗口，并且不需要任何人为干预</strong> 。执行脚本代码期间发生异常时，资产服务器更新失败或其他失败的操作，Unity立即退出并返回代码1。<br>请注意，在批处理模式下，Unity将其日志输出的最小版本发送到控制台。但是，日志文件仍然包含完整的日志信息。在编辑器打开相同的项目时以批处理模式打开项目不受支持; Unity的一个实例只能一次运行。</p>
-<p>-projectPath 指定项目的路径</p>
-<p>-executeMethod(ClassName.MethodName) 调用Unity编辑器某个类型中的某个方法</p>
-<p>一旦Unity启动，项目打开，并且执行了可选的Asset Server更新之后，执行静态方法。这可以用于执行持续集成，执行单元测试，构建或准备数据等任务。要从命令行进程返回错误，请抛出异常，导致Unity退出代码1，或者使用非零返回代码调用EditorApplication.Exit。要传递参数，将它们添加到命令行并使用函数检索它们System.Environment.GetCommandLineArgs。要使用-executeMethod，您需要将封闭的脚本放在编辑器文件夹中。要执行的方法必须定义为static。</p>
-<p>Ref: <a href="https://blog.csdn.net/qq_29579137/article/details/76598929" target="_blank" rel="noopener">https://blog.csdn.net/qq_29579137/article/details/76598929</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-A计划"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-A%E8%AE%A1%E5%88%92/"
-    >A计划</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-A%E8%AE%A1%E5%88%92/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.141Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="学前准备"><a href="#学前准备" class="headerlink" title="学前准备"></a>学前准备</h1><p>学习方法：<br>我已经算是能够熟练使用Unity了，基本算是一个资深的Unity开发者了，已经完全能够应付工作了，学习A计划只是为了把我的基础知识体系补充的更加全面，查缺补漏，在入门级别的小问题上就不值得浪费时间了，快速刷完就OK。</p>
-<h3 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h3><p>先自己解决三小时以上，解决不了再提问<br>解决错误的时候，先解决第一个</p>
-<blockquote>
-<p>2019破解<br> <a href="https://www.isharepc.com/19012.html" target="_blank" rel="noopener">https://www.isharepc.com/19012.html</a></p>
-</blockquote>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-Audio"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-Audio/"
-    >Audio</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-Audio/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.126Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><h3 id="Basic-Theory"><a href="#Basic-Theory" class="headerlink" title="Basic Theory"></a>Basic Theory</h3><p>To simulate the effects of position, Unity requires sounds to originate from Audio Sources<br>attached to objects. The sounds emitted are then picked up by an Audio Listener<br>attached to another object, most often the main camera. Unity can then simulate the effects of a source’s distance and position from the listener object and play them to the user accordingly. The relative speed of the source and listener objects can also be used to simulate the <strong>Doppler Effect(多普勒效应)</strong> for added realism.</p>
-<h4 id="回声和混响"><a href="#回声和混响" class="headerlink" title="回声和混响"></a>回声和混响</h4><p>Unity can’t calculate echoes purely from scene geometry but you can simulate them by adding Audio Filters to objects. For example, you could apply the Echo filter to a sound that is supposed to be coming from inside a cave. In situations where objects can move in and out of a place with a strong echo, you can add a Reverb Zone to the scene. </p>
-<h2 id="Assets"><a href="#Assets" class="headerlink" title="Assets"></a>Assets</h2><p>Unity supports <strong>mono</strong> , <strong>stereo</strong> and <strong>multichannel</strong> audio assets (up to eight channels).<br>Unity3D游戏引擎一共支持4个音乐格式的文件<br>.AIFF 适用于较短的音乐文件可用作游戏打斗音效<br>.WAV 适用于较短的音乐文件可用作游戏打斗音效<br>.MP3 适用于较长的音乐文件可用作游戏背景音乐<br>.OGG 适用于较长的音乐文件可用作游戏背景音乐</p>
-<blockquote>
-<p>Unity also supports tracker modules, which use short audio samples as “instruments” that are then arranged to play tunes. Tracker modules can be imported from .xm, .mod, .it, and .s3m files but are otherwise used in much the same way as ordinary audio clips.</p>
-</blockquote>
-<h2 id="Recording"><a href="#Recording" class="headerlink" title="Recording"></a>Recording</h2><p>Unity can access the computer’s microphones from a script and create Audio Clips by direct recording. The <strong>Microphone</strong> class provides a straightforward API to find available microphones, query their capabilities and start and end a recording session.</p>
-<h1 id="Clip"><a href="#Clip" class="headerlink" title="Clip"></a>Clip</h1><h3 id="Load-Type"><a href="#Load-Type" class="headerlink" title="Load Type"></a>Load Type</h3><h4 id="Decompress-On-Load"><a href="#Decompress-On-Load" class="headerlink" title="Decompress On Load"></a>Decompress On Load</h4><p>Use this option for smaller compressed sounds to avoid the performance overhead of decompressing on the fly. Be aware that decompressing Vorbis-encoded sounds on load will use about <strong>ten times</strong> more memory than keeping them compressed (for ADPCM encoding it’s about 3.5 times), so don’t use this option for large files.</p>
-<p>适用于 <strong>较小</strong> 的压缩声音，避免即时解压缩的性能开销。不要使用于大文件。</p>
-<h4 id="Compressed-In-Memory"><a href="#Compressed-In-Memory" class="headerlink" title="Compressed In Memory"></a>Compressed In Memory</h4><p>Keep sounds compressed in memory and decompress while playing. This option has a slight <strong>performance overhead</strong> (especially for Ogg/Vorbis compressed files) so only use it for bigger files where decompression on load would use a prohibitive amount of memory.<br>播放时解压会有CPU开销（尤其是OGG / Vorbis格式的压缩文件），但可以提高加载速度并减少内存消 耗，因此这个选项适用于 <strong>大文件</strong> 。 </p>
-<blockquote>
-<p>The decompression is happening on the mixer thread and can be monitored in the “DSP CPU” section in the audio pane of the profiler window.</p>
-</blockquote>
-<h4 id="Streaming"><a href="#Streaming" class="headerlink" title="Streaming"></a>Streaming</h4><p>Decode sounds on the fly. This method uses a minimal amount of memory to buffer compressed data that is <strong>incrementally read from the disk and decoded on the fly.</strong></p>
-<blockquote>
-<p>Profiler中：“Streaming CPU” section in the audio pane of the profiler window.<br> Streaming clips has an overload of approximately 200KB, even if none of the audio data is loaded.</p>
-</blockquote>
-<p>直接从磁盘流音频数据。这只使用了原始声音占内存大小的很小一部分。 该方法使用最少的内存和最多的CPU，它有个很明显的缺点就是不能被引用超过一次。试着让 Audio Clip产生多个副本的时候会每个都产生数据缓冲区，如果非要这么做会产生大量的内存和cpu消耗。因此这个选择最好是给单实例的Audio Clip，如背景和环境音效。对于手游而言不要优先考虑使用这种方式。</p>
-<h3 id="Compression-Format"><a href="#Compression-Format" class="headerlink" title="Compression Format"></a>Compression Format</h3><h4 id="PCM"><a href="#PCM" class="headerlink" title="PCM"></a>PCM</h4><p>全称是Pulse-Code Modulation。属于脉冲调制编码，它将模拟信号转换为数字信号，实质上没有经过编码，没有进行压缩，所以在音质上是属于完全无损的原始音频。而且相较于原生的模拟信号，它的抗干扰能力更强，保真效果更好。</p>
-<p>This option offers higher quality at the expense of larger file size and is best for very short sound effects.</p>
-<h4 id="ADPCM"><a href="#ADPCM" class="headerlink" title="ADPCM"></a>ADPCM</h4><p>Adaptive Differential Pulse Code Modulation，自适应差分脉冲编码调制。是一种基于PCM的优化压缩方式，但也属于有损压缩。<br>This format is useful for sounds that contain a fair bit of noise and need to be played in large quantities, such as footsteps, impacts, weapons. The compression ratio is 3.5 times smaller than PCM, but CPU usage is much lower than the MP3/Vorbis formats which makes it the preferrable choice for the aforementioned categories of sounds.</p>
-<h4 id="Vorbis-MP3"><a href="#Vorbis-MP3" class="headerlink" title="Vorbis/MP3"></a>Vorbis/MP3</h4><p>应该叫做OGG Vorbis。类似mp3格式，但这是一种免费开发的非商业压缩格式。属于有损压缩。</p>
-<p>The compression results in smaller files but with somewhat lower quality compared to PCM audio. The amount of compression is configurable via the Quality slider. This format is best for <strong>medium length</strong> sound effects and music.</p>
-<h3 id="使用建议"><a href="#使用建议" class="headerlink" title="使用建议"></a>使用建议</h3><h4 id="占据大量内存的长音频"><a href="#占据大量内存的长音频" class="headerlink" title="占据大量内存的长音频"></a>占据大量内存的长音频</h4><ul>
-<li><p>使用流（Streaming）载入方式（Load Type），并且设置压缩格式（Compression Format）为Vorbis。如此设置即可使内存使用量减至最低，但相对的会占用更多CPU资源和I/O吞吐量。</p>
-</li>
-<li><p>使用压缩并存储至内存（Compressed In Memory）载入方式，设置压缩格式为Vorbis。与第一个方案唯一的区别是，前者占据更多I/O吞吐，而此种方式占用更多内存。可以调整Quality滑块来通过降低音频质量来减小音频剪辑压缩后的尺寸。一般来说，100%的Quality值略高，我们推荐70%。注意，使用该种设置添加两个以上的音乐或环境声剪辑时会大量消耗CPU。</p>
-</li>
-</ul>
-<h4 id="短或中等长度的音频"><a href="#短或中等长度的音频" class="headerlink" title="短或中等长度的音频"></a>短或中等长度的音频</h4><ul>
-<li><p>对于经常播放的短音频剪辑，使用载入时压缩（Decompress On Load）载入方式（Load Type），PCM或ADPCM压缩格式（Compression Format）。选择PCM时，播放无需解压，适用于短且使用频率高的音频剪辑。您也可以用ADPCM压缩格式，播放该格式需要解压缩，但解压缩ADPCM比Vorbis快很多。</p>
-</li>
-<li><p>对于经常播放的中等长度剪辑，使用压缩并存储至内存（Compressed In Memory）和ADPCM压缩格式（Compression Format）。原始PCM的大小大概是ADPCM的3.5倍，ADPCM的解压缩算法也比Vorbis解压缩算法占用更少CPU。</p>
-</li>
-<li><p>对于播放频率低的短音频剪辑，使用压缩并存储至内存（Compressed In Memory）和ADPCM压缩格式（Compression Format）</p>
-</li>
-<li><p>对于播放频率低的中等长度剪辑，使用压缩并存储至内存（Compressed In Memory）和Vorbis压缩格式（Compression Format）。使用ADPCM处理该种声音效果（SFX）未免显得浪费了存储空间，况且播放的频率又很低，所以使用更多CPU资源解压缩还是可以接受的。</p>
-</li>
-</ul>
-<h3 id="Sample-Rate-Setting"><a href="#Sample-Rate-Setting" class="headerlink" title="Sample Rate Setting"></a>Sample Rate Setting</h3><p>Preserve Sample Rate: 保留采样率<br>Optimize Sample Rate：此设置根据分析的最高频率内容自动优化采样率。<br>Override Sample Rate：此设置允许手动覆盖采样率，因此可以有效地避免采样内容丢失。</p>
-<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://docs.unity3d.com/Manual/AudioOverview.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/AudioOverview.html</a><br><a href="https://www.xuanyusong.com/archives/550" target="_blank" rel="noopener">https://www.xuanyusong.com/archives/550</a><br><a href="https://support.unity3d.com/hc/zh-cn/articles/208211393-%E6%B8%B8%E6%88%8F%E5%9C%A8%E6%92%AD%E6%94%BE%E5%A3%B0%E9%9F%B3%E5%8F%91%E7%94%9F%E5%8D%A1%E9%A1%BF" target="_blank" rel="noopener">https://support.unity3d.com/hc/zh-cn/articles/208211393-%E6%B8%B8%E6%88%8F%E5%9C%A8%E6%92%AD%E6%94%BE%E5%A3%B0%E9%9F%B3%E5%8F%91%E7%94%9F%E5%8D%A1%E9%A1%BF</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
   id="post-Unity3D-Atlas-图集"
   class="article article-type-post"
   itemscope
@@ -1380,7 +1352,7 @@ taskkill /f /im unity.exe
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-Atlas-%E5%9B%BE%E9%9B%86/"
+  <a class="article-title" href="/2023/07/25/Unity3D-Atlas-%E5%9B%BE%E9%9B%86/"
     >Atlas(图集)</a> 
 </h2>
  
@@ -1389,8 +1361,8 @@ taskkill /f /im unity.exe
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-Atlas-%E5%9B%BE%E9%9B%86/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.116Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-Atlas-%E5%9B%BE%E9%9B%86/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.238Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1573,6 +1545,156 @@ E:\04_DCC_Tools\CodeAndWeb\TexturePacker\bin\TexturePacker --data foo.tpsheet \-
 
     
     <article
+  id="post-Unity3D-Audio"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-Audio/"
+    >Audio</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-Audio/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.238Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><h3 id="Basic-Theory"><a href="#Basic-Theory" class="headerlink" title="Basic Theory"></a>Basic Theory</h3><p>To simulate the effects of position, Unity requires sounds to originate from Audio Sources<br>attached to objects. The sounds emitted are then picked up by an Audio Listener<br>attached to another object, most often the main camera. Unity can then simulate the effects of a source’s distance and position from the listener object and play them to the user accordingly. The relative speed of the source and listener objects can also be used to simulate the <strong>Doppler Effect(多普勒效应)</strong> for added realism.</p>
+<h4 id="回声和混响"><a href="#回声和混响" class="headerlink" title="回声和混响"></a>回声和混响</h4><p>Unity can’t calculate echoes purely from scene geometry but you can simulate them by adding Audio Filters to objects. For example, you could apply the Echo filter to a sound that is supposed to be coming from inside a cave. In situations where objects can move in and out of a place with a strong echo, you can add a Reverb Zone to the scene. </p>
+<h2 id="Assets"><a href="#Assets" class="headerlink" title="Assets"></a>Assets</h2><p>Unity supports <strong>mono</strong> , <strong>stereo</strong> and <strong>multichannel</strong> audio assets (up to eight channels).<br>Unity3D游戏引擎一共支持4个音乐格式的文件<br>.AIFF 适用于较短的音乐文件可用作游戏打斗音效<br>.WAV 适用于较短的音乐文件可用作游戏打斗音效<br>.MP3 适用于较长的音乐文件可用作游戏背景音乐<br>.OGG 适用于较长的音乐文件可用作游戏背景音乐</p>
+<blockquote>
+<p>Unity also supports tracker modules, which use short audio samples as “instruments” that are then arranged to play tunes. Tracker modules can be imported from .xm, .mod, .it, and .s3m files but are otherwise used in much the same way as ordinary audio clips.</p>
+</blockquote>
+<h2 id="Recording"><a href="#Recording" class="headerlink" title="Recording"></a>Recording</h2><p>Unity can access the computer’s microphones from a script and create Audio Clips by direct recording. The <strong>Microphone</strong> class provides a straightforward API to find available microphones, query their capabilities and start and end a recording session.</p>
+<h1 id="Clip"><a href="#Clip" class="headerlink" title="Clip"></a>Clip</h1><h3 id="Load-Type"><a href="#Load-Type" class="headerlink" title="Load Type"></a>Load Type</h3><h4 id="Decompress-On-Load"><a href="#Decompress-On-Load" class="headerlink" title="Decompress On Load"></a>Decompress On Load</h4><p>Use this option for smaller compressed sounds to avoid the performance overhead of decompressing on the fly. Be aware that decompressing Vorbis-encoded sounds on load will use about <strong>ten times</strong> more memory than keeping them compressed (for ADPCM encoding it’s about 3.5 times), so don’t use this option for large files.</p>
+<p>适用于 <strong>较小</strong> 的压缩声音，避免即时解压缩的性能开销。不要使用于大文件。</p>
+<h4 id="Compressed-In-Memory"><a href="#Compressed-In-Memory" class="headerlink" title="Compressed In Memory"></a>Compressed In Memory</h4><p>Keep sounds compressed in memory and decompress while playing. This option has a slight <strong>performance overhead</strong> (especially for Ogg/Vorbis compressed files) so only use it for bigger files where decompression on load would use a prohibitive amount of memory.<br>播放时解压会有CPU开销（尤其是OGG / Vorbis格式的压缩文件），但可以提高加载速度并减少内存消 耗，因此这个选项适用于 <strong>大文件</strong> 。 </p>
+<blockquote>
+<p>The decompression is happening on the mixer thread and can be monitored in the “DSP CPU” section in the audio pane of the profiler window.</p>
+</blockquote>
+<h4 id="Streaming"><a href="#Streaming" class="headerlink" title="Streaming"></a>Streaming</h4><p>Decode sounds on the fly. This method uses a minimal amount of memory to buffer compressed data that is <strong>incrementally read from the disk and decoded on the fly.</strong></p>
+<blockquote>
+<p>Profiler中：“Streaming CPU” section in the audio pane of the profiler window.<br> Streaming clips has an overload of approximately 200KB, even if none of the audio data is loaded.</p>
+</blockquote>
+<p>直接从磁盘流音频数据。这只使用了原始声音占内存大小的很小一部分。 该方法使用最少的内存和最多的CPU，它有个很明显的缺点就是不能被引用超过一次。试着让 Audio Clip产生多个副本的时候会每个都产生数据缓冲区，如果非要这么做会产生大量的内存和cpu消耗。因此这个选择最好是给单实例的Audio Clip，如背景和环境音效。对于手游而言不要优先考虑使用这种方式。</p>
+<h3 id="Compression-Format"><a href="#Compression-Format" class="headerlink" title="Compression Format"></a>Compression Format</h3><h4 id="PCM"><a href="#PCM" class="headerlink" title="PCM"></a>PCM</h4><p>全称是Pulse-Code Modulation。属于脉冲调制编码，它将模拟信号转换为数字信号，实质上没有经过编码，没有进行压缩，所以在音质上是属于完全无损的原始音频。而且相较于原生的模拟信号，它的抗干扰能力更强，保真效果更好。</p>
+<p>This option offers higher quality at the expense of larger file size and is best for very short sound effects.</p>
+<h4 id="ADPCM"><a href="#ADPCM" class="headerlink" title="ADPCM"></a>ADPCM</h4><p>Adaptive Differential Pulse Code Modulation，自适应差分脉冲编码调制。是一种基于PCM的优化压缩方式，但也属于有损压缩。<br>This format is useful for sounds that contain a fair bit of noise and need to be played in large quantities, such as footsteps, impacts, weapons. The compression ratio is 3.5 times smaller than PCM, but CPU usage is much lower than the MP3/Vorbis formats which makes it the preferrable choice for the aforementioned categories of sounds.</p>
+<h4 id="Vorbis-MP3"><a href="#Vorbis-MP3" class="headerlink" title="Vorbis/MP3"></a>Vorbis/MP3</h4><p>应该叫做OGG Vorbis。类似mp3格式，但这是一种免费开发的非商业压缩格式。属于有损压缩。</p>
+<p>The compression results in smaller files but with somewhat lower quality compared to PCM audio. The amount of compression is configurable via the Quality slider. This format is best for <strong>medium length</strong> sound effects and music.</p>
+<h3 id="使用建议"><a href="#使用建议" class="headerlink" title="使用建议"></a>使用建议</h3><h4 id="占据大量内存的长音频"><a href="#占据大量内存的长音频" class="headerlink" title="占据大量内存的长音频"></a>占据大量内存的长音频</h4><ul>
+<li><p>使用流（Streaming）载入方式（Load Type），并且设置压缩格式（Compression Format）为Vorbis。如此设置即可使内存使用量减至最低，但相对的会占用更多CPU资源和I/O吞吐量。</p>
+</li>
+<li><p>使用压缩并存储至内存（Compressed In Memory）载入方式，设置压缩格式为Vorbis。与第一个方案唯一的区别是，前者占据更多I/O吞吐，而此种方式占用更多内存。可以调整Quality滑块来通过降低音频质量来减小音频剪辑压缩后的尺寸。一般来说，100%的Quality值略高，我们推荐70%。注意，使用该种设置添加两个以上的音乐或环境声剪辑时会大量消耗CPU。</p>
+</li>
+</ul>
+<h4 id="短或中等长度的音频"><a href="#短或中等长度的音频" class="headerlink" title="短或中等长度的音频"></a>短或中等长度的音频</h4><ul>
+<li><p>对于经常播放的短音频剪辑，使用载入时压缩（Decompress On Load）载入方式（Load Type），PCM或ADPCM压缩格式（Compression Format）。选择PCM时，播放无需解压，适用于短且使用频率高的音频剪辑。您也可以用ADPCM压缩格式，播放该格式需要解压缩，但解压缩ADPCM比Vorbis快很多。</p>
+</li>
+<li><p>对于经常播放的中等长度剪辑，使用压缩并存储至内存（Compressed In Memory）和ADPCM压缩格式（Compression Format）。原始PCM的大小大概是ADPCM的3.5倍，ADPCM的解压缩算法也比Vorbis解压缩算法占用更少CPU。</p>
+</li>
+<li><p>对于播放频率低的短音频剪辑，使用压缩并存储至内存（Compressed In Memory）和ADPCM压缩格式（Compression Format）</p>
+</li>
+<li><p>对于播放频率低的中等长度剪辑，使用压缩并存储至内存（Compressed In Memory）和Vorbis压缩格式（Compression Format）。使用ADPCM处理该种声音效果（SFX）未免显得浪费了存储空间，况且播放的频率又很低，所以使用更多CPU资源解压缩还是可以接受的。</p>
+</li>
+</ul>
+<h3 id="Sample-Rate-Setting"><a href="#Sample-Rate-Setting" class="headerlink" title="Sample Rate Setting"></a>Sample Rate Setting</h3><p>Preserve Sample Rate: 保留采样率<br>Optimize Sample Rate：此设置根据分析的最高频率内容自动优化采样率。<br>Override Sample Rate：此设置允许手动覆盖采样率，因此可以有效地避免采样内容丢失。</p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://docs.unity3d.com/Manual/AudioOverview.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/AudioOverview.html</a><br><a href="https://www.xuanyusong.com/archives/550" target="_blank" rel="noopener">https://www.xuanyusong.com/archives/550</a><br><a href="https://support.unity3d.com/hc/zh-cn/articles/208211393-%E6%B8%B8%E6%88%8F%E5%9C%A8%E6%92%AD%E6%94%BE%E5%A3%B0%E9%9F%B3%E5%8F%91%E7%94%9F%E5%8D%A1%E9%A1%BF" target="_blank" rel="noopener">https://support.unity3d.com/hc/zh-cn/articles/208211393-%E6%B8%B8%E6%88%8F%E5%9C%A8%E6%92%AD%E6%94%BE%E5%A3%B0%E9%9F%B3%E5%8F%91%E7%94%9F%E5%8D%A1%E9%A1%BF</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-A计划"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-A%E8%AE%A1%E5%88%92/"
+    >A计划</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-A%E8%AE%A1%E5%88%92/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.238Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="学前准备"><a href="#学前准备" class="headerlink" title="学前准备"></a>学前准备</h1><p>学习方法：<br>我已经算是能够熟练使用Unity了，基本算是一个资深的Unity开发者了，已经完全能够应付工作了，学习A计划只是为了把我的基础知识体系补充的更加全面，查缺补漏，在入门级别的小问题上就不值得浪费时间了，快速刷完就OK。</p>
+<h3 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h3><p>先自己解决三小时以上，解决不了再提问<br>解决错误的时候，先解决第一个</p>
+<blockquote>
+<p>2019破解<br> <a href="https://www.isharepc.com/19012.html" target="_blank" rel="noopener">https://www.isharepc.com/19012.html</a></p>
+</blockquote>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-Assets-Resources-and-AssetBundles-Unity-Le"
   class="article article-type-post"
   itemscope
@@ -1584,7 +1706,7 @@ E:\04_DCC_Tools\CodeAndWeb\TexturePacker\bin\TexturePacker --data foo.tpsheet \-
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-Assets-Resources-and-AssetBundles-Unity-Le/"
+  <a class="article-title" href="/2023/07/25/Unity3D-Assets-Resources-and-AssetBundles-Unity-Le/"
     >Assets, Resources and AssetBundles - Unity Le</a> 
 </h2>
  
@@ -1593,8 +1715,8 @@ E:\04_DCC_Tools\CodeAndWeb\TexturePacker\bin\TexturePacker --data foo.tpsheet \-
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-Assets-Resources-and-AssetBundles-Unity-Le/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.105Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-Assets-Resources-and-AssetBundles-Unity-Le/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.234Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -2203,7 +2325,7 @@ Material:
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-Assembly-Definition-File-Package-Manager/"
+  <a class="article-title" href="/2023/07/25/Unity3D-Assembly-Definition-File-Package-Manager/"
     >Assembly Definition File &amp; Package Manager</a> 
 </h2>
  
@@ -2212,8 +2334,8 @@ Material:
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-Assembly-Definition-File-Package-Manager/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.103Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-Assembly-Definition-File-Package-Manager/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.213Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -2367,6 +2489,169 @@ Material:
 
     
     <article
+  id="post-Unity3D-An-introduction-to-IL2CPP-internalsВведение-в"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-An-introduction-to-IL2CPP-internals%D0%92%D0%B2%D0%B5%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B2/"
+    >An introduction to IL2CPP internalsВведение в</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-An-introduction-to-IL2CPP-internals%D0%92%D0%B2%D0%B5%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B2/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.212Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p> IL2CPP - Unity Technologies Blog</p>
+<h1 id="An-introduction-to-IL2CPP-internals"><a href="#An-introduction-to-IL2CPP-internals" class="headerlink" title="An introduction to IL2CPP internals"></a>An introduction to IL2CPP internals</h1><p><a href="https://blogs.unity3d.com/author/josh/" target="_blank" rel="noopener" title="Posts by Josh Peterson">Josh Peterson</a>, May 6, 2015</p>
+<p><a href="https://blogs.unity3d.com/category/technology/" target="_blank" rel="noopener">Technology</a></p>
+<p><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;470.5&#39; height=&#39;470.5&#39; viewBox=&#39;0 0 470.5 470.5&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’278’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’279’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3cpath d=’M271.5 154.2v-40.5c0-6.1 0.3-10.8 0.8-14.1 0.6-3.3 1.9-6.6 3.9-9.9 2-3.2 5.2-5.5 9.7-6.7 4.5-1.2 10.4-1.9 17.9-1.9h40.5V0h-64.8c-37.5 0-64.4 8.9-80.8 26.7 -16.4 17.8-24.6 44-24.6 78.7v48.8h-48.5v81.1h48.5v235.3h97.4V235.3h64.8l8.6-81.1H271.5z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’280’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a><a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F&amp;text=An+introduction+to+IL2CPP+internals&amp;via=unity3d" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;450&#39; height=&#39;450&#39; viewBox=&#39;0 0 450 450&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’282’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’283’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3cpath d=’M450 85.7c-17.7 7.6-35.4 12.4-53.1 14.3 20-12 33.5-28.9 40.5-50.8 -18.3 10.8-37.8 18.3-58.5 22.3 -18.3-19.4-40.7-29.1-67.4-29.1 -25.5 0-47.2 9-65.2 27 -18 18-27 39.7-27 65.2 0 6.9 0.8 13.9 2.3 21.1 -37.7-1.9-73-11.4-106.1-28.4C82.5 110.2 54.4 87.5 31.4 59.1c-8.4 14.3-12.6 29.8-12.6 46.5 0 15.8 3.7 30.5 11.1 44 7.4 13.5 17.4 24.5 30 32.8 -14.8-0.6-28.7-4.5-41.7-11.7v1.1c0 22.3 7 41.8 21 58.7 14 16.8 31.6 27.5 53 31.8 -8 2.1-16.1 3.1-24.3 3.1 -5.3 0-11.1-0.5-17.4-1.4 5.9 18.5 16.8 33.6 32.5 45.5 15.8 11.9 33.7 18 53.7 18.4 -33.5 26.3-71.7 39.4-114.5 39.4 -8.2 0-15.6-0.4-22.3-1.1 42.8 27.6 90 41.4 141.6 41.4 32.7 0 63.5-5.2 92.2-15.6 28.7-10.4 53.3-24.3 73.7-41.7 20.4-17.4 37.9-37.4 52.7-60.1 14.8-22.7 25.7-46.3 33-70.9 7.2-24.7 10.8-49.3 10.8-74.1 0-5.3-0.1-9.3-0.3-12C421.8 120.2 437.2 104.3 450 85.7z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’284’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F&amp;title=An+introduction+to+IL2CPP+internals&amp;summary=Almost+a+year+ago+now%2C+we+started+to+talk+about+the+future+of+scripting+in+Unity.+The+new+IL2CPP+scripting+backend+promised+to+bring+a+highly-performant%2C+highly-portable+virtual+machine+to+Unity.+In+January%2C+we+shipped+our+first+platform+using+IL2CPP%2C+iOS+64-bit.+The+Unity+5+release+brought+another+platform%2C+WebGL.+Thanks+to+the+input+from+%5B%26hellip%3B%5D&amp;source=Unity3d+Blog" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;438.5&#39; height=&#39;438.5&#39; viewBox=&#39;0 0 438.5 438.5&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’286’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’287’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3crect x=’5.4’ y=’145.9’ width=’94.2’ height=’282.9’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’288’ class=’js-evernote-checked’%3e%3c/rect%3e %3cpath d=’M408.8 171.7c-19.8-21.6-46-32.4-78.5-32.4 -12 0-22.9 1.5-32.7 4.4 -9.8 3-18.1 7.1-24.8 12.4 -6.8 5.3-12.1 10.3-16.1 14.8 -3.8 4.3-7.5 9.4-11.1 15.1v-40.2h-93.9l0.3 13.7c0.2 9.1 0.3 37.3 0.3 84.5 0 47.2-0.2 108.8-0.6 184.7h93.9V270.9c0-9.7 1-17.4 3.1-23.1 4-9.7 10-17.8 18.1-24.4 8.1-6.6 18.1-9.9 30.1-9.9 16.4 0 28.4 5.7 36.1 17 7.7 11.3 11.6 27 11.6 47V428.8h93.9V266.7C438.5 225 428.6 193.3 408.8 171.7zM53.1 9.7c-15.8 0-28.6 4.6-38.4 13.8C4.9 32.8 0 44.4 0 58.5c0 13.9 4.8 25.5 14.3 34.8 9.5 9.3 22.1 14 37.7 14h0.6c16 0 28.9-4.7 38.7-14 9.8-9.3 14.6-20.9 14.4-34.8 -0.2-14.1-5-25.7-14.6-35C81.6 14.3 68.9 9.7 53.1 9.7z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’289’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a></p>
+<p>Almost a year ago now, we started to talk about the <a href="http://blogs.unity3d.com/2014/05/20/the-future-of-scripting-in-unity/" target="_blank" rel="noopener">future</a> of scripting in Unity. The new IL2CPP scripting backend promised to bring a highly-performant, highly-portable virtual machine to Unity. In January, we shipped our first platform using IL2CPP, <a href="http://blogs.unity3d.com/2015/01/29/unity-4-6-2-ios-64-bit-support/" target="_blank" rel="noopener">iOS 64-bit</a>. The Unity 5 release brought another platform, <a href="http://blogs.unity3d.com/2014/04/29/on-the-future-of-web-publishing-in-unity/" target="_blank" rel="noopener">WebGL</a>. Thanks to the input from our tremendous community of users, we have shipped many patch release <a href="http://blogs.unity3d.com/2015/04/07/weekly-ios-64-bit-and-metal-update/" target="_blank" rel="noopener">updates</a> for IL2CPP, steadily improving its compiler and runtime.</p>
+<p>We have no plans to stop improving IL2CPP, but we thought it might be a good idea to take a step back and tell you a little bit about how IL2CPP works from the inside out. Over the next few months, we’re planning to write about the following topics (and maybe others) in this IL2CPP Internals series of posts:</p>
+<ol>
+<li>The basics – toolchain and command line arguments (this post)</li>
+<li><a href="http://blogs.unity3d.com/2015/05/13/il2cpp-internals-a-tour-of-generated-code/" target="_blank" rel="noopener">A tour of generated code</a></li>
+<li><a href="http://blogs.unity3d.com/2015/05/20/il2cpp-internals-debugging-tips-for-generated-code/" target="_blank" rel="noopener">Debugging tips for generated code</a></li>
+<li><a href="http://blogs.unity3d.com/2015/06/03/il2cpp-internals-method-calls/" target="_blank" rel="noopener">Method calls</a> (normal methods, virtual methods, etc.)</li>
+<li><a href="http://blogs.unity3d.com/2015/06/16/il2cpp-internals-generic-sharing-implementation" target="_blank" rel="noopener">Generic sharing implementation</a></li>
+<li><a href="http://blogs.unity3d.com/2015/07/02/il2cpp-internals-pinvoke-wrappers/" target="_blank" rel="noopener">P/invoke wrappers for types and methods</a></li>
+<li><a href="http://blogs.unity3d.com/2015/07/09/il2cpp-internals-garbage-collector-integration/" target="_blank" rel="noopener">Garbage collection integration</a></li>
+<li><a href="http://blogs.unity3d.com/2015/07/20/il2cpp-internals-testing-frameworks/" target="_blank" rel="noopener">Testing frameworks and usage</a></li>
+</ol>
+<p>In order to make this series of posts possible, we’re going to discuss some details about the IL2CPP implementation that will surely change in the future. Hopefully we can still provide some useful and interesting information.</p>
+<p><strong>What is IL2CPP?</strong></p>
+<p>The technology that we refer to as IL2CPP has two distinct parts.</p>
+<ul>
+<li>•An ahead-of-time (AOT) compiler</li>
+<li>•A runtime library to support the virtual machine</li>
+</ul>
+<p>The AOT compiler translates Intermediate Language (IL), the low-level output from .NET compilers, to C++ source code. The runtime library provides services and abstractions like a garbage collector, platform-independent access to threads and files, and implementations of internal calls (native code which modifies managed data structures directly).</p>
+<p><strong>The AOT compiler</strong></p>
+<p>The IL2CPP AOT compiler is named il2cpp.exe. On Windows you can find it in the Editor\Data\il2cpp directory. On OSX it is in the Contents/Frameworks/il2cpp/build directory in the Unity installation. The il2cpp.exe utility is a managed executable, written entirely in C#. We compile it with both .NET and Mono compilers during our development of IL2CPP.</p>
+<p>The il2cpp.exe utility accepts managed assemblies compiled with the Mono compiler that ships with Unity and generates C++ code which we pass on to a platform-specific C++ compiler.</p>
+<p>You can think about the IL2CPP toolchain like this:</p>
+<p><a href="https://blogs.unity3d.com/wp-content/uploads/2015/04/il2cpp-toolchain-smaller.png" target="_blank" rel="noopener"><br><img src="assets/An%20introduction%20to%20IL2CPP%20internalsВведение%20в/il2cpp-toolchain-smaller.png" alt="">
+</a></p>
+<p><strong>The runtime library</strong></p>
+<p>The other part of the IL2CPP technology is a runtime library to support the virtual machine. We have implemented this library using almost entirely C++ code (it has a little bit of platform-specific assembly code, but let’s keep that between the two of us). We call the runtime library libil2cpp, and it is shipped as a static library linked into the player executable. One of the key benefits of the IL2CPP technology is this simple and portable runtime library.</p>
+<p>You can find some clues about how the libil2cpp code is organized by looking at the header files for libil2cpp we ship with Unity (you’ll find them in the Editor\Data\PlaybackEngines\webglsupport\BuildTools\Libraries\libil2cpp\include directory on Windows, or the Contents/Frameworks/il2cpp/libil2cpp directory on OSX). For example, the interface between the C++ code generated by il2cpp.exe and the libil2cpp runtime is located in the codegen/il2cpp-codegen.h header file.</p>
+<p>One key part of the runtime is the garbage collector. We’re shipping Unity 5 with <a href="https://github.com/ivmai/bdwgc/" target="_blank" rel="noopener">libgc</a>, the Boehm-Demers-Weiser garbage collector. However, libil2cpp has been designed to allow us to use other garbage collectors. For example, we are researching an integration of the Microsoft GC which was open-sourced as part of the CoreCLR. We’ll have more to say about this in our post about garbage collector integration later in the series.</p>
+<p><strong>How is il2cpp.exe executed?</strong></p>
+<p>Let’s take a look at an example. I’ll be using Unity 5.0.1 on Windows, and I’ll start with a new, empty project. So that we have at least one user script to convert, I’ll add this simple MonoBehaviour component to the Main Camera game object:</p>
+<p>1</p>
+<p>2</p>
+<p>3</p>
+<p>4</p>
+<p>5</p>
+<p>6</p>
+<p>7</p>
+<p>| </p>
+<p>using UnityEngine;</p>
+<p>public class HelloWorld : MonoBehaviour {</p>
+<p>void Start () {</p>
+<p>Debug.Log(“Hello, IL2CPP!”);</p>
+<p>}</p>
+<p>}  </p>
+<p>—-|—-  </p>
+<p>When I build for the WebGL platform, I can use <a href="https://technet.microsoft.com/en-us/sysinternals/bb896653.aspx" target="_blank" rel="noopener">Process Explorer</a> to see the command line Unity used to run il2cpp.exe:</p>
+<p>1</p>
+<p>| </p>
+<p>“C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe” “C:\Program Files\Unity\Editor\Data\il2cpp/il2cpp.exe” --copy-level=None --enable-generic-sharing --enable-unity-event-support --output-format=Compact --extra-types.file=”C:\Program Files\Unity\Editor\Data\il2cpp\il2cpp_default_extra_types.txt” “C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll” “C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\Managed\UnityEngine.UI.dll” “C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\il2cppOutput”  </p>
+<p>—-|—-  </p>
+<p>That command line is pretty long and horrible, so let’s unpack it. First, Unity is running this executable:</p>
+<p>1</p>
+<p>| </p>
+<p>“C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe”  </p>
+<p>—-|—-  </p>
+<p>The next argument on the command line is the il2cpp.exe utility itself.</p>
+<p>1</p>
+<p>| </p>
+<p>“C:\Program Files\Unity\Editor\Data\il2cpp/il2cpp.exe”  </p>
+<p>—-|—-  </p>
+<p>The remaining command line arguments are passed to il2cpp.exe, not mono.exe. Let’s look at them. First, Unity passes five flags to il2cpp.exe:</p>
+<ul>
+<li>•–copy-level=None <ul>
+<li>Specify that il2cpp.exe should not perform an special file copies of the generated C++ code.</li>
+</ul>
+</li>
+<li>•–enable-generic-sharing <ul>
+<li>This is a code and binary size reduction feature. IL2CPP will share the implementation of generic methods when it can.</li>
+</ul>
+</li>
+<li>•–enable-unity-event-support <ul>
+<li>Special support to ensure that code for Unity events, which are accessed via reflection, is correctly generated.</li>
+</ul>
+</li>
+<li>•–output-format=Compact <ul>
+<li>Generate C++ code in a format that requires fewer characters for type and method names. This code is difficult to debug, since the names in the IL code are not preserved, but it often compiles faster, since there is less code for the C++ compiler to parse.</li>
+</ul>
+</li>
+<li>•–extra-types.file=”C:\Program Files\Unity\Editor\Data\il2cpp\il2cpp_default_extra_types.txt” <ul>
+<li>Use the default (and empty) extra types file. This file can be added in a Unity project to let il2cpp.exe know which generic or array types will be created at runtime, but are not present in the IL code.</li>
+</ul>
+</li>
+</ul>
+<p>It is important to note that these command line arguments can and will be changed in later releases. We’re not at a point yet where we have a stable and supported set of command line arguments for il2cpp.exe.</p>
+<p>Finally, we have a list of two files and one directory on the command line:</p>
+<ul>
+<li>•“C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll”</li>
+<li>•“C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\Managed\UnityEngine.UI.dll”</li>
+<li>•“C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\il2cppOutput”</li>
+</ul>
+<p>The il2cpp.exe utility accepts a list of all of the IL assemblies it should convert. In this case they are the assembly containing my simple MonoBehaviour, Assembly-CSharp.dll, and the GUI assembly, UnityEngine.UI.dll. Note that there are a few conspicuously missing assembles here. Clearly, my script references UnityEngine.dll, and that references at least mscorlib.dll, and maybe other assemblies. Where are they? Actually, il2cpp.exe resolves those assemblies internally. They can be mentioned on the command line, but they are not necessary. Unity only needs to mention the root assemblies (those which are not referenced by any other assembly) explicitly.</p>
+<p>The last argument on the il2cpp.exe command line is the directory where the output C++ files should be created. If you are curious, have a look at the generated files in that directory, they will be the subject of the next post in this series. Before you do though, you might want to choose the “Development Player” option in the WebGL build settings. That will remove the –output-format=Compact command line argument and give you better type and method names in the generated C++ code.</p>
+<p>Try changing various options in the WebGL or iOS Player Settings. You should be able to see different command line options passed to il2cpp.exe to enable different code generation steps. For example, changing the “Enable Exceptions” setting in the WebGL Player Settings to a value of “Full” adds the –emit-null-checks, –enable-stacktrace, and –enable-array-bounds-check arguments to the il2cpp.exe command line.</p>
+<p><strong>What does IL2CPP not do?</strong></p>
+<p>I’d like to point out one of the challenges that we did not take on with IL2CPP, and we could not be happier that we ignored it. We did not attempt to re-write the C# standard library with IL2CPP. When you build a Unity project which uses the IL2CPP scripting backend, all of the C# standard library code in mscorlib.dll, System.dll, etc. is the exact same code used for the Mono scripting backend.</p>
+<p>We rely on C# standard library code that is already well-known by users and well-tested in Unity projects. So when we investigate a bug related to IL2CPP, we can be fairly confident that the bug is in either the AOT compiler or the runtime library, and nowhere else.</p>
+<p><strong>How we develop, test, and ship IL2CPP</strong></p>
+<p>Since the initial public release of IL2CPP at version 4.6.1p5 in January, we’ve shipped 6 full releases and 7 patch releases (across versions 4.6 and 5.0 of Unity). We have corrected more than 100 bugs mentioned in the release notes.</p>
+<p>In order to make this continuous improvement happen, we develop against only one version of the IL2CPP code internally, which sits on the bleeding edge of the trunk branch in Unity used to ship alpha and beta releases. Just before each release, we port the IL2CPP changes to the specific release branch, run our tests, and verify all of the bugs we fixed are corrected in that version. Our QA and Sustained Engineering teams have done incredible work to make delivery at this rate possible. This means that our users are never more than about one week away from the latest fixes for IL2CPP bugs.</p>
+<p>Our user community has proven invaluable by submitting many high quality bug reports. We appreciate all the feedback from our users to help continually improve IL2CPP, and we look forward to more of it.</p>
+<p>The development team working on IL2CPP has a strong test-first mentality. We often employee Test Driven Design practices, and seldom merge a pull request without good tests. This strategy works well for a technology like IL2CPP, where we have clear inputs and outputs. It means that the vast majority of the bugs we see are not unexpected behavior, but rather unexpected cases (e.g. it is possible to use an 64-bit IntPtr as a 32-bit array index, causing clang to fail with a C++ compiler error, and <a href="http://forum.unity3d.com/threads/4-6-3-il2cpp-xcode-build-errors.299561/" target="_blank" rel="noopener">real code</a> actually does this!). That difference allows us to fix bugs quickly with a high degree of confidence.</p>
+<p>With the help of our community, we’re working hard to make IL2CPP as stable and fast as possible. By the way, if any of this excites you, <a href="http://unity3d.com/jobs/position?id=oWfh0fwc" target="_blank" rel="noopener">we’re hiring</a> (just sayin’).</p>
+<p><strong>More to come</strong></p>
+<p>I fear that I’ve spent too much time here teasing future blog posts. We have a lot to say, and it simply won’t all fit in one post. Next time, we’ll dig into the code generated by il2cpp.exe to see how your project actually looks to the C++ compiler.</p>
+<p><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;470.5&#39; height=&#39;470.5&#39; viewBox=&#39;0 0 470.5 470.5&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’599’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’600’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3cpath d=’M271.5 154.2v-40.5c0-6.1 0.3-10.8 0.8-14.1 0.6-3.3 1.9-6.6 3.9-9.9 2-3.2 5.2-5.5 9.7-6.7 4.5-1.2 10.4-1.9 17.9-1.9h40.5V0h-64.8c-37.5 0-64.4 8.9-80.8 26.7 -16.4 17.8-24.6 44-24.6 78.7v48.8h-48.5v81.1h48.5v235.3h97.4V235.3h64.8l8.6-81.1H271.5z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’601’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a><a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F&amp;text=An+introduction+to+IL2CPP+internals&amp;via=unity3d" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;450&#39; height=&#39;450&#39; viewBox=&#39;0 0 450 450&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’603’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’604’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3cpath d=’M450 85.7c-17.7 7.6-35.4 12.4-53.1 14.3 20-12 33.5-28.9 40.5-50.8 -18.3 10.8-37.8 18.3-58.5 22.3 -18.3-19.4-40.7-29.1-67.4-29.1 -25.5 0-47.2 9-65.2 27 -18 18-27 39.7-27 65.2 0 6.9 0.8 13.9 2.3 21.1 -37.7-1.9-73-11.4-106.1-28.4C82.5 110.2 54.4 87.5 31.4 59.1c-8.4 14.3-12.6 29.8-12.6 46.5 0 15.8 3.7 30.5 11.1 44 7.4 13.5 17.4 24.5 30 32.8 -14.8-0.6-28.7-4.5-41.7-11.7v1.1c0 22.3 7 41.8 21 58.7 14 16.8 31.6 27.5 53 31.8 -8 2.1-16.1 3.1-24.3 3.1 -5.3 0-11.1-0.5-17.4-1.4 5.9 18.5 16.8 33.6 32.5 45.5 15.8 11.9 33.7 18 53.7 18.4 -33.5 26.3-71.7 39.4-114.5 39.4 -8.2 0-15.6-0.4-22.3-1.1 42.8 27.6 90 41.4 141.6 41.4 32.7 0 63.5-5.2 92.2-15.6 28.7-10.4 53.3-24.3 73.7-41.7 20.4-17.4 37.9-37.4 52.7-60.1 14.8-22.7 25.7-46.3 33-70.9 7.2-24.7 10.8-49.3 10.8-74.1 0-5.3-0.1-9.3-0.3-12C421.8 120.2 437.2 104.3 450 85.7z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’605’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F&amp;title=An+introduction+to+IL2CPP+internals&amp;summary=Almost+a+year+ago+now%2C+we+started+to+talk+about+the+future+of+scripting+in+Unity.+The+new+IL2CPP+scripting+backend+promised+to+bring+a+highly-performant%2C+highly-portable+virtual+machine+to+Unity.+In+January%2C+we+shipped+our+first+platform+using+IL2CPP%2C+iOS+64-bit.+The+Unity+5+release+brought+another+platform%2C+WebGL.+Thanks+to+the+input+from+%5B%26hellip%3B%5D&amp;source=Unity3d+Blog" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;438.5&#39; height=&#39;438.5&#39; viewBox=&#39;0 0 438.5 438.5&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’607’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’608’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3crect x=’5.4’ y=’145.9’ width=’94.2’ height=’282.9’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’609’ class=’js-evernote-checked’%3e%3c/rect%3e %3cpath d=’M408.8 171.7c-19.8-21.6-46-32.4-78.5-32.4 -12 0-22.9 1.5-32.7 4.4 -9.8 3-18.1 7.1-24.8 12.4 -6.8 5.3-12.1 10.3-16.1 14.8 -3.8 4.3-7.5 9.4-11.1 15.1v-40.2h-93.9l0.3 13.7c0.2 9.1 0.3 37.3 0.3 84.5 0 47.2-0.2 108.8-0.6 184.7h93.9V270.9c0-9.7 1-17.4 3.1-23.1 4-9.7 10-17.8 18.1-24.4 8.1-6.6 18.1-9.9 30.1-9.9 16.4 0 28.4 5.7 36.1 17 7.7 11.3 11.6 27 11.6 47V428.8h93.9V266.7C438.5 225 428.6 193.3 408.8 171.7zM53.1 9.7c-15.8 0-28.6 4.6-38.4 13.8C4.9 32.8 0 44.4 0 58.5c0 13.9 4.8 25.5 14.3 34.8 9.5 9.3 22.1 14 37.7 14h0.6c16 0 28.9-4.7 38.7-14 9.8-9.3 14.6-20.9 14.4-34.8 -0.2-14.1-5-25.7-14.6-35C81.6 14.3 68.9 9.7 53.1 9.7z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’610’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-Animation优化"
   class="article article-type-post"
   itemscope
@@ -2378,7 +2663,7 @@ Material:
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-Animation%E4%BC%98%E5%8C%96/"
+  <a class="article-title" href="/2023/07/25/Unity3D-Animation%E4%BC%98%E5%8C%96/"
     >Animation优化</a> 
 </h2>
  
@@ -2387,8 +2672,8 @@ Material:
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-Animation%E4%BC%98%E5%8C%96/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.101Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-Animation%E4%BC%98%E5%8C%96/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.212Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -2599,169 +2884,6 @@ return false;
 <h3 id="GPU-Skinning"><a href="#GPU-Skinning" class="headerlink" title="GPU Skinning"></a>GPU Skinning</h3><p>用GPU计算网格，<br>优点：<br>减少SkinnedMesh.Render的CPU耗时<br>骨骼结点信息通过纹理来存储，数据量较Bake Mesh会大幅降低<br>缺点：<br>增加GPU消耗，<br>要求DIrectX 11或者Opengl ES 3.0</p>
 <h3 id="简化骨骼名字"><a href="#简化骨骼名字" class="headerlink" title="简化骨骼名字"></a>简化骨骼名字</h3><p>unity的动画数据存储的时候按每个骨骼节点的轨道拆分存储的，每个骨骼存储的是从根节点到这个骨骼节点的hierarchy路径，字符串的，骨骼多了之后这部分字符串不少。如果把所有骨骼名字都简化，这里可以省不少内存 </p>
 <h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="http://nfrechette.github.io/2017/01/30/anim_compression_unity5/" target="_blank" rel="noopener">http://nfrechette.github.io/2017/01/30/anim_compression_unity5/</a><br><a href="http://www.manew.com/thread-103127-1-1.html" target="_blank" rel="noopener">http://www.manew.com/thread-103127-1-1.html</a><br><a href="https://blog.csdn.net/alexander_xfl/article/details/66975570" target="_blank" rel="noopener">https://blog.csdn.net/alexander_xfl/article/details/66975570</a><br><a href="https://blog.csdn.net/j756915370/article/details/79415841" target="_blank" rel="noopener">https://blog.csdn.net/j756915370/article/details/79415841</a><br><a href="https://blog.uwa4d.com/archives/Loading_AnimationClip.html" target="_blank" rel="noopener">https://blog.uwa4d.com/archives/Loading_AnimationClip.html</a><br><a href="http://www.360doc.com/content/17/0424/15/6432946_648246543.shtml" target="_blank" rel="noopener">http://www.360doc.com/content/17/0424/15/6432946_648246543.shtml</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-An-introduction-to-IL2CPP-internalsВведение-в"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-An-introduction-to-IL2CPP-internals%D0%92%D0%B2%D0%B5%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B2/"
-    >An introduction to IL2CPP internalsВведение в</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-An-introduction-to-IL2CPP-internals%D0%92%D0%B2%D0%B5%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B2/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.093Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p> IL2CPP - Unity Technologies Blog</p>
-<h1 id="An-introduction-to-IL2CPP-internals"><a href="#An-introduction-to-IL2CPP-internals" class="headerlink" title="An introduction to IL2CPP internals"></a>An introduction to IL2CPP internals</h1><p><a href="https://blogs.unity3d.com/author/josh/" target="_blank" rel="noopener" title="Posts by Josh Peterson">Josh Peterson</a>, May 6, 2015</p>
-<p><a href="https://blogs.unity3d.com/category/technology/" target="_blank" rel="noopener">Technology</a></p>
-<p><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;470.5&#39; height=&#39;470.5&#39; viewBox=&#39;0 0 470.5 470.5&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’278’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’279’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3cpath d=’M271.5 154.2v-40.5c0-6.1 0.3-10.8 0.8-14.1 0.6-3.3 1.9-6.6 3.9-9.9 2-3.2 5.2-5.5 9.7-6.7 4.5-1.2 10.4-1.9 17.9-1.9h40.5V0h-64.8c-37.5 0-64.4 8.9-80.8 26.7 -16.4 17.8-24.6 44-24.6 78.7v48.8h-48.5v81.1h48.5v235.3h97.4V235.3h64.8l8.6-81.1H271.5z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’280’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a><a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F&amp;text=An+introduction+to+IL2CPP+internals&amp;via=unity3d" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;450&#39; height=&#39;450&#39; viewBox=&#39;0 0 450 450&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’282’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’283’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3cpath d=’M450 85.7c-17.7 7.6-35.4 12.4-53.1 14.3 20-12 33.5-28.9 40.5-50.8 -18.3 10.8-37.8 18.3-58.5 22.3 -18.3-19.4-40.7-29.1-67.4-29.1 -25.5 0-47.2 9-65.2 27 -18 18-27 39.7-27 65.2 0 6.9 0.8 13.9 2.3 21.1 -37.7-1.9-73-11.4-106.1-28.4C82.5 110.2 54.4 87.5 31.4 59.1c-8.4 14.3-12.6 29.8-12.6 46.5 0 15.8 3.7 30.5 11.1 44 7.4 13.5 17.4 24.5 30 32.8 -14.8-0.6-28.7-4.5-41.7-11.7v1.1c0 22.3 7 41.8 21 58.7 14 16.8 31.6 27.5 53 31.8 -8 2.1-16.1 3.1-24.3 3.1 -5.3 0-11.1-0.5-17.4-1.4 5.9 18.5 16.8 33.6 32.5 45.5 15.8 11.9 33.7 18 53.7 18.4 -33.5 26.3-71.7 39.4-114.5 39.4 -8.2 0-15.6-0.4-22.3-1.1 42.8 27.6 90 41.4 141.6 41.4 32.7 0 63.5-5.2 92.2-15.6 28.7-10.4 53.3-24.3 73.7-41.7 20.4-17.4 37.9-37.4 52.7-60.1 14.8-22.7 25.7-46.3 33-70.9 7.2-24.7 10.8-49.3 10.8-74.1 0-5.3-0.1-9.3-0.3-12C421.8 120.2 437.2 104.3 450 85.7z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’284’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F&amp;title=An+introduction+to+IL2CPP+internals&amp;summary=Almost+a+year+ago+now%2C+we+started+to+talk+about+the+future+of+scripting+in+Unity.+The+new+IL2CPP+scripting+backend+promised+to+bring+a+highly-performant%2C+highly-portable+virtual+machine+to+Unity.+In+January%2C+we+shipped+our+first+platform+using+IL2CPP%2C+iOS+64-bit.+The+Unity+5+release+brought+another+platform%2C+WebGL.+Thanks+to+the+input+from+%5B%26hellip%3B%5D&amp;source=Unity3d+Blog" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;438.5&#39; height=&#39;438.5&#39; viewBox=&#39;0 0 438.5 438.5&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’286’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’287’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3crect x=’5.4’ y=’145.9’ width=’94.2’ height=’282.9’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’288’ class=’js-evernote-checked’%3e%3c/rect%3e %3cpath d=’M408.8 171.7c-19.8-21.6-46-32.4-78.5-32.4 -12 0-22.9 1.5-32.7 4.4 -9.8 3-18.1 7.1-24.8 12.4 -6.8 5.3-12.1 10.3-16.1 14.8 -3.8 4.3-7.5 9.4-11.1 15.1v-40.2h-93.9l0.3 13.7c0.2 9.1 0.3 37.3 0.3 84.5 0 47.2-0.2 108.8-0.6 184.7h93.9V270.9c0-9.7 1-17.4 3.1-23.1 4-9.7 10-17.8 18.1-24.4 8.1-6.6 18.1-9.9 30.1-9.9 16.4 0 28.4 5.7 36.1 17 7.7 11.3 11.6 27 11.6 47V428.8h93.9V266.7C438.5 225 428.6 193.3 408.8 171.7zM53.1 9.7c-15.8 0-28.6 4.6-38.4 13.8C4.9 32.8 0 44.4 0 58.5c0 13.9 4.8 25.5 14.3 34.8 9.5 9.3 22.1 14 37.7 14h0.6c16 0 28.9-4.7 38.7-14 9.8-9.3 14.6-20.9 14.4-34.8 -0.2-14.1-5-25.7-14.6-35C81.6 14.3 68.9 9.7 53.1 9.7z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’289’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a></p>
-<p>Almost a year ago now, we started to talk about the <a href="http://blogs.unity3d.com/2014/05/20/the-future-of-scripting-in-unity/" target="_blank" rel="noopener">future</a> of scripting in Unity. The new IL2CPP scripting backend promised to bring a highly-performant, highly-portable virtual machine to Unity. In January, we shipped our first platform using IL2CPP, <a href="http://blogs.unity3d.com/2015/01/29/unity-4-6-2-ios-64-bit-support/" target="_blank" rel="noopener">iOS 64-bit</a>. The Unity 5 release brought another platform, <a href="http://blogs.unity3d.com/2014/04/29/on-the-future-of-web-publishing-in-unity/" target="_blank" rel="noopener">WebGL</a>. Thanks to the input from our tremendous community of users, we have shipped many patch release <a href="http://blogs.unity3d.com/2015/04/07/weekly-ios-64-bit-and-metal-update/" target="_blank" rel="noopener">updates</a> for IL2CPP, steadily improving its compiler and runtime.</p>
-<p>We have no plans to stop improving IL2CPP, but we thought it might be a good idea to take a step back and tell you a little bit about how IL2CPP works from the inside out. Over the next few months, we’re planning to write about the following topics (and maybe others) in this IL2CPP Internals series of posts:</p>
-<ol>
-<li>The basics – toolchain and command line arguments (this post)</li>
-<li><a href="http://blogs.unity3d.com/2015/05/13/il2cpp-internals-a-tour-of-generated-code/" target="_blank" rel="noopener">A tour of generated code</a></li>
-<li><a href="http://blogs.unity3d.com/2015/05/20/il2cpp-internals-debugging-tips-for-generated-code/" target="_blank" rel="noopener">Debugging tips for generated code</a></li>
-<li><a href="http://blogs.unity3d.com/2015/06/03/il2cpp-internals-method-calls/" target="_blank" rel="noopener">Method calls</a> (normal methods, virtual methods, etc.)</li>
-<li><a href="http://blogs.unity3d.com/2015/06/16/il2cpp-internals-generic-sharing-implementation" target="_blank" rel="noopener">Generic sharing implementation</a></li>
-<li><a href="http://blogs.unity3d.com/2015/07/02/il2cpp-internals-pinvoke-wrappers/" target="_blank" rel="noopener">P/invoke wrappers for types and methods</a></li>
-<li><a href="http://blogs.unity3d.com/2015/07/09/il2cpp-internals-garbage-collector-integration/" target="_blank" rel="noopener">Garbage collection integration</a></li>
-<li><a href="http://blogs.unity3d.com/2015/07/20/il2cpp-internals-testing-frameworks/" target="_blank" rel="noopener">Testing frameworks and usage</a></li>
-</ol>
-<p>In order to make this series of posts possible, we’re going to discuss some details about the IL2CPP implementation that will surely change in the future. Hopefully we can still provide some useful and interesting information.</p>
-<p><strong>What is IL2CPP?</strong></p>
-<p>The technology that we refer to as IL2CPP has two distinct parts.</p>
-<ul>
-<li>•An ahead-of-time (AOT) compiler</li>
-<li>•A runtime library to support the virtual machine</li>
-</ul>
-<p>The AOT compiler translates Intermediate Language (IL), the low-level output from .NET compilers, to C++ source code. The runtime library provides services and abstractions like a garbage collector, platform-independent access to threads and files, and implementations of internal calls (native code which modifies managed data structures directly).</p>
-<p><strong>The AOT compiler</strong></p>
-<p>The IL2CPP AOT compiler is named il2cpp.exe. On Windows you can find it in the Editor\Data\il2cpp directory. On OSX it is in the Contents/Frameworks/il2cpp/build directory in the Unity installation. The il2cpp.exe utility is a managed executable, written entirely in C#. We compile it with both .NET and Mono compilers during our development of IL2CPP.</p>
-<p>The il2cpp.exe utility accepts managed assemblies compiled with the Mono compiler that ships with Unity and generates C++ code which we pass on to a platform-specific C++ compiler.</p>
-<p>You can think about the IL2CPP toolchain like this:</p>
-<p><a href="https://blogs.unity3d.com/wp-content/uploads/2015/04/il2cpp-toolchain-smaller.png" target="_blank" rel="noopener"><br><img src="assets/An%20introduction%20to%20IL2CPP%20internalsВведение%20в/il2cpp-toolchain-smaller.png" alt="">
-</a></p>
-<p><strong>The runtime library</strong></p>
-<p>The other part of the IL2CPP technology is a runtime library to support the virtual machine. We have implemented this library using almost entirely C++ code (it has a little bit of platform-specific assembly code, but let’s keep that between the two of us). We call the runtime library libil2cpp, and it is shipped as a static library linked into the player executable. One of the key benefits of the IL2CPP technology is this simple and portable runtime library.</p>
-<p>You can find some clues about how the libil2cpp code is organized by looking at the header files for libil2cpp we ship with Unity (you’ll find them in the Editor\Data\PlaybackEngines\webglsupport\BuildTools\Libraries\libil2cpp\include directory on Windows, or the Contents/Frameworks/il2cpp/libil2cpp directory on OSX). For example, the interface between the C++ code generated by il2cpp.exe and the libil2cpp runtime is located in the codegen/il2cpp-codegen.h header file.</p>
-<p>One key part of the runtime is the garbage collector. We’re shipping Unity 5 with <a href="https://github.com/ivmai/bdwgc/" target="_blank" rel="noopener">libgc</a>, the Boehm-Demers-Weiser garbage collector. However, libil2cpp has been designed to allow us to use other garbage collectors. For example, we are researching an integration of the Microsoft GC which was open-sourced as part of the CoreCLR. We’ll have more to say about this in our post about garbage collector integration later in the series.</p>
-<p><strong>How is il2cpp.exe executed?</strong></p>
-<p>Let’s take a look at an example. I’ll be using Unity 5.0.1 on Windows, and I’ll start with a new, empty project. So that we have at least one user script to convert, I’ll add this simple MonoBehaviour component to the Main Camera game object:</p>
-<p>1</p>
-<p>2</p>
-<p>3</p>
-<p>4</p>
-<p>5</p>
-<p>6</p>
-<p>7</p>
-<p>| </p>
-<p>using UnityEngine;</p>
-<p>public class HelloWorld : MonoBehaviour {</p>
-<p>void Start () {</p>
-<p>Debug.Log(“Hello, IL2CPP!”);</p>
-<p>}</p>
-<p>}  </p>
-<p>—-|—-  </p>
-<p>When I build for the WebGL platform, I can use <a href="https://technet.microsoft.com/en-us/sysinternals/bb896653.aspx" target="_blank" rel="noopener">Process Explorer</a> to see the command line Unity used to run il2cpp.exe:</p>
-<p>1</p>
-<p>| </p>
-<p>“C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe” “C:\Program Files\Unity\Editor\Data\il2cpp/il2cpp.exe” --copy-level=None --enable-generic-sharing --enable-unity-event-support --output-format=Compact --extra-types.file=”C:\Program Files\Unity\Editor\Data\il2cpp\il2cpp_default_extra_types.txt” “C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll” “C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\Managed\UnityEngine.UI.dll” “C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\il2cppOutput”  </p>
-<p>—-|—-  </p>
-<p>That command line is pretty long and horrible, so let’s unpack it. First, Unity is running this executable:</p>
-<p>1</p>
-<p>| </p>
-<p>“C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe”  </p>
-<p>—-|—-  </p>
-<p>The next argument on the command line is the il2cpp.exe utility itself.</p>
-<p>1</p>
-<p>| </p>
-<p>“C:\Program Files\Unity\Editor\Data\il2cpp/il2cpp.exe”  </p>
-<p>—-|—-  </p>
-<p>The remaining command line arguments are passed to il2cpp.exe, not mono.exe. Let’s look at them. First, Unity passes five flags to il2cpp.exe:</p>
-<ul>
-<li>•–copy-level=None <ul>
-<li>Specify that il2cpp.exe should not perform an special file copies of the generated C++ code.</li>
-</ul>
-</li>
-<li>•–enable-generic-sharing <ul>
-<li>This is a code and binary size reduction feature. IL2CPP will share the implementation of generic methods when it can.</li>
-</ul>
-</li>
-<li>•–enable-unity-event-support <ul>
-<li>Special support to ensure that code for Unity events, which are accessed via reflection, is correctly generated.</li>
-</ul>
-</li>
-<li>•–output-format=Compact <ul>
-<li>Generate C++ code in a format that requires fewer characters for type and method names. This code is difficult to debug, since the names in the IL code are not preserved, but it often compiles faster, since there is less code for the C++ compiler to parse.</li>
-</ul>
-</li>
-<li>•–extra-types.file=”C:\Program Files\Unity\Editor\Data\il2cpp\il2cpp_default_extra_types.txt” <ul>
-<li>Use the default (and empty) extra types file. This file can be added in a Unity project to let il2cpp.exe know which generic or array types will be created at runtime, but are not present in the IL code.</li>
-</ul>
-</li>
-</ul>
-<p>It is important to note that these command line arguments can and will be changed in later releases. We’re not at a point yet where we have a stable and supported set of command line arguments for il2cpp.exe.</p>
-<p>Finally, we have a list of two files and one directory on the command line:</p>
-<ul>
-<li>•“C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll”</li>
-<li>•“C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\Managed\UnityEngine.UI.dll”</li>
-<li>•“C:\Users\Josh Peterson\Documents\IL2CPP Blog Example\Temp\StagingArea\Data\il2cppOutput”</li>
-</ul>
-<p>The il2cpp.exe utility accepts a list of all of the IL assemblies it should convert. In this case they are the assembly containing my simple MonoBehaviour, Assembly-CSharp.dll, and the GUI assembly, UnityEngine.UI.dll. Note that there are a few conspicuously missing assembles here. Clearly, my script references UnityEngine.dll, and that references at least mscorlib.dll, and maybe other assemblies. Where are they? Actually, il2cpp.exe resolves those assemblies internally. They can be mentioned on the command line, but they are not necessary. Unity only needs to mention the root assemblies (those which are not referenced by any other assembly) explicitly.</p>
-<p>The last argument on the il2cpp.exe command line is the directory where the output C++ files should be created. If you are curious, have a look at the generated files in that directory, they will be the subject of the next post in this series. Before you do though, you might want to choose the “Development Player” option in the WebGL build settings. That will remove the –output-format=Compact command line argument and give you better type and method names in the generated C++ code.</p>
-<p>Try changing various options in the WebGL or iOS Player Settings. You should be able to see different command line options passed to il2cpp.exe to enable different code generation steps. For example, changing the “Enable Exceptions” setting in the WebGL Player Settings to a value of “Full” adds the –emit-null-checks, –enable-stacktrace, and –enable-array-bounds-check arguments to the il2cpp.exe command line.</p>
-<p><strong>What does IL2CPP not do?</strong></p>
-<p>I’d like to point out one of the challenges that we did not take on with IL2CPP, and we could not be happier that we ignored it. We did not attempt to re-write the C# standard library with IL2CPP. When you build a Unity project which uses the IL2CPP scripting backend, all of the C# standard library code in mscorlib.dll, System.dll, etc. is the exact same code used for the Mono scripting backend.</p>
-<p>We rely on C# standard library code that is already well-known by users and well-tested in Unity projects. So when we investigate a bug related to IL2CPP, we can be fairly confident that the bug is in either the AOT compiler or the runtime library, and nowhere else.</p>
-<p><strong>How we develop, test, and ship IL2CPP</strong></p>
-<p>Since the initial public release of IL2CPP at version 4.6.1p5 in January, we’ve shipped 6 full releases and 7 patch releases (across versions 4.6 and 5.0 of Unity). We have corrected more than 100 bugs mentioned in the release notes.</p>
-<p>In order to make this continuous improvement happen, we develop against only one version of the IL2CPP code internally, which sits on the bleeding edge of the trunk branch in Unity used to ship alpha and beta releases. Just before each release, we port the IL2CPP changes to the specific release branch, run our tests, and verify all of the bugs we fixed are corrected in that version. Our QA and Sustained Engineering teams have done incredible work to make delivery at this rate possible. This means that our users are never more than about one week away from the latest fixes for IL2CPP bugs.</p>
-<p>Our user community has proven invaluable by submitting many high quality bug reports. We appreciate all the feedback from our users to help continually improve IL2CPP, and we look forward to more of it.</p>
-<p>The development team working on IL2CPP has a strong test-first mentality. We often employee Test Driven Design practices, and seldom merge a pull request without good tests. This strategy works well for a technology like IL2CPP, where we have clear inputs and outputs. It means that the vast majority of the bugs we see are not unexpected behavior, but rather unexpected cases (e.g. it is possible to use an 64-bit IntPtr as a 32-bit array index, causing clang to fail with a C++ compiler error, and <a href="http://forum.unity3d.com/threads/4-6-3-il2cpp-xcode-build-errors.299561/" target="_blank" rel="noopener">real code</a> actually does this!). That difference allows us to fix bugs quickly with a high degree of confidence.</p>
-<p>With the help of our community, we’re working hard to make IL2CPP as stable and fast as possible. By the way, if any of this excites you, <a href="http://unity3d.com/jobs/position?id=oWfh0fwc" target="_blank" rel="noopener">we’re hiring</a> (just sayin’).</p>
-<p><strong>More to come</strong></p>
-<p>I fear that I’ve spent too much time here teasing future blog posts. We have a lot to say, and it simply won’t all fit in one post. Next time, we’ll dig into the code generated by il2cpp.exe to see how your project actually looks to the C++ compiler.</p>
-<p><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;470.5&#39; height=&#39;470.5&#39; viewBox=&#39;0 0 470.5 470.5&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’599’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’600’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3cpath d=’M271.5 154.2v-40.5c0-6.1 0.3-10.8 0.8-14.1 0.6-3.3 1.9-6.6 3.9-9.9 2-3.2 5.2-5.5 9.7-6.7 4.5-1.2 10.4-1.9 17.9-1.9h40.5V0h-64.8c-37.5 0-64.4 8.9-80.8 26.7 -16.4 17.8-24.6 44-24.6 78.7v48.8h-48.5v81.1h48.5v235.3h97.4V235.3h64.8l8.6-81.1H271.5z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’601’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a><a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F&amp;text=An+introduction+to+IL2CPP+internals&amp;via=unity3d" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;450&#39; height=&#39;450&#39; viewBox=&#39;0 0 450 450&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’603’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’604’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3cpath d=’M450 85.7c-17.7 7.6-35.4 12.4-53.1 14.3 20-12 33.5-28.9 40.5-50.8 -18.3 10.8-37.8 18.3-58.5 22.3 -18.3-19.4-40.7-29.1-67.4-29.1 -25.5 0-47.2 9-65.2 27 -18 18-27 39.7-27 65.2 0 6.9 0.8 13.9 2.3 21.1 -37.7-1.9-73-11.4-106.1-28.4C82.5 110.2 54.4 87.5 31.4 59.1c-8.4 14.3-12.6 29.8-12.6 46.5 0 15.8 3.7 30.5 11.1 44 7.4 13.5 17.4 24.5 30 32.8 -14.8-0.6-28.7-4.5-41.7-11.7v1.1c0 22.3 7 41.8 21 58.7 14 16.8 31.6 27.5 53 31.8 -8 2.1-16.1 3.1-24.3 3.1 -5.3 0-11.1-0.5-17.4-1.4 5.9 18.5 16.8 33.6 32.5 45.5 15.8 11.9 33.7 18 53.7 18.4 -33.5 26.3-71.7 39.4-114.5 39.4 -8.2 0-15.6-0.4-22.3-1.1 42.8 27.6 90 41.4 141.6 41.4 32.7 0 63.5-5.2 92.2-15.6 28.7-10.4 53.3-24.3 73.7-41.7 20.4-17.4 37.9-37.4 52.7-60.1 14.8-22.7 25.7-46.3 33-70.9 7.2-24.7 10.8-49.3 10.8-74.1 0-5.3-0.1-9.3-0.3-12C421.8 120.2 437.2 104.3 450 85.7z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’605’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fblogs.unity3d.com%2F2015%2F05%2F06%2Fan-introduction-to-ilcpp-internals%2F&amp;title=An+introduction+to+IL2CPP+internals&amp;summary=Almost+a+year+ago+now%2C+we+started+to+talk+about+the+future+of+scripting+in+Unity.+The+new+IL2CPP+scripting+backend+promised+to+bring+a+highly-performant%2C+highly-portable+virtual+machine+to+Unity.+In+January%2C+we+shipped+our+first+platform+using+IL2CPP%2C+iOS+64-bit.+The+Unity+5+release+brought+another+platform%2C+WebGL.+Thanks+to+the+input+from+%5B%26hellip%3B%5D&amp;source=Unity3d+Blog" target="_blank" rel="noopener"><br><img src="data:image/svg+xml,%3csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; version=&#39;1.1&#39; x=&#39;0&#39; y=&#39;0&#39; width=&#39;438.5&#39; height=&#39;438.5&#39; viewBox=&#39;0 0 438.5 438.5&#39; xml:space=&#39;preserve&#39; fill=&#39;rgb\(0%2c 0%2c 0\" alt=""><br>‘ data-evernote-id=’607’ class=’js-evernote-checked’%3e%3cstyle data-evernote-id=’608’ class=’js-evernote-checked’%3e.s0 %7b fill: rgb(0%2c 0%2c 0)%3b %7d%3c/style%3e %3crect x=’5.4’ y=’145.9’ width=’94.2’ height=’282.9’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’609’ class=’js-evernote-checked’%3e%3c/rect%3e %3cpath d=’M408.8 171.7c-19.8-21.6-46-32.4-78.5-32.4 -12 0-22.9 1.5-32.7 4.4 -9.8 3-18.1 7.1-24.8 12.4 -6.8 5.3-12.1 10.3-16.1 14.8 -3.8 4.3-7.5 9.4-11.1 15.1v-40.2h-93.9l0.3 13.7c0.2 9.1 0.3 37.3 0.3 84.5 0 47.2-0.2 108.8-0.6 184.7h93.9V270.9c0-9.7 1-17.4 3.1-23.1 4-9.7 10-17.8 18.1-24.4 8.1-6.6 18.1-9.9 30.1-9.9 16.4 0 28.4 5.7 36.1 17 7.7 11.3 11.6 27 11.6 47V428.8h93.9V266.7C438.5 225 428.6 193.3 408.8 171.7zM53.1 9.7c-15.8 0-28.6 4.6-38.4 13.8C4.9 32.8 0 44.4 0 58.5c0 13.9 4.8 25.5 14.3 34.8 9.5 9.3 22.1 14 37.7 14h0.6c16 0 28.9-4.7 38.7-14 9.8-9.3 14.6-20.9 14.4-34.8 -0.2-14.1-5-25.7-14.6-35C81.6 14.3 68.9 9.7 53.1 9.7z’ fill=’rgb(0%2c 0%2c 0)‘ data-evernote-id=’610’ class=’js-evernote-checked’%3e%3c/path%3e%3c/svg%3e) </a></p>
  
       <!-- reward -->
       

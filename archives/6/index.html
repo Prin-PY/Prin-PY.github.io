@@ -182,7 +182,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E3%80%90%E8%B5%84%E6%BA%90%E3%80%91Asset-Bundle-2020-10-25-022900/"
+  <a class="article-title" href="/2023/07/25/Unity3D-%E3%80%90%E8%B5%84%E6%BA%90%E3%80%91Asset-Bundle-2020-10-25-022900/"
     >【资源】Asset Bundle(2020-10-25 022900)</a> 
 </h2>
  
@@ -191,8 +191,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E3%80%90%E8%B5%84%E6%BA%90%E3%80%91Asset-Bundle-2020-10-25-022900/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.904Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-%E3%80%90%E8%B5%84%E6%BA%90%E3%80%91Asset-Bundle-2020-10-25-022900/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.350Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -991,7 +991,7 @@ public static AssetBundle LoadFromFile(string path, uint crc, ulong offset);
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E3%80%90%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86%E3%80%91%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E4%B8%8E%E5%A4%84%E7%90%86/"
+  <a class="article-title" href="/2023/07/25/Unity3D-%E3%80%90%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86%E3%80%91%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E4%B8%8E%E5%A4%84%E7%90%86/"
     >【疑难问题处理】异常捕获与处理</a> 
 </h2>
  
@@ -1000,8 +1000,8 @@ public static AssetBundle LoadFromFile(string path, uint crc, ulong offset);
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E3%80%90%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86%E3%80%91%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E4%B8%8E%E5%A4%84%E7%90%86/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.900Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-%E3%80%90%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86%E3%80%91%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E4%B8%8E%E5%A4%84%E7%90%86/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.348Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1033,6 +1033,129 @@ public static AssetBundle LoadFromFile(string path, uint crc, ulong offset);
 
     
     <article
+  id="post-Unity3D-【内存】内存底层深入"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-%E3%80%90%E5%86%85%E5%AD%98%E3%80%91%E5%86%85%E5%AD%98%E5%BA%95%E5%B1%82%E6%B7%B1%E5%85%A5/"
+    >【内存】内存底层深入</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-%E3%80%90%E5%86%85%E5%AD%98%E3%80%91%E5%86%85%E5%AD%98%E5%BA%95%E5%B1%82%E6%B7%B1%E5%85%A5/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.340Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="基本知识"><a href="#基本知识" class="headerlink" title="基本知识"></a>基本知识</h2><h3 id="物理内存的访问"><a href="#物理内存的访问" class="headerlink" title="物理内存的访问"></a>物理内存的访问</h3><p>CPU访问内存是一个慢速过程。<br>访问过程：先访问Cache，Cache包含L1，L2，L3，也就是一级缓存，二级缓存和三级缓存，若在这些缓存里全没找到我们要的数据，再去访问内存，接着会把找到的数据存放到Cache中，完成一次操作。</p>
+<p>过多的Cache Miss就会导致大量的内存和Cache的IO交换，浪费大量时间。</p>
+<blockquote>
+<p>Unity ECS方案: 可以将存储在内存中的不连续数据，变为连续的数据，从而降低Cache Miss的概率。</p>
+</blockquote>
+<h3 id="台式设备和移动设备内存架构差异"><a href="#台式设备和移动设备内存架构差异" class="headerlink" title="台式设备和移动设备内存架构差异"></a>台式设备和移动设备内存架构差异</h3><ul>
+<li><p>移动设备 <strong>没有独立显卡</strong> 。</p>
+</li>
+<li><p>移动设备 <strong>没有独立显存</strong> ，内存和显存是同一块内存。</p>
+</li>
+</ul>
+<blockquote>
+<p>所以有可能我们游戏占用的内存并不大，但是依旧爆内存了，其实是因为显存分配不出来了。这种情况，我们可以去查看一下Log，例如Android会有一个 OpenGL Error：Out Of Memory。</p>
+</blockquote>
+<ul>
+<li>移动设备的CPU面积更小，因此会导致 <strong>缓存级数更少</strong> ，大小也更小，例如一般的台式机三级缓存可能有8-16M，而移动设备则只有2M左右。</li>
+</ul>
+<h2 id="内存分页"><a href="#内存分页" class="headerlink" title="内存分页"></a>内存分页</h2><p>内存分页（IOS上大部分为16K/page）是内存管理的最小单位，当Unity需要申请内存的时候，都会以block的方式（若干个页）进行申请。如果某一页在若干次GC（IOS为8次）之后仍然为Empty的话，它就会被释放，实际的物理内存就会被还给物理内存。</p>
+<h2 id="Unity"><a href="#Unity" class="headerlink" title="Unity"></a>Unity</h2><h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://zhuanlan.zhihu.com/p/370467923" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/370467923</a><br><a href="https://zhuanlan.zhihu.com/p/362941227" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/362941227</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-【动画】Animator-ApplyRootMotion"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-%E3%80%90%E5%8A%A8%E7%94%BB%E3%80%91Animator-ApplyRootMotion/"
+    >【动画】Animator &amp; ApplyRootMotion</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-%E3%80%90%E5%8A%A8%E7%94%BB%E3%80%91Animator-ApplyRootMotion/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.340Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+   
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-【动画】Unity动画系统"
   class="article article-type-post"
   itemscope
@@ -1044,7 +1167,7 @@ public static AssetBundle LoadFromFile(string path, uint crc, ulong offset);
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E3%80%90%E5%8A%A8%E7%94%BB%E3%80%91Unity%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/"
+  <a class="article-title" href="/2023/07/25/Unity3D-%E3%80%90%E5%8A%A8%E7%94%BB%E3%80%91Unity%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/"
     >【动画】Unity动画系统</a> 
 </h2>
  
@@ -1053,8 +1176,8 @@ public static AssetBundle LoadFromFile(string path, uint crc, ulong offset);
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E3%80%90%E5%8A%A8%E7%94%BB%E3%80%91Unity%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.890Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-%E3%80%90%E5%8A%A8%E7%94%BB%E3%80%91Unity%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.340Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1261,129 +1384,6 @@ if(animatorStateInfo.tagHash==tagHash){
 
     
     <article
-  id="post-Unity3D-【动画】Animator-ApplyRootMotion"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E3%80%90%E5%8A%A8%E7%94%BB%E3%80%91Animator-ApplyRootMotion/"
-    >【动画】Animator &amp; ApplyRootMotion</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E3%80%90%E5%8A%A8%E7%94%BB%E3%80%91Animator-ApplyRootMotion/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.888Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-   
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-【内存】内存底层深入"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E3%80%90%E5%86%85%E5%AD%98%E3%80%91%E5%86%85%E5%AD%98%E5%BA%95%E5%B1%82%E6%B7%B1%E5%85%A5/"
-    >【内存】内存底层深入</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E3%80%90%E5%86%85%E5%AD%98%E3%80%91%E5%86%85%E5%AD%98%E5%BA%95%E5%B1%82%E6%B7%B1%E5%85%A5/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.878Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="基本知识"><a href="#基本知识" class="headerlink" title="基本知识"></a>基本知识</h2><h3 id="物理内存的访问"><a href="#物理内存的访问" class="headerlink" title="物理内存的访问"></a>物理内存的访问</h3><p>CPU访问内存是一个慢速过程。<br>访问过程：先访问Cache，Cache包含L1，L2，L3，也就是一级缓存，二级缓存和三级缓存，若在这些缓存里全没找到我们要的数据，再去访问内存，接着会把找到的数据存放到Cache中，完成一次操作。</p>
-<p>过多的Cache Miss就会导致大量的内存和Cache的IO交换，浪费大量时间。</p>
-<blockquote>
-<p>Unity ECS方案: 可以将存储在内存中的不连续数据，变为连续的数据，从而降低Cache Miss的概率。</p>
-</blockquote>
-<h3 id="台式设备和移动设备内存架构差异"><a href="#台式设备和移动设备内存架构差异" class="headerlink" title="台式设备和移动设备内存架构差异"></a>台式设备和移动设备内存架构差异</h3><ul>
-<li><p>移动设备 <strong>没有独立显卡</strong> 。</p>
-</li>
-<li><p>移动设备 <strong>没有独立显存</strong> ，内存和显存是同一块内存。</p>
-</li>
-</ul>
-<blockquote>
-<p>所以有可能我们游戏占用的内存并不大，但是依旧爆内存了，其实是因为显存分配不出来了。这种情况，我们可以去查看一下Log，例如Android会有一个 OpenGL Error：Out Of Memory。</p>
-</blockquote>
-<ul>
-<li>移动设备的CPU面积更小，因此会导致 <strong>缓存级数更少</strong> ，大小也更小，例如一般的台式机三级缓存可能有8-16M，而移动设备则只有2M左右。</li>
-</ul>
-<h2 id="内存分页"><a href="#内存分页" class="headerlink" title="内存分页"></a>内存分页</h2><p>内存分页（IOS上大部分为16K/page）是内存管理的最小单位，当Unity需要申请内存的时候，都会以block的方式（若干个页）进行申请。如果某一页在若干次GC（IOS为8次）之后仍然为Empty的话，它就会被释放，实际的物理内存就会被还给物理内存。</p>
-<h2 id="Unity"><a href="#Unity" class="headerlink" title="Unity"></a>Unity</h2><h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://zhuanlan.zhihu.com/p/370467923" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/370467923</a><br><a href="https://zhuanlan.zhihu.com/p/362941227" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/362941227</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
   id="post-Unity3D-【内存】Unity内存组成"
   class="article article-type-post"
   itemscope
@@ -1395,7 +1395,7 @@ if(animatorStateInfo.tagHash==tagHash){
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E3%80%90%E5%86%85%E5%AD%98%E3%80%91Unity%E5%86%85%E5%AD%98%E7%BB%84%E6%88%90/"
+  <a class="article-title" href="/2023/07/25/Unity3D-%E3%80%90%E5%86%85%E5%AD%98%E3%80%91Unity%E5%86%85%E5%AD%98%E7%BB%84%E6%88%90/"
     >【内存】Unity内存组成</a> 
 </h2>
  
@@ -1404,8 +1404,8 @@ if(animatorStateInfo.tagHash==tagHash){
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E3%80%90%E5%86%85%E5%AD%98%E3%80%91Unity%E5%86%85%E5%AD%98%E7%BB%84%E6%88%90/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.854Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-%E3%80%90%E5%86%85%E5%AD%98%E3%80%91Unity%E5%86%85%E5%AD%98%E7%BB%84%E6%88%90/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.339Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1718,7 +1718,7 @@ if(animatorStateInfo.tagHash==tagHash){
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E3%80%90%E5%86%85%E5%AD%98%E3%80%91PSS%E5%86%85%E5%AD%98%E7%BB%84%E6%88%90/"
+  <a class="article-title" href="/2023/07/25/Unity3D-%E3%80%90%E5%86%85%E5%AD%98%E3%80%91PSS%E5%86%85%E5%AD%98%E7%BB%84%E6%88%90/"
     >【内存】PSS内存组成</a> 
 </h2>
  
@@ -1727,8 +1727,8 @@ if(animatorStateInfo.tagHash==tagHash){
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E3%80%90%E5%86%85%E5%AD%98%E3%80%91PSS%E5%86%85%E5%AD%98%E7%BB%84%E6%88%90/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.850Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-%E3%80%90%E5%86%85%E5%AD%98%E3%80%91PSS%E5%86%85%E5%AD%98%E7%BB%84%E6%88%90/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.331Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1771,7 +1771,7 @@ if(animatorStateInfo.tagHash==tagHash){
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E3%80%90Editor-Extension%E3%80%91IMGUI/"
+  <a class="article-title" href="/2023/07/25/Unity3D-%E3%80%90Editor-Extension%E3%80%91IMGUI/"
     >【Editor Extension】IMGUI</a> 
 </h2>
  
@@ -1780,8 +1780,8 @@ if(animatorStateInfo.tagHash==tagHash){
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E3%80%90Editor-Extension%E3%80%91IMGUI/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.544Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-%E3%80%90Editor-Extension%E3%80%91IMGUI/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.331Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1915,7 +1915,7 @@ GUI.Label (new Rect (10, 10, 200, 80), &quot;Hello World!&quot;);
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E2%80%9D%E6%B8%B8%E6%88%8F%E7%A8%8B%E5%BA%8F%E5%91%98%E6%A0%B8%E5%BF%83%E7%AB%9E%E4%BA%89%E5%8A%9B%E2%80%9C%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/"
+  <a class="article-title" href="/2023/07/25/Unity3D-%E2%80%9D%E6%B8%B8%E6%88%8F%E7%A8%8B%E5%BA%8F%E5%91%98%E6%A0%B8%E5%BF%83%E7%AB%9E%E4%BA%89%E5%8A%9B%E2%80%9C%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/"
     >”游戏程序员核心竞争力“问题总结</a> 
 </h2>
  
@@ -1924,8 +1924,8 @@ GUI.Label (new Rect (10, 10, 200, 80), &quot;Hello World!&quot;);
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E2%80%9D%E6%B8%B8%E6%88%8F%E7%A8%8B%E5%BA%8F%E5%91%98%E6%A0%B8%E5%BF%83%E7%AB%9E%E4%BA%89%E5%8A%9B%E2%80%9C%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.541Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-%E2%80%9D%E6%B8%B8%E6%88%8F%E7%A8%8B%E5%BA%8F%E5%91%98%E6%A0%B8%E5%BF%83%E7%AB%9E%E4%BA%89%E5%8A%9B%E2%80%9C%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.328Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1985,7 +1985,7 @@ GUI.Label (new Rect (10, 10, 200, 80), &quot;Hello World!&quot;);
 
     
     <article
-  id="post-Unity3D-YAML"
+  id="post-Unity3D-Windows与MacOS在U3D项目中的使用"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -1996,8 +1996,8 @@ GUI.Label (new Rect (10, 10, 200, 80), &quot;Hello World!&quot;);
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-YAML/"
-    >YAML</a> 
+  <a class="article-title" href="/2023/07/25/Unity3D-Windows%E4%B8%8EMacOS%E5%9C%A8U3D%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8/"
+    >Windows与MacOS在U3D项目中的使用</a> 
 </h2>
  
 
@@ -2005,8 +2005,8 @@ GUI.Label (new Rect (10, 10, 200, 80), &quot;Hello World!&quot;);
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-YAML/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.534Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-Windows%E4%B8%8EMacOS%E5%9C%A8U3D%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.327Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -2016,10 +2016,35 @@ GUI.Label (new Rect (10, 10, 200, 80), &quot;Hello World!&quot;);
       
     <div class="article-entry" itemprop="articleBody">
        
-  <p>YAML TAG： <a href="https://stackoverflow.com/questions/15233335/i-dont-understand-what-a-yaml-tag-is" target="_blank" rel="noopener">https://stackoverflow.com/questions/15233335/i-dont-understand-what-a-yaml-tag-is</a></p>
-<p>YAML 文档：<a href="https://yaml.org/spec/1.2.2/#rule-ns-tag-directive" target="_blank" rel="noopener">https://yaml.org/spec/1.2.2/#rule-ns-tag-directive</a></p>
-<p>YAML 博客：<a href="https://www.jianshu.com/p/20c3cde0f189" target="_blank" rel="noopener">https://www.jianshu.com/p/20c3cde0f189</a></p>
-<p>Unity YAML解析方案：<a href="https://stackoverflow.com/questions/21473076/pyyaml-and-unusual-tags" target="_blank" rel="noopener">https://stackoverflow.com/questions/21473076/pyyaml-and-unusual-tags</a></p>
+  <p>Windows的优劣</p>
+<ol>
+<li><p>优势</p>
+<ol>
+<li><p>和美术协作比较方便</p>
+</li>
+<li><p>显卡性能也有保障</p>
+</li>
+<li><p>设备性价比高</p>
+</li>
+<li></li>
+</ol>
+</li>
+</ol>
+<p>MacOS的优劣</p>
+<ol>
+<li><p>优势</p>
+<ol>
+<li><p>出包或者做平台关联 api。 有时候要导出 xcode 项目，需要在 xcode 里写代码。</p>
+</li>
+<li><p>好看逼格高系统舒服</p>
+</li>
+</ol>
+</li>
+<li><p>设备成本较高。同等价位设备性能较差</p>
+</li>
+</ol>
+<p>主要使用windows 开发，mac 打包</p>
+<p>参考讨论：<a href="https://www.v2ex.com/t/670347" target="_blank" rel="noopener">https://www.v2ex.com/t/670347</a></p>
  
       <!-- reward -->
       

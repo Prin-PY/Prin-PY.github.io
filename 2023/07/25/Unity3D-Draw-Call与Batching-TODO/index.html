@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Draw Call与Batching(TODO) |  半个出家人</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/circle_image.png" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="半个出家人" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Unity3D-Draw-Call与Batching-TODO"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Draw Call与Batching(TODO)
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-Draw-Call%E4%B8%8EBatching-TODO/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.249Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">12 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Draw-Call"><a href="#Draw-Call" class="headerlink" title="Draw Call"></a>Draw Call</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>To draw a GameObject on the screen, the engine has to issue a draw call to the graphics API (such as OpenGL or Direct3D).<br><strong>每次引擎准备数据并通知GPU的过程称为一次Draw Call</strong> 。<br><strong>The command that tells the GPU to render a certain set of vertices as triangles with a certain state (shaders, blend state and so on)</strong></p>
+<h3 id="耗时原因"><a href="#耗时原因" class="headerlink" title="耗时原因"></a>耗时原因</h3><p>在没有进行拼合的情况下，引擎准备数据并通知GPU的过程是逐个物体进行的，对于每个物体，不只GPU的渲染，CPU重新 <strong>设置材质/Shader</strong> 也是一项非常耗时的操作。</p>
+<p><strong>Draw Call耗时主要是CPU端的耗时——</strong><br>Unity3d官方 - Draw calls are often resource-intensive(资源密集型的，大量占用资源的), with the graphics API doing significant work for every draw call, causing <strong>performance overhead(开销)on the CPU side</strong>. This is mostly caused <strong>by the state changes done between the draw calls</strong> (such as switching to a different Material), which causes resource-intensive validation and translation steps in the graphics driver.</p>
+<p>There are some real costs with making draw calls, it requires <strong>setting up a bunch of state</strong> ( <strong>which set of vertices to use, what shader to use and so on</strong> ), and state changes have a cost both on the hardware side (updating a bunch of registers) and on the driver side (validating and translating your calls that set state).</p>
+<p>为何要减少DrawCall？<br><strong>The main reason to make fewer draw calls is that graphics hardware can transform and render triangles much faster than you can submit them.</strong> If you submit few triangles with each call, you will be completely bound by the CPU and the GPU will be mostly idle. The CPU won’t be able to feed the GPU fast enough.</p>
+<p><strong>The main cost of draw calls only apply if each call submits too little data</strong> , since this will cause you to be CPU-bound, and stop you from utilizing the hardware fully.</p>
+<blockquote>
+<p>Making a single draw call with two triangles is cheap, but if you submit too little data with each call, you won’t have enough CPU time to submit as much geometry to the GPU as you could have.</p>
+<p>(我还不太懂的)draw calls can also cause the command buffer to be flushed, but in my experience that usually happens when you call SwapBuffers, not when submitting geometry. Video drivers generally try to buffer as much as they can get away with (several frames sometimes!) to squeeze out as much parallelism from the GPU as possible.</p>
+</blockquote>
+<h3 id="方法与建议"><a href="#方法与建议" class="headerlink" title="方法与建议"></a>方法与建议</h3><p>目前，我们建议DrawCall的主体范围(5%~95%) 控制在[0,150]范围内。</p>
+<p>方法：减少所渲染物体的材质种类，并通过Draw Call Batching 来减少其数量。</p>
+<h3 id="Note：游戏性能并非Draw-Call越小越好。"><a href="#Note：游戏性能并非Draw-Call越小越好。" class="headerlink" title="Note：游戏性能并非Draw Call越小越好。"></a>Note：游戏性能并非Draw Call越小越好。</h3><p>决定渲染模块性能的除了Draw Call之外，还有用于传输渲染数据的 <strong>总线带宽</strong> 。当我们使用Draw Call Batching将同种材质的网格模型拼合在一起时，可能会造成同一时间需要传输的数据（Texture、VB/IB等）大大增加，以至于造成带宽“堵塞”，在资源无法及时传输过去的情况下，GPU只能等待，从而反倒降低了游戏的运行帧率。</p>
+<h2 id="Batch-Draw-Call-Setpass-Call"><a href="#Batch-Draw-Call-Setpass-Call" class="headerlink" title="Batch, Draw Call, Setpass Call"></a>Batch, Draw Call, Setpass Call</h2><p>DrawCall</p>
+<p>DrawCall：CPU每次调用图像编程接口 glDrawElements（OpenGl中的图元渲染函数）或者 DrawIndexedPrimitive（DirectX中的顶点绘制方法）命令GPU渲染的操作称为一次Draw Call。Draw Call就是一次渲染命令的调用，它指向一个需要被渲染的图元（primitive）列表，不包含任何材质信息，glDrawElements 或者 DrawIndexedPrimitive 函数的作用是将CPU准备好的顶点数据渲染出来。</p>
+<p>Batch</p>
+<p>一个Batch：提交vbo，提交ibo，提交shader，设置好硬件渲染状态，设置好光源属性，CPU调用GPU渲染。</p>
+<p>这其实就是渲染流程的运用阶段，最终输出一个渲染图元（点、线、面等），再传递给GPU进行几何阶段和光栅化阶段的渲染显示。一个Batch必然会触发一次或多次DrawCall，且包含了该对象的所有的网格和顶点数据以及材质信息。把数据加载到显存是指把渲染所需的数据从硬盘加载到内存（RAM），再将网格和纹理等加载到显卡（VRAM），这一步比较耗时。设置渲染状态就是设置场景中的网格的顶点（Vertex）/片元（Fragment）着色器，光源属性，材质等。Unity提供的动态合批（Dynamic Batching ）合并的就是这一过程，将渲染状态相同的对象合并成一个Batch，减少DrawCall。</p>
+<blockquote>
+<p>如果一个batch和另一个batch使用的不是同种材质或者同一个材质的不同pass，那么就要触发一次set pass call来重新设定渲染状态。例如，Unity要渲染20个物体，这20个物体使用同种材质（但不一定mesh等价），假设两次dynamic batch各自合批了10个物体，则对于这次渲染，set pass call为1（只需要渲染一个材质），batch为2（向GPU提交了两次VBO，IBO等数据）。</p>
+</blockquote>
+<p>SetPassCall</p>
+<p>Shader脚本中一个Pass语义块就是一个完整的渲染流程，一个着色器可以包含多个Pass语义块，每当GPU运行一个Pass之前，就会产生一个SetPassCall，所以可以理解为一次完整的渲染流程次数。</p>
+<p>由此可见，一个Batch包含一个或多个DrawCall，都是产生是在CPU阶段，而目前普遍渲染的瓶颈恰恰就是CPU，GPU的处理速度比CPU快多了，Draw Call太高，CPU会把大量时间花费在处理Draw Call调用上。如果Batch太大，CPU需要频繁的从硬盘加载数据，切换渲染状态，这个消耗要比DrawCall大，所以后面Unity才逐渐弱化了DrawCall的显示。</p>
+<h3 id="主要看哪个指标"><a href="#主要看哪个指标" class="headerlink" title="主要看哪个指标"></a>主要看哪个指标</h3><p>SetPass Call与 Draw Call相比，SetPass Call的指标与性能相关性更大（比如Static Batching的开启不影响Draw Call数，而SetPass Call通常会明显下降）。但 SetPass Call在某些情况下也同样存在问题，比如往一个场景中添加任意个相邻且材质相同的大网格物体（使Dynamic Batching失效）时，SetPass Call并不会变化。因此在UWA中，我们所使用的是类似Profiler 中 Total Batches 这一项指标，通常该数值与 Frame Debugger 中的数值基本一致，因此可以通过该工具来查看每个Batch的内容，从而更有针对性地进行优化。</p>
+<h2 id="Draw-call-batching"><a href="#Draw-call-batching" class="headerlink" title="Draw call batching"></a>Draw call batching</h2><blockquote>
+<p>You can enable or disable Dynamic and Static batching through Unity’s Player settings under Other Settings.</p>
+<p>Built-in Batching的优劣：<br> Built-in batching has several <strong>benefits</strong> compared to manually merging GameObjects together; most notably, GameObjects <strong>can still be culled individually</strong>.<br> However, it also has some <strong>downsides</strong> ; <strong>static</strong> batching incurs <strong>memory and storage overhead</strong> , and <strong>dynamic</strong> batching incurs some <strong>CPU overhead</strong>.</p>
+</blockquote>
+<h3 id="Dynamic-batching"><a href="#Dynamic-batching" class="headerlink" title="Dynamic batching"></a>Dynamic batching</h3><h4 id="Meshes"><a href="#Meshes" class="headerlink" title="Meshes"></a>Meshes</h4><p>条件:</p>
+<ol>
+<li><p>share the same Material(共享相同的材质 <strong>实例</strong> )</p>
+</li>
+<li><p>fulfill other criteria</p>
+<ul>
+<li><p>顶点数量：Batching dynamic GameObjects has certain overhead per vertex, so batching is applied only to Meshes containing no more than 900 vertex attributes, and no more than 300 vertices. 如果你的着色器使用顶点位置，法线和一个UV，那么你可以动态批处理多达300个顶点；而如果你的着色器使用顶点位置，法线，UV0，UV1和切线，那么只有180个顶点。</p>
+</li>
+<li><p>镜像信息：GameObjects are not batched if they contain mirroring on the transform. 例如A物体的大小是(1f, 1f, 1f)，而B物体的大小则是(-1f, -1f, -1f)，则无法做批处理。</p>
+</li>
+<li><p>Using different <strong>Material instances</strong> causes GameObjects not to batch together, even if they are essentially the same. The exception is shadow caster rendering.</p>
+</li>
+<li><p>GameObjects with lightmaps have additional renderer parameters: lightmap index and offset/scale into the lightmap. Generally, dynamic lightmapped GameObjects should point to exactly the same lightmap location to be batched.</p>
+</li>
+<li><p>Multi-pass Shaders break batching. 几乎所有的Unity着色器都支持多个灯光的正向渲染模式（Forward Rendering），这要求额外的渲染次数，所以绘制 “额外的每像素灯”时不会被批处理；Legacy Deferred（Light Pre-Pass）渲染路径不能被动态批处理，因为它必须绘制物体两次。</p>
+</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>If you need to access shared Material properties from the scripts, then it is important to note that <strong>modifying Renderer.material creates a copy of the Material</strong>. Instead, use Renderer.sharedMaterial to keep Materials shared.</p>
+<p>Shadow casters can often be batched together while rendering, even if their Materials are different. Shadow casters in Unity can use dynamic batching even with different Materials, as long as the values in the Materials needed by the shadow pass are the same. For example, many crates could use Materials with different Textures on them, but for the shadow caster rendering the textures are not relevant, so in this case they can be batched together.</p>
+<p>如果Draw Call的开销比合批要低, 那么合批就没有意义了. Dynamic batching works by transforming all GameObject vertices into world space on the CPU, so it is only an advantage if that work is smaller than doing a draw call. The resource requirements of a draw call depends on many factors, primarily the graphics API used. For example, on consoles or modern APIs like Apple Metal, the draw call overhead is generally much lower, and often dynamic batching cannot be an advantage at all.</p>
+</blockquote>
+<h4 id="Particle-Systems-Line-Renderers-Trail-Renderers"><a href="#Particle-Systems-Line-Renderers-Trail-Renderers" class="headerlink" title="Particle Systems, Line Renderers, Trail Renderers"></a>Particle Systems, Line Renderers, Trail Renderers</h4><p>ParticleSystem等属于 <strong>Components with geometry that Unity generates dynamically(带有动态生成的几何图形的组件)</strong></p>
+<p>具体处理方式:</p>
+<ul>
+<li><p>For each compatible renderer type, Unity builds all batchable content into 1 large Vertex Buffer.</p>
+</li>
+<li><p>The renderer sets up the Material state for the batch.</p>
+</li>
+<li><p>Unity binds the Vertex Buffer to the Graphics Device.</p>
+</li>
+<li><p>For each Renderer in the batch, Unity updates the offset into the Vertex Buffer, and then submits a new draw call.</p>
+</li>
+</ul>
+<p>When measuring the cost of the Graphics Device calls, the slowest part of rendering a Component is the set-up of the Material state. Submitting draw calls at different offsets into a shared Vertex Buffer is very fast by comparison.</p>
+<h3 id="Static-batching"><a href="#Static-batching" class="headerlink" title="Static batching"></a>Static batching</h3><p><strong>本质上是用空间换时间,要在渲染耗时与内存占用之间做权衡.</strong></p>
+<p>Static batching allows the engine to reduce draw calls for geometry of any size provided it <strong>shares the same material</strong> , and <strong>does not move</strong>.</p>
+<ul>
+<li><p>优点：more efficient than dynamic batching (it does not transform vertices on the CPU)</p>
+</li>
+<li><p>缺点：uses more memory.</p>
+</li>
+</ul>
+<blockquote>
+<p>Using static batching requires <strong>additional memory for storing the combined geometry</strong>. If several GameObjects shared the same geometry before static batching, then a copy of geometry is created for each GameObject, either in the Editor or at runtime. This might not always be a good idea; sometimes you have to sacrifice rendering performance by avoiding static batching for some GameObjects to keep a smaller memory footprint. For example, marking trees as static in a dense forest level can have serious memory impact.</p>
+</blockquote>
+<p>内部实现: Internally, static batching works by transforming the static GameObjects into world space and building one shared vertex and index buffer for them.</p>
+<h3 id="实践技巧"><a href="#实践技巧" class="headerlink" title="实践技巧"></a>实践技巧</h3><h4 id="Dynamic-Batching的开启"><a href="#Dynamic-Batching的开启" class="headerlink" title="Dynamic Batching的开启"></a>Dynamic Batching的开启</h4><p>Built-in管线，在Project Settings -&gt; Player当中：</p>
+<p><img src="Draw Call与Batching\(TODO\" alt="Alt text"><br>_files/1617977824829.png)</p>
+<p>SRP，在RenderPipelineAsset的Inspector面板的Advanced下：</p>
+<p><img src="Draw Call与Batching\(TODO\" alt="Alt text"><br>_files/1617977877330.png)</p>
+<h4 id="使用图集合并Material"><a href="#使用图集合并Material" class="headerlink" title="使用图集合并Material"></a>使用图集合并Material</h4><p>If you have two identical Materials which differ only in Texture, you can combine those Textures into a single big Texture. This process is often called Texture atlasing (see the Wikipedia page on Texture atlases for more information). Once Textures are in the same atlas, you can use a single Material instead.</p>
+<p>atlas (also called a sprite sheet or an image sprite) is an image containing multiple smaller images, usually packed together to reduce overall dimensions.<br><strong>Benefits</strong><br>In an application where many small textures are used frequently, it is often more efficient to store the textures in a texture atlas which is treated as a single unit by the graphics hardware. This reduces the overhead of a context switch by increasing memory locality.</p>
+<h4 id="无法合批的常见原因及案例"><a href="#无法合批的常见原因及案例" class="headerlink" title="无法合批的常见原因及案例"></a>无法合批的常见原因及案例</h4><p>详情见：<br><a href="https://github.com/Unity-Technologies/BatchBreakingCause" target="_blank" rel="noopener">https://github.com/Unity-Technologies/BatchBreakingCause</a></p>
+<h2 id="SRP-Batching"><a href="#SRP-Batching" class="headerlink" title="SRP Batching"></a>SRP Batching</h2><h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://blog.uwa4d.com/archives/Simple_PA_Rendering.html" target="_blank" rel="noopener">https://blog.uwa4d.com/archives/Simple_PA_Rendering.html</a><br><a href="https://blog.uwa4d.com/archives/optimzation_cpu.html" target="_blank" rel="noopener">https://blog.uwa4d.com/archives/optimzation_cpu.html</a><br><a href="https://stackoverflow.com/questions/4853856/why-are-draw-calls-expensive" target="_blank" rel="noopener">https://stackoverflow.com/questions/4853856/why-are-draw-calls-expensive</a><br><a href="https://docs.unity3d.com/Manual/DrawCallBatching.html" target="_blank" rel="noopener">https://docs.unity3d.com/Manual/DrawCallBatching.html</a><br><a href="https://en.wikipedia.org/wiki/Texture_atlas" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Texture_atlas</a><br><a href="https://www.zhihu.com/question/60614886" target="_blank" rel="noopener">https://www.zhihu.com/question/60614886</a><br><a href="https://zhuanlan.zhihu.com/p/76562300" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/76562300</a><br><a href="https://zhuanlan.zhihu.com/p/366779113" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/366779113</a><br><a href="https://answer.uwa4d.com/question/58d29b8b5a5050b366a6b6ae" target="_blank" rel="noopener">https://answer.uwa4d.com/question/58d29b8b5a5050b366a6b6ae</a></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.prince-y-p.com/2023/07/25/Unity3D-Draw-Call%E4%B8%8EBatching-TODO/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/25/Unity3D-Destroy/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Destroy
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/25/Unity3D-CubeMap-Skybox/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">CubeMap &amp; Skybox</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> Prin
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/circle_image.png" alt="半个出家人"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/Unreal">虚幻引擎</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Animation优化 |  半个出家人</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/img/circle_image.png" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="半个出家人" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Unity3D-Animation优化"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Animation优化
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-Animation%E4%BC%98%E5%8C%96/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.212Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">8 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><strong>标签：</strong>|  <em>优化</em>  </p>
+<h2 id="优化方案"><a href="#优化方案" class="headerlink" title="优化方案"></a>优化方案</h2><ol>
+<li><p>Rig-&gt;Animation Type:改为Generic</p>
+</li>
+<li><p>Animations-&gt;Anim.Compression:Optimal</p>
+</li>
+<li><p>其他高级方式</p>
+</li>
+</ol>
+<h2 id="曲线数据存储与压缩"><a href="#曲线数据存储与压缩" class="headerlink" title="曲线数据存储与压缩"></a>曲线数据存储与压缩</h2><h3 id="存储方式"><a href="#存储方式" class="headerlink" title="存储方式"></a>存储方式</h3><h4 id="Stream-流"><a href="#Stream-流" class="headerlink" title="Stream(流)"></a>Stream(流)</h4><p>Use the “stream” method of storing data (values with time and tangent data for curved interpolation).<br>（保留时间和切线数据进行 <strong>曲线插值</strong> ）<br>This data occupies significantly <strong>more memory</strong> than the “dense” method.</p>
+<blockquote>
+<p>Streaming curves are very fast to decompress in the average use case.</p>
+</blockquote>
+<h4 id="Dense-密集的"><a href="#Dense-密集的" class="headerlink" title="Dense(密集的)"></a>Dense(密集的)</h4><p>Optimize animation curves using the “dense” method of storing data (discrete values which are interpolated between linearly).<br>（离散数值之间的 <strong>线性差值</strong> ）<br>不含有切线数据，使用较少内存<br>This method uses less significantly less memory than the “stream” method.<br>与“流”方法相比，此方法使用的内存要少得多。</p>
+<h4 id="Constant"><a href="#Constant" class="headerlink" title="Constant"></a>Constant</h4><p>Curves are optimised as constant (unchanging) values.<br>Unity selects this automatically if your animation files contain curves with unchanging values.</p>
+<h3 id="Compression方式"><a href="#Compression方式" class="headerlink" title="Compression方式"></a>Compression方式</h3><p>Unity引擎对导入的Clip提供三种压缩格式，Off、KeyframeReduction和Optimal。其中Off表示不压缩，Keyframe Reduction表示使用关键帧进行处理，Optimal则表示Unity引擎会根据动画曲线的特点来自动选择一个最优的压缩方式。</p>
+<h4 id="Off"><a href="#Off" class="headerlink" title="Off"></a>Off</h4><p>存储方式：Stream</p>
+<p>不压缩，官方不推荐</p>
+<blockquote>
+<p>Unity文档: This means that Unity doesn’t reduce keyframe count on import. Disabling animation compression leads to the highest precision animations, but slower performance and bigger file and runtime memory size. It is generally not advisable to use this option - if you need higher precision animation, you should enable keyframe reduction and lower allowed Animation Compression Error values instead.</p>
+</blockquote>
+<h4 id="Keyframe-Reduction"><a href="#Keyframe-Reduction" class="headerlink" title="Keyframe Reduction"></a>Keyframe Reduction</h4><p>存储方式：Stream<br>压缩方式：关键帧缩减算法</p>
+<h5 id="Keyframe-Reduction算法"><a href="#Keyframe-Reduction算法" class="headerlink" title="Keyframe Reduction算法"></a>Keyframe Reduction算法</h5><p>Basically key frame reduction will simply <strong>go through all key frames in your animation, and evaluate the animation curves with and without that key, and if the difference is smaller then some defined delta, the key is removed.</strong></p>
+<p><strong>error tolerance(误差宽容度，容错值)</strong> 或者称为 <strong>error threshold(误差阈值)</strong><br>值越小动画的精度越高，如果默认值的表现效果不过好，可以通过减小容错值来调。</p>
+<ul>
+<li><p>Rotation Error 角度值</p>
+</li>
+<li><p>Position Error 百分比值</p>
+</li>
+<li><p>Scale Error 百分比值</p>
+</li>
+</ul>
+<p>Unity compares the original curve to what the curve looks like after removing a specific keyframe and applies this test：<br>OriginalValue - ReducedValue &gt; OriginalValue * percentageOfError<br>Unity removes a keyframe if the delta between the original value and the reduced value is less than the original value multiplied by the error tolerance percentage.</p>
+<h4 id="Optimal"><a href="#Optimal" class="headerlink" title="Optimal"></a>Optimal</h4><p>存储方式：(Unity官方)Unity will use a heuristic algorithm to determine whether it is best to use the <strong>dense</strong> or <strong>stream</strong> method to store the data for each curve.<br>(笔者推测，可能对于unchanging的值做优化处理，使用constant方式存储)<br>压缩方式：Unity decide how to compress, either by <strong>keyframe reduction</strong> or by using <strong>dense format</strong>.</p>
+<p>If a track is very short or very noisy (which could happen with motion capture clips or baked simulations), the key reduction algorithm might not give appreciable gains and it is possible that a dense curve might end up having a smaller memory footprint than a streaming curve. </p>
+<blockquote>
+<p>Unity官方：<br> If your animation clips are imported with “Anim Compression” set to “Optimal” in the Animation import reference, Unity will use a heuristic（启发式的） algorithm to determine whether it is best to use the <strong>dense</strong> or <strong>stream</strong> method to <strong>store the data for each curve</strong>.</p>
+</blockquote>
+<h3 id="UWA性能对比实验"><a href="#UWA性能对比实验" class="headerlink" title="UWA性能对比实验"></a>UWA性能对比实验</h3><p><a href="https://blog.uwa4d.com/archives/Loading_AnimationClip.html" target="_blank" rel="noopener">https://blog.uwa4d.com/archives/Loading_AnimationClip.html</a></p>
+<ol>
+<li><p>Optimal压缩方式确实可以提升资源的加载效率，无论是在高端机、中端机还是低端机上；</p>
+</li>
+<li><p>硬件设备性能越好，其加载效率越高。但随着设备的提升，Keyframe Reduction和Optimal的加载效率提升已不十分明显；</p>
+</li>
+<li><p>Optimal压缩方式可能会降低动画的视觉质量，因此，是否最终选择Optimal压缩模式，还需根据最终视觉效果的接受程度来决定。</p>
+</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>从性能的角度来看，Optimal的方式内存占用是最低的，是我们最推荐的方案，但是可能会降低动画的视觉质量。Off是不压缩，Unity官方都不推荐的。Keyframe Reduction内存稍高于Optimal，在内存性能和效果上算是折中的方案，用户手动设置Keyframe Reduction问题不大。</p>
+<h2 id="优化方法"><a href="#优化方法" class="headerlink" title="优化方法"></a>优化方法</h2><h3 id="1-去掉AnimationClip中的无效曲线：例如ScaleCurve"><a href="#1-去掉AnimationClip中的无效曲线：例如ScaleCurve" class="headerlink" title="1. 去掉AnimationClip中的无效曲线：例如ScaleCurve"></a>1. 去掉AnimationClip中的无效曲线：例如ScaleCurve</h3><pre><code class="lang-csharp">
+using UnityEngine; 
+
+using UnityEditor; 
+
+using System.Collections.Generic; 
+
+public class RemoveCurve : AssetPostprocessor
+
+{ 
+
+void OnPostprocessModel(GameObject g)
+
+{ 
+
+Apply(g); 
+
+} 
+
+void Apply(GameObject g)
+
+{ 
+
+List&lt;AnimationClip&gt; animationClipList = new List&lt;AnimationClip&gt;(AnimationUtility.GetAnimationClips(g)); 
+
+if (animationClipList.Count == 0) 
+
+{ 
+
+AnimationClip[] objectList = UnityEngine.Object.FindObjectsOfType(typeof(AnimationClip)) as AnimationClip[]; 
+
+animationClipList.AddRange(objectList); 
+
+} 
+
+foreach (AnimationClip theAnimation in animationClipList) 
+
+{ 
+
+foreach (EditorCurveBinding theCurveBinding in AnimationUtility.GetCurveBindings(theAnimation)) 
+
+{ 
+
+string name = theCurveBinding.propertyName.ToLower(); 
+
+if (name.Contains(&quot;scale&quot;)) 
+
+{ 
+
+AnimationUtility.SetEditorCurve(theAnimation, theCurveBinding, null); 
+
+} 
+
+} 
+
+} 
+
+} 
+
+}
+</code></pre>
+<h3 id="2-压缩AnimationClip文件float的精度"><a href="#2-压缩AnimationClip文件float的精度" class="headerlink" title="2. 压缩AnimationClip文件float的精度"></a>2. 压缩AnimationClip文件float的精度</h3><pre><code class="lang-csharp">
+public static bool CompressAnimationClip(Object o)
+
+{ 
+
+string animationPath = AssetDatabase.GetAssetPath(o); 
+
+try
+
+{ 
+
+//AnimationClip clip = GameObject.Instantiate(o) as AnimationClip;
+
+AnimationClip clip = o as AnimationClip; 
+
+AnimationClipCurveData[] curves = null; 
+
+curves = AnimationUtility.GetAllCurves(clip); 
+
+Keyframe key; 
+
+Keyframe[] keyFrames; 
+
+for (int ii = 0; ii &lt; curves.Length; ++ii) 
+
+{ 
+
+AnimationClipCurveData curveDate = curves[ii]; 
+
+if (curveDate.curve == null || curveDate.curve.keys == null) 
+
+{ 
+
+//Debug.LogWarning(string.Format(&quot;AnimationClipCurveData {0} don&#39;t have curve; Animation name {1} &quot;, curveDate, animationPath));
+
+continue; 
+
+} 
+
+keyFrames = curveDate.curve.keys; 
+
+for (int i = 0; i &lt; keyFrames.Length; i++) 
+
+{ 
+
+key = keyFrames[i]; 
+
+key.value = float.Parse(key.value.ToString(&quot;f3&quot;)); 
+
+key.inTangent = float.Parse(key.inTangent.ToString(&quot;f3&quot;)); 
+
+key.outTangent = float.Parse(key.outTangent.ToString(&quot;f3&quot;)); 
+
+keyFrames[i] = key; 
+
+} 
+
+curveDate.curve.keys = keyFrames; 
+
+clip.SetCurve(curveDate.path, curveDate.type, curveDate.propertyName, curveDate.curve); 
+
+} 
+
+//AssetDatabase.CreateAsset(clip, animationPath);
+
+Debug.Log(string.Format(&quot; CompressAnimationClip {0} Success !!!&quot;, animationPath)); 
+
+return true; 
+
+} 
+
+catch(Exception e) 
+
+{ 
+
+Debug.LogError(string.Format(&quot;CompressAnimationClip Failed !!! animationPath : {0} error: {1}&quot;, animationPath, e)); 
+
+return false; 
+
+} 
+
+}
+</code></pre>
+<h2 id="其他内容"><a href="#其他内容" class="headerlink" title="其他内容"></a>其他内容</h2><h3 id="optimize-gameobject"><a href="#optimize-gameobject" class="headerlink" title="optimize gameobject"></a>optimize gameobject</h3><p>针对Mecinam新版动画系统的优化选项，默认情况下会将动画网格下的所有骨骼结点隐藏，但是，你可以通过“Extra Transform to Expose”查看你想通过脚本获取的骨骼结点，这样既可以提升该角色的动画模块性能，又可以达到获取某个关键结点的需求。不过这种方式获得的骨骼节点是只读的，如果想要对其中的属性进行改变比如换装，就不可以开启这个选项。</p>
+<h3 id="multithreaded-rendering"><a href="#multithreaded-rendering" class="headerlink" title="multithreaded rendering"></a>multithreaded rendering</h3><p>多线程渲染，将主线程的一部分渲染工作移到另一个线程里执行，Android平台下才有的优化渲染设置，但是对半透明物体支持不好，项目中需要进行测试来决定开不开启。</p>
+<h3 id="Animation-Type"><a href="#Animation-Type" class="headerlink" title="Animation Type"></a>Animation Type</h3><p>Legacy Generic Humaniod<br>Legacy 老版动画系统<br>Generic 适合非人型动画<br>Humaniod 适合人型动画，可以动画重定向<br>cpu耗时 Generic &lt; Humanoid<br>Humanoid更省内存</p>
+<h3 id="Apply-Root-Motion"><a href="#Apply-Root-Motion" class="headerlink" title="Apply Root Motion"></a>Apply Root Motion</h3><p>增加CPU计算量，不建议开启。如果要开启，建议勾上optimize gameobject。</p>
+<h3 id="AnimationBlend"><a href="#AnimationBlend" class="headerlink" title="AnimationBlend"></a>AnimationBlend</h3><p>指的是混合树，多层动画，动画状态过渡三个方面。<br>会增加ProcessAnimations的开销<br>避免频繁blend<br>替换不必要的blend tree和layers</p>
+<h3 id="Bake-Mesh"><a href="#Bake-Mesh" class="headerlink" title="Bake Mesh"></a>Bake Mesh</h3><p>将Skinned Mesh转换为普通的Mesh，运行时从网格中获取对应的网格数据进行渲染。<br>缺点：需要记录Mesh信息，占用大量内存。</p>
+<h3 id="GPU-Skinning"><a href="#GPU-Skinning" class="headerlink" title="GPU Skinning"></a>GPU Skinning</h3><p>用GPU计算网格，<br>优点：<br>减少SkinnedMesh.Render的CPU耗时<br>骨骼结点信息通过纹理来存储，数据量较Bake Mesh会大幅降低<br>缺点：<br>增加GPU消耗，<br>要求DIrectX 11或者Opengl ES 3.0</p>
+<h3 id="简化骨骼名字"><a href="#简化骨骼名字" class="headerlink" title="简化骨骼名字"></a>简化骨骼名字</h3><p>unity的动画数据存储的时候按每个骨骼节点的轨道拆分存储的，每个骨骼存储的是从根节点到这个骨骼节点的hierarchy路径，字符串的，骨骼多了之后这部分字符串不少。如果把所有骨骼名字都简化，这里可以省不少内存 </p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="http://nfrechette.github.io/2017/01/30/anim_compression_unity5/" target="_blank" rel="noopener">http://nfrechette.github.io/2017/01/30/anim_compression_unity5/</a><br><a href="http://www.manew.com/thread-103127-1-1.html" target="_blank" rel="noopener">http://www.manew.com/thread-103127-1-1.html</a><br><a href="https://blog.csdn.net/alexander_xfl/article/details/66975570" target="_blank" rel="noopener">https://blog.csdn.net/alexander_xfl/article/details/66975570</a><br><a href="https://blog.csdn.net/j756915370/article/details/79415841" target="_blank" rel="noopener">https://blog.csdn.net/j756915370/article/details/79415841</a><br><a href="https://blog.uwa4d.com/archives/Loading_AnimationClip.html" target="_blank" rel="noopener">https://blog.uwa4d.com/archives/Loading_AnimationClip.html</a><br><a href="http://www.360doc.com/content/17/0424/15/6432946_648246543.shtml" target="_blank" rel="noopener">http://www.360doc.com/content/17/0424/15/6432946_648246543.shtml</a></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.prince-y-p.com/2023/07/25/Unity3D-Animation%E4%BC%98%E5%8C%96/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/25/Unity3D-An-introduction-to-IL2CPP-internals%D0%92%D0%B2%D0%B5%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B2/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            An introduction to IL2CPP internalsВведение в
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/25/Unity3D-00-%E5%AE%9E%E7%94%A8%E6%8F%92%E4%BB%B6%E3%80%81%E5%B7%A5%E5%85%B7%E3%80%81%E7%BD%91%E7%AB%99%E6%95%B4%E7%90%86/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">00_实用插件、工具、网站整理</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2023
+        <i class="ri-heart-fill heart_icon"></i> Prin
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/img/circle_image.png" alt="半个出家人"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/Unreal">虚幻引擎</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+
+</html>

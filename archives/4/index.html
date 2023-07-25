@@ -171,7 +171,7 @@
     
     
     <article
-  id="post-Unreal-Actor-Lifecycle"
+  id="post-Unreal-Build-Unreal-Build-System"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -182,8 +182,8 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unreal-Actor-Lifecycle/"
-    >Actor Lifecycle</a> 
+  <a class="article-title" href="/2023/07/25/Unreal-Build-Unreal-Build-System/"
+    >Build - Unreal Build System</a> 
 </h2>
  
 
@@ -191,8 +191,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unreal-Actor-Lifecycle/" class="article-date">
-  <time datetime="2023-07-20T15:00:29.261Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unreal-Build-Unreal-Build-System/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.387Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
@@ -202,7 +202,73 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-   
+  <h2 id="Build-Engine-from-Source"><a href="#Build-Engine-from-Source" class="headerlink" title="Build Engine from Source"></a>Build Engine from Source</h2><h2 id="Build-Project-的步骤与原理"><a href="#Build-Project-的步骤与原理" class="headerlink" title="Build Project 的步骤与原理"></a>Build Project 的步骤与原理</h2><p>整体的打包流程如下：Build-&gt;Cook-&gt;Stage-&gt;Pakage-&gt;Archive</p>
+<p>Build: This stage compiles the executeables for the selected platform.</p>
+<p>Cook: This stage cooks content by executing the Editor in a special mode.</p>
+<p>Stage: This stage copies the executables and content to a staging area; a standalone directory outside of the development directory.<br>build cook</p>
+<p>(run )</p>
+<p>package</p>
+<p>platform</p>
+<p>task</p>
+<h2 id="Build-Project-工具与自动化"><a href="#Build-Project-工具与自动化" class="headerlink" title="Build Project 工具与自动化"></a>Build Project 工具与自动化</h2><p><img src="assets/Build%20-%20Unreal%20Build%20System/Image.png" alt=""></p>
+<p>via. <a href="https://www.maygames.net/2020/07/03/cross-platform-build-automation-for-ue4-projects-with-jenkins/" target="_blank" rel="noopener">https://www.maygames.net/2020/07/03/cross-platform-build-automation-for-ue4-projects-with-jenkins/</a></p>
+<h3 id="UnrealBuildTool-UBT"><a href="#UnrealBuildTool-UBT" class="headerlink" title="UnrealBuildTool (UBT)"></a>UnrealBuildTool (UBT)</h3><p>a custom tool that manages the process of building Unreal Engine 4 (UE4) source code across a variety of build configurations.</p>
+<p>Unreal Build Tool is a console application that does a lot of magic like generating project files, invoking unreal header tool, invoking the compiler and linker for different platforms and flavours of build.</p>
+<h3 id="UnrealHeaderTool-UHT"><a href="#UnrealHeaderTool-UHT" class="headerlink" title="UnrealHeaderTool (UHT)"></a>UnrealHeaderTool (UHT)</h3><p>a custom parsing and code-generation tool that supports the UObject system</p>
+<h3 id="AutomationTool"><a href="#AutomationTool" class="headerlink" title="AutomationTool"></a>AutomationTool</h3><h4 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h4><p>building<br>cooking<br>running games<br>running automation tests<br>scripting other operations to be executed on our build farm</p>
+<h4 id="How-AT-Works"><a href="#How-AT-Works" class="headerlink" title="How AT Works"></a>How AT Works</h4><p>finds all automation projects (saved as Visual Studio C# projects with an .Automation.csproj extension), compiles them, and then uses reflection to find the appropriate command to be executed.</p>
+<h4 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h4><p>RunUAT.bat/.sh: Unreal提供了bat/shell脚本，来调用UnreaAutomationTool.exe。</p>
+<ol>
+<li>根据情况判断是否要编译UnreaAutomationTool.exe本身</li>
+<li>启动UnreaAutomationTool.exe</li>
+</ol>
+<p>位置<br>Windows: Engine/Build/BatchFiles/RunUAT.bat<br>Mac: Engine/Build/BatchFiles/RunUAT.sh</p>
+<p><code>csharp RunUAT.bat Command1 [-Arg1 -Arg2...] Command2 [-Arg3 -Arg4…] ...</code> </p>
+<p>参数解释：<a href="https://zhuanlan.zhihu.com/p/41931214" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/41931214</a></p>
+<h3 id="GenerateProjectFiles"><a href="#GenerateProjectFiles" class="headerlink" title="GenerateProjectFiles"></a>GenerateProjectFiles</h3><p>当使用Unreal Source时，there are no Visual Studio (VS) or Xcode project files included for compiling and running the engine or example games.</p>
+<p>generates your Visual Studio solution and projects for Windows</p>
+<p>the first step is building the build tool. This happens invoking MSBuild on Source\Programs\UnrealBuildTool\UnrealBuiltTool.csproj.</p>
+<p>如果安装预编译好的Unreal引擎，那么是没有GenerateProjectFiles.bat脚本的。可以右键uproject文件，点击Generate Visual Studio Project Files来生成Project文件，也可以直接使用Unreal Build Tool来实现</p>
+<p><code>csharp &quot;\path\to\UE_4.22\Engine\Binaries\DotNET\UnrealBuildTool.exe&quot; -ProjectFiles -UsePrecompiled -Game &quot;absolute\path\to\your\project\file.uproject&quot; # 在Windows上生成Visual Studio Project # 在Mac上生成 XCode Project，(Visual Studio for Mac cannot be used, because it does not support C++)</code> </p>
+<h3 id="BuildGraph"><a href="#BuildGraph" class="headerlink" title="BuildGraph"></a>BuildGraph</h3><p>BuildGraph integrates with UnrealBuildTool, AutomationTool, and the editor, and can be extended and customized for your projects.</p>
+<p>More: <a href="https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/BuildTools/AutomationTool/BuildGraph/" target="_blank" rel="noopener">https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/BuildTools/AutomationTool/BuildGraph/</a></p>
+<h2 id="Unreal-CI-实践"><a href="#Unreal-CI-实践" class="headerlink" title="Unreal CI 实践"></a>Unreal CI 实践</h2><p>注意：Unreal的配置保存在Config目录下的 XXX.ini 文件当中，这个文件配置好之后，需要进版本管理的，否则在更新工程后会出现配置失效的问题。尤其是iOS打包时配置的证书问题。</p>
+<p>UE4游戏开发基础命令【部署环境、编译引擎、构建代码】：<a href="https://www.cnblogs.com/kekec/p/8684068.html" target="_blank" rel="noopener">https://www.cnblogs.com/kekec/p/8684068.html</a></p>
+<h3 id="Windows-Build-Android"><a href="#Windows-Build-Android" class="headerlink" title="Windows Build Android"></a>Windows Build Android</h3><h4 id="GenerateProjFiles"><a href="#GenerateProjFiles" class="headerlink" title="GenerateProjFiles"></a>GenerateProjFiles</h4><p>UnrealBuildTool.exe -projectfiles -project=”%UPROJECT_PATH%” -game -rocket -progress</p>
+<h4 id="Compile-Codes"><a href="#Compile-Codes" class="headerlink" title="Compile Codes"></a>Compile Codes</h4><p>可以用MSBuild进行编译：<br>“%MSBUILD_EXE%” “%PROJ_VS_SLN%” /t:build /p:Platform=%PLATFORM%;verbosity=diagnostic</p>
+<h4 id="BuildCook"><a href="#BuildCook" class="headerlink" title="BuildCook"></a>BuildCook</h4><p><code>csharp &quot;%RUN_UAT_BAT%&quot; BuildCookRun -project=&quot;%UPROJECT_PATH%&quot; -noP4 -platform=%PLATFORM% -clientconfig=Development -cook -allmaps -build -stage -pak -archive -NoCompile -archivedirectory=&quot;%ARCHIVE_DIR%&quot; -nocompile</code> </p>
+<h4 id="RunUAT"><a href="#RunUAT" class="headerlink" title="RunUAT"></a>RunUAT</h4><p>RunUAT可以把编译到出包的工作全部自动化地执行，一键出包，只需要配置参数，来决定开启哪些功能、执行哪些步骤就可以了。</p>
+<p><a href="https://blog.csdn.net/zhangxiaofan666/article/details/79567017" target="_blank" rel="noopener">https://blog.csdn.net/zhangxiaofan666/article/details/79567017</a></p>
+<p><code>csharp &quot;%RUN_UAT_BAT%&quot; BuildCookRun -project=&quot;%UPROJECT_PATH%&quot;-noP4 -platform=%PLATFORM% -clientconfig=Development -serverconfig=Development -cook -allmaps -build -stage -pak -archive -archivedirectory=&quot;%ARCHIVE_DIR%&quot; -nocompileeditor</code> </p>
+<p>如果不执行某个阶段，把某个参数去掉就可以了。</p>
+<h3 id="Mac-Build-iOS"><a href="#Mac-Build-iOS" class="headerlink" title="Mac Build iOS"></a>Mac Build iOS</h3><h4 id="GenerateProjFiles-1"><a href="#GenerateProjFiles-1" class="headerlink" title="GenerateProjFiles"></a>GenerateProjFiles</h4><p><code>csharp U_BUILD_TOOL_EXE=&quot;/Users/Shared/Epic Games/UE_4.27/Engine/Binaries/DotNET/UnrealBuildTool.exe&quot; echo ${UPROJECT_PATH} mono &quot;${U_BUILD_TOOL_EXE}&quot; -projectfiles -project=&quot;${UPROJECT_PATH}&quot; -game -rocket -progress</code> </p>
+<h4 id="Xcode-Build-Engine-Build-Project"><a href="#Xcode-Build-Engine-Build-Project" class="headerlink" title="Xcode Build Engine, Build Project"></a>Xcode Build Engine, Build Project</h4><p><code>csharp xcodebuild -workspace PROJECT_NAME.xcworkspace -scheme Engine xcodebuild -workspace PROJECT_NAME.xcworkspace -scheme PROJECT_NAME</code> </p>
+<h4 id="证书与签名问题"><a href="#证书与签名问题" class="headerlink" title="证书与签名问题"></a>证书与签名问题</h4><p>注意：配置要进版本管理。</p>
+<p>理论上，只要在Config当中，配置好BundlID、证书的名称等信息，使用UAT就可以直接打包了，工具会自动查找、使用证书来进行签名。只需要 unlock keychain就可以了</p>
+<p><code>csharp security unlock-keychain -p &quot;enter password&quot;</code> </p>
+<p>签名失败：</p>
+<ul>
+<li>Code Signing Error： <a href="https://medium.com/@ceyhunkeklik/how-to-fix-ios-application-code-signing-error-4818bd331327" target="_blank" rel="noopener">https://medium.com/@ceyhunkeklik/how-to-fix-ios-application-code-signing-error-4818bd331327</a></li>
+<li><a href="https://developer.apple.com/forums/thread/669328" target="_blank" rel="noopener">https://developer.apple.com/forums/thread/669328</a></li>
+<li><a href="https://stackoverflow.com/questions/24023639/xcode-command-usr-bin-codesign-failed-with-exit-code-1-errsecinternalcomponen" target="_blank" rel="noopener">https://stackoverflow.com/questions/24023639/xcode-command-usr-bin-codesign-failed-with-exit-code-1-errsecinternalcomponen</a></li>
+</ul>
+<p>自动导入证书：<a href="https://zhuanlan.zhihu.com/p/400261513" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/400261513</a><br>说明：证书是自动导入到Keychain里面，UE在使用UAT打包的时候，会自动在里面找Keychain，所以UE配置证书，只是配一个证书的名字。上文中，导入证书是向Keychain当中导入。</p>
+<hr>
+<h4 id="RunUAT-1"><a href="#RunUAT-1" class="headerlink" title="RunUAT"></a>RunUAT</h4><p><code>csharp &quot;%RUN_UAT_BAT%&quot; BuildCookRun -project=&quot;%UPROJECT_PATH%&quot;-noP4 -platform=%PLATFORM% -clientconfig=Development -serverconfig=Development -cook -allmaps -build -stage -pak -archive -archivedirectory=&quot;%ARCHIVE_DIR%&quot; -nocompileeditor</code> </p>
+<h3 id="Windows-Remote-Mac-Build-iOS"><a href="#Windows-Remote-Mac-Build-iOS" class="headerlink" title="Windows Remote Mac Build iOS"></a>Windows Remote Mac Build iOS</h3><p>手动打包教程：<br><a href="https://www.jianshu.com/p/04188aa411b4" target="_blank" rel="noopener">https://www.jianshu.com/p/04188aa411b4</a><br><a href="https://blog.csdn.net/u011047958/article/details/78300086" target="_blank" rel="noopener">https://blog.csdn.net/u011047958/article/details/78300086</a></p>
+<p>使用IPhonePackager.exe，自动导入证书：<a href="https://ue5wiki.com/wiki/32489/" target="_blank" rel="noopener">https://ue5wiki.com/wiki/32489/</a></p>
+<h3 id="错误排坑"><a href="#错误排坑" class="headerlink" title="错误排坑"></a>错误排坑</h3><h4 id="Android-SDK问题"><a href="#Android-SDK问题" class="headerlink" title="Android SDK问题"></a>Android SDK问题</h4><p><a href="https://stackoverflow.com/questions/68387270/android-studio-error-installed-build-tools-revision-31-0-0-is-corrupted" target="_blank" rel="noopener">https://stackoverflow.com/questions/68387270/android-studio-error-installed-build-tools-revision-31-0-0-is-corrupted</a></p>
+<p>Installed Build Tools revision 31.0.0 is corrupted. Remove and install again using the SDK Manager.</p>
+<p>The main problem is the two files missing in SDK build tool 31 that are:<br>dx.bat<br>dx.jar</p>
+<p>The solution is that these files are named d8 in the file location so changing their name to dx will solve the error.</p>
+<h4 id="引用丢失问题"><a href="#引用丢失问题" class="headerlink" title="引用丢失问题"></a>引用丢失问题</h4><p>问题：删除插件，打包失败 。<br>原因：场景还在引用这个插件。右键场景-&gt;Reference Viewer，可见场景对插件中组件的引用关系。</p>
+<p>Unreal比较奇怪的一点是，如果场景对Actor有引用，但是Actor资源被删除了，World Outliner里面是看不到的。</p>
+<p>解决方法：找到引用这个资源的场景，啥都不做，save一下，None引用就没有了。</p>
+<h4 id="Adding-Adaptive-Icons-to-a-UE4-project-for-Android"><a href="#Adding-Adaptive-Icons-to-a-UE4-project-for-Android" class="headerlink" title="Adding Adaptive Icons to a UE4 project for Android"></a>Adding Adaptive Icons to a UE4 project for Android</h4><p><a href="https://www.unrealengine.com/en-US/tech-blog/adding-adaptive-icons-to-a-ue4-project-for-android" target="_blank" rel="noopener">https://www.unrealengine.com/en-US/tech-blog/adding-adaptive-icons-to-a-ue4-project-for-android</a></p>
+<h4 id="丢失dSYM"><a href="#丢失dSYM" class="headerlink" title="丢失dSYM"></a>丢失dSYM</h4><p>-SkipBuildEditor: 不编译编辑器</p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://ericlemes.com/2018/11/23/understanding-unreal-build-tool/" target="_blank" rel="noopener">https://ericlemes.com/2018/11/23/understanding-unreal-build-tool/</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/144656367" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/144656367</a></p>
+ 
       <!-- reward -->
       
     </div>
@@ -234,7 +300,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unreal-9999-Unreal%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%8B%93%E5%B1%95%E8%A7%84%E5%88%92/"
+  <a class="article-title" href="/2023/07/25/Unreal-9999-Unreal%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%8B%93%E5%B1%95%E8%A7%84%E5%88%92/"
     >9999 Unreal学习与拓展规划</a> 
 </h2>
  
@@ -243,8 +309,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unreal-9999-Unreal%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%8B%93%E5%B1%95%E8%A7%84%E5%88%92/" class="article-date">
-  <time datetime="2023-07-20T15:00:29.259Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unreal-9999-Unreal%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%8B%93%E5%B1%95%E8%A7%84%E5%88%92/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.378Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
@@ -258,7 +324,7 @@
 <li><img src="assets/9999%20Unreal学习与拓展规划\\en_todo.png" alt=""><br><a href="https://github.com/botman99/ue4-unreal-automation-tool" target="_blank" rel="noopener">https://github.com/botman99/ue4-unreal-automation-tool</a></li>
 </ul>
 <h2 id="基本自动化构建"><a href="#基本自动化构建" class="headerlink" title="基本自动化构建"></a>基本自动化构建</h2><h3 id="Source-Code-Automation"><a href="#Source-Code-Automation" class="headerlink" title="Source Code Automation"></a>Source Code Automation</h3><ul>
-<li><img src="assets/9999%20Unreal学习与拓展规划\\en_todo_1.png" alt=""><br><a href="&#109;&#97;&#x69;&#108;&#116;&#x6f;&#58;&#104;&#116;&#116;&#x70;&#115;&#58;&#47;&#x2f;&#109;&#101;&#100;&#x69;&#117;&#109;&#46;&#99;&#111;&#109;&#47;&#x40;&#x6c;&#x69;&#x66;&#x65;&#x65;&#120;&#x65;&#x2f;&#117;&#x6e;&#114;&#x65;&#x61;&#x6c;&#x2d;&#x65;&#110;&#103;&#x69;&#x6e;&#101;&#45;&#99;&#105;&#45;&#112;&#97;&#114;&#116;&#x2d;&#x69;&#x2d;&#115;&#111;&#117;&#114;&#x63;&#x65;&#45;&#x63;&#x6f;&#x64;&#x65;&#x2d;&#x62;&#x75;&#x69;&#x6c;&#x64;&#115;&#45;&#x38;&#48;&#48;&#x30;&#x63;&#97;&#x31;&#100;&#97;&#x37;&#50;&#51;">&#104;&#116;&#116;&#x70;&#115;&#58;&#47;&#x2f;&#109;&#101;&#100;&#x69;&#117;&#109;&#46;&#99;&#111;&#109;&#47;&#x40;&#x6c;&#x69;&#x66;&#x65;&#x65;&#120;&#x65;&#x2f;&#117;&#x6e;&#114;&#x65;&#x61;&#x6c;&#x2d;&#x65;&#110;&#103;&#x69;&#x6e;&#101;&#45;&#99;&#105;&#45;&#112;&#97;&#114;&#116;&#x2d;&#x69;&#x2d;&#115;&#111;&#117;&#114;&#x63;&#x65;&#45;&#x63;&#x6f;&#x64;&#x65;&#x2d;&#x62;&#x75;&#x69;&#x6c;&#x64;&#115;&#45;&#x38;&#48;&#48;&#x30;&#x63;&#97;&#x31;&#100;&#97;&#x37;&#50;&#51;</a></li>
+<li><img src="assets/9999%20Unreal学习与拓展规划\\en_todo_1.png" alt=""><br><a href="&#x6d;&#x61;&#105;&#108;&#116;&#111;&#58;&#104;&#x74;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#47;&#109;&#x65;&#x64;&#x69;&#x75;&#x6d;&#46;&#x63;&#111;&#109;&#47;&#x40;&#x6c;&#x69;&#102;&#101;&#101;&#x78;&#x65;&#47;&#x75;&#110;&#114;&#101;&#x61;&#x6c;&#x2d;&#x65;&#110;&#x67;&#x69;&#110;&#x65;&#x2d;&#99;&#105;&#x2d;&#x70;&#97;&#114;&#116;&#x2d;&#105;&#45;&#115;&#111;&#117;&#114;&#99;&#101;&#45;&#x63;&#x6f;&#100;&#101;&#x2d;&#x62;&#117;&#x69;&#108;&#100;&#115;&#x2d;&#x38;&#x30;&#48;&#48;&#99;&#97;&#49;&#100;&#97;&#55;&#x32;&#51;">&#104;&#x74;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#47;&#109;&#x65;&#x64;&#x69;&#x75;&#x6d;&#46;&#x63;&#111;&#109;&#47;&#x40;&#x6c;&#x69;&#102;&#101;&#101;&#x78;&#x65;&#47;&#x75;&#110;&#114;&#101;&#x61;&#x6c;&#x2d;&#x65;&#110;&#x67;&#x69;&#110;&#x65;&#x2d;&#99;&#105;&#x2d;&#x70;&#97;&#114;&#116;&#x2d;&#105;&#45;&#115;&#111;&#117;&#114;&#99;&#101;&#45;&#x63;&#x6f;&#100;&#101;&#x2d;&#x62;&#117;&#x69;&#108;&#100;&#115;&#x2d;&#x38;&#x30;&#48;&#48;&#99;&#97;&#49;&#100;&#97;&#55;&#x32;&#51;</a></li>
 </ul>
 <h3 id="Client-Game-Automation"><a href="#Client-Game-Automation" class="headerlink" title="Client Game Automation"></a>Client Game Automation</h3><p>学习路径：</p>
 <ul>
@@ -404,7 +470,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unreal-9999-Unreal%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/"
+  <a class="article-title" href="/2023/07/25/Unreal-9999-Unreal%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/"
     >9999 Unreal入门路线</a> 
 </h2>
  
@@ -413,8 +479,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unreal-9999-Unreal%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/" class="article-date">
-  <time datetime="2023-07-20T15:00:29.257Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unreal-9999-Unreal%E5%85%A5%E9%97%A8%E8%B7%AF%E7%BA%BF/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.374Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
@@ -536,94 +602,6 @@
 
     
     <article
-  id="post-Unreal-4-3-Unreal-index"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unreal-4-3-Unreal-index/"
-    >4-3 Unreal_index</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unreal-4-3-Unreal-index/" class="article-date">
-  <time datetime="2023-07-20T15:00:29.255Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><ul>
-<li><a href="UE%20-%20Rendering%20Pipeline.html">UE - Rendering Pipeline</a></li>
-<li><a href="Unreal%20-%20蓝图Blueprint.html">Unreal - 蓝图Blueprint</a></li>
-<li><a href="9999%20Unreal入门路线.html">9999 Unreal入门路线</a></li>
-<li><a href="Unreal操作.html">Unreal操作</a></li>
-<li><a href="Unity-Unreal.html">Unity-&gt;Unreal</a></li>
-<li><a href="【Private】Unreal%20Glossary.html">【Private】Unreal Glossary</a></li>
-<li><a href="Build%20-%20Unreal%20Build%20System.html">Build - Unreal Build System</a></li>
-<li><a href="9999%20Unreal学习与拓展规划.html">9999 Unreal学习与拓展规划</a></li>
-<li><a href="CI实践：Cross-platform%20build%20automation%20for%20UE4%20.html">CI实践：Cross-platform build automation for UE4 projects with Jenkins</a></li>
-<li><a href="【CI】Mac自动导入证书.html">【CI】Mac自动导入证书</a></li>
-<li><a href="常见问题.html">常见问题</a></li>
-<li><a href="UI方案.html">UI方案</a></li>
-<li><a href="Unreal插件开发.html">Unreal插件开发</a></li>
-<li><a href="Unreal%20C++.html">Unreal C++</a></li>
-<li><a href="【C++】常用预处理指令.html">【C++】常用预处理指令</a></li>
-<li><a href="Unreal工程目录结构.html">Unreal工程目录结构</a></li>
-<li><a href="C++基础补充.html">C++基础补充</a></li>
-<li><a href="类与API.html">类与API</a></li>
-<li><a href="Actor%20Lifecycle.html">Actor Lifecycle</a></li>
-<li><a href="Unreal资源管理.html">Unreal资源管理</a></li>
-<li><a href="技术笔记.html">技术笔记</a></li>
-<li><a href="遇到的问题及解决.html">遇到的问题及解决</a></li>
-<li><a href="Unreal%20c++常见问题.html">Unreal c++常见问题</a></li>
-<li><a href="C++基础补充-2.html">C++基础补充-2</a></li>
-<li><a href="Unreal%20C++资料整理.html">Unreal C++资料整理</a></li>
-<li><a href="%5BTODO%5D解决困惑-Actor与component关系.html">[TODO]解决困惑-Actor与component关系</a></li>
-<li><a href="Unreal%20Plugin多个模块开发与编译.html">Unreal Plugin多个模块开发与编译</a></li>
-<li><a href="Slate%20UI.html">Slate UI</a></li>
-<li><a href="无标题笔记.html">无标题笔记</a></li>
-<li><a href="Mipmap与Texture%20Streaming.html">Mipmap与Texture Streaming</a></li>
-<li><a href="UDIM贴图.html">UDIM贴图</a></li>
-<li><a href="Build%20-%20踩坑.html">Build - 踩坑</a></li>
-<li><a href="Build%20-%20UE%20CI.html">Build - UE CI</a></li>
-<li><a href="UE%20移动设备调试.html">UE 移动设备调试</a></li>
-</ul>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unreal/" rel="tag">Unreal</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
   id="post-Unity3D-资源路径与文件加载"
   class="article article-type-post"
   itemscope
@@ -635,7 +613,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E8%B5%84%E6%BA%90%E8%B7%AF%E5%BE%84%E4%B8%8E%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD/"
+  <a class="article-title" href="/2023/07/25/Unity3D-%E8%B5%84%E6%BA%90%E8%B7%AF%E5%BE%84%E4%B8%8E%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD/"
     >资源路径与文件加载</a> 
 </h2>
  
@@ -644,8 +622,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E8%B5%84%E6%BA%90%E8%B7%AF%E5%BE%84%E4%B8%8E%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.969Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-%E8%B5%84%E6%BA%90%E8%B7%AF%E5%BE%84%E4%B8%8E%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.373Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -793,7 +771,7 @@ return xml;
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/"
+  <a class="article-title" href="/2023/07/25/Unity3D-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/"
     >资源管理工具</a> 
 </h2>
  
@@ -802,8 +780,8 @@ return xml;
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.966Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.373Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -835,6 +813,435 @@ return xml;
 
     
     <article
+  id="post-Unreal-4-3-Unreal-index"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unreal-4-3-Unreal-index/"
+    >4-3 Unreal_index</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unreal-4-3-Unreal-index/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.373Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unreal/">Unreal</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><ul>
+<li><a href="UE%20-%20Rendering%20Pipeline.html">UE - Rendering Pipeline</a></li>
+<li><a href="Unreal%20-%20蓝图Blueprint.html">Unreal - 蓝图Blueprint</a></li>
+<li><a href="9999%20Unreal入门路线.html">9999 Unreal入门路线</a></li>
+<li><a href="Unreal操作.html">Unreal操作</a></li>
+<li><a href="Unity-Unreal.html">Unity-&gt;Unreal</a></li>
+<li><a href="【Private】Unreal%20Glossary.html">【Private】Unreal Glossary</a></li>
+<li><a href="Build%20-%20Unreal%20Build%20System.html">Build - Unreal Build System</a></li>
+<li><a href="9999%20Unreal学习与拓展规划.html">9999 Unreal学习与拓展规划</a></li>
+<li><a href="CI实践：Cross-platform%20build%20automation%20for%20UE4%20.html">CI实践：Cross-platform build automation for UE4 projects with Jenkins</a></li>
+<li><a href="【CI】Mac自动导入证书.html">【CI】Mac自动导入证书</a></li>
+<li><a href="常见问题.html">常见问题</a></li>
+<li><a href="UI方案.html">UI方案</a></li>
+<li><a href="Unreal插件开发.html">Unreal插件开发</a></li>
+<li><a href="Unreal%20C++.html">Unreal C++</a></li>
+<li><a href="【C++】常用预处理指令.html">【C++】常用预处理指令</a></li>
+<li><a href="Unreal工程目录结构.html">Unreal工程目录结构</a></li>
+<li><a href="C++基础补充.html">C++基础补充</a></li>
+<li><a href="类与API.html">类与API</a></li>
+<li><a href="Actor%20Lifecycle.html">Actor Lifecycle</a></li>
+<li><a href="Unreal资源管理.html">Unreal资源管理</a></li>
+<li><a href="技术笔记.html">技术笔记</a></li>
+<li><a href="遇到的问题及解决.html">遇到的问题及解决</a></li>
+<li><a href="Unreal%20c++常见问题.html">Unreal c++常见问题</a></li>
+<li><a href="C++基础补充-2.html">C++基础补充-2</a></li>
+<li><a href="Unreal%20C++资料整理.html">Unreal C++资料整理</a></li>
+<li><a href="%5BTODO%5D解决困惑-Actor与component关系.html">[TODO]解决困惑-Actor与component关系</a></li>
+<li><a href="Unreal%20Plugin多个模块开发与编译.html">Unreal Plugin多个模块开发与编译</a></li>
+<li><a href="Slate%20UI.html">Slate UI</a></li>
+<li><a href="无标题笔记.html">无标题笔记</a></li>
+<li><a href="Mipmap与Texture%20Streaming.html">Mipmap与Texture Streaming</a></li>
+<li><a href="UDIM贴图.html">UDIM贴图</a></li>
+<li><a href="Build%20-%20踩坑.html">Build - 踩坑</a></li>
+<li><a href="Build%20-%20UE%20CI.html">Build - UE CI</a></li>
+<li><a href="UE%20移动设备调试.html">UE 移动设备调试</a></li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unreal/" rel="tag">Unreal</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-研究Unity引擎的技巧"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-%E7%A0%94%E7%A9%B6Unity%E5%BC%95%E6%93%8E%E7%9A%84%E6%8A%80%E5%B7%A7/"
+    >研究Unity引擎的技巧</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-%E7%A0%94%E7%A9%B6Unity%E5%BC%95%E6%93%8E%E7%9A%84%E6%8A%80%E5%B7%A7/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.369Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="调用Editor内部的函数"><a href="#调用Editor内部的函数" class="headerlink" title="调用Editor内部的函数"></a>调用Editor内部的函数</h1><p>参考:<br><a href="https://www.xuanyusong.com/archives/4263（获取资源内存和硬盘大小" target="_blank" rel="noopener">https://www.xuanyusong.com/archives/4263（获取资源内存和硬盘大小</a>)</p>
+<p>Unity Editor实现的一些功能，调用了Editor本身的一些函数。这些函数可能没有作为API提供出来。如果想要调用，可以看Editor的源码：用dnSpy反编译一下，找到相关的代码与函数。<br>然后利用反射，根据函数名调用相应函数。</p>
+<p>此外，该方法提供了一个思路：想要深入理解UnityEditor的实现，就多看看Editor的包文件，反编译看看源码。一个是顺藤摸瓜，看相应功能的实现。一个是看包的整体结构组织，了解各个模块的功能以及实现，理解模块之间的关系。<br>d<br>一个小工具（用来调用内部函数）：</p>
+<p><code>csharp private static object InvokeInternalAPI(string type, string method, params object[] parameters) { var assembly = typeof(AssetDatabase).Assembly; var custom = assembly.GetType(type); var methodInfo = custom.GetMethod(method, BindingFlags.Public | BindingFlags.Static); return methodInfo != null ? methodInfo.Invoke(null, parameters) : 0; }</code> <code>csharp [MenuItem(&quot;ProfilingTools/GetTextureMem&quot;)] public static void GetTextureMem() { Texture target = Selection.activeObject as Texture; Assembly editorAssembly = Assembly.Load(&quot;UnityEditor&quot;); var type = editorAssembly.GetType(&quot;UnityEditor.TextureUtil&quot;); MethodInfo methodInfo = type.GetMethod(&quot;GetStorageMemorySize&quot;, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public); Debug.Log(&quot;内存占用：&quot; \+ EditorUtility.FormatBytes(UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(Selection.activeObject))); Debug.Log(&quot;硬盘占用：&quot; \+ EditorUtility.FormatBytes((int)methodInfo.Invoke(null, new object[] { target }))); }</code> </p>
+<h1 id="监听Unity编辑器关闭的事件"><a href="#监听Unity编辑器关闭的事件" class="headerlink" title="监听Unity编辑器关闭的事件"></a>监听Unity编辑器关闭的事件</h1><p><code>csharp using UnityEditor; public class Test { [InitializeOnLoadMethod] static void InitializeOnLoadMethod() { EditorApplication.wantsToQuit -= Quit; EditorApplication.wantsToQuit += Quit; } static bool Quit() { EditorUtility.DisplayDialog(&quot;我就是不让你关闭unity&quot;, &quot;我就是不让你关闭unity&quot;, &quot;呵呵&quot;); return false; //return true表示可以关闭unity编辑器 } }</code> </p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-编辑器扩展"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-%E7%BC%96%E8%BE%91%E5%99%A8%E6%89%A9%E5%B1%95/"
+    >编辑器扩展</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-%E7%BC%96%E8%BE%91%E5%99%A8%E6%89%A9%E5%B1%95/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.369Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="菜单项"><a href="#菜单项" class="headerlink" title="菜单项"></a>菜单项</h2><h3 id="MenuItem"><a href="#MenuItem" class="headerlink" title="MenuItem"></a>MenuItem</h3><h4 id="常用的菜单那位置"><a href="#常用的菜单那位置" class="headerlink" title="常用的菜单那位置"></a>常用的菜单那位置</h4><ol>
+<li><p>整个Unity编辑器顶头的菜单栏；</p>
+</li>
+<li><p>Inspector挂Component的；</p>
+</li>
+<li><p>Hierarchy游戏物体节点树的；</p>
+</li>
+<li><p>Project游戏资源文件的。</p>
+</li>
+</ol>
+<h4 id="验证菜单栏"><a href="#验证菜单栏" class="headerlink" title="验证菜单栏"></a>验证菜单栏</h4><p>为某个菜单项写一个bool方法。<br>第二个参数表示，是否为验证函数</p>
+<pre><code class="lang-csharp">
+[MenuItem(&quot;MyMenu/LogTransFormname&quot;)] 
+
+static void LogTransformName()
+
+{ 
+
+Debug.Log(&quot;TransformName is &quot;+Selection.activeTransform.name); 
+
+} 
+
+[MenuItem(&quot;MyMenu/LogTransFormname&quot;,true)] 
+
+static bool ValidatedLogTransformName()
+
+{ 
+
+return Selection.activeTransform!=null; 
+
+}
+</code></pre>
+<h4 id="自定义快捷键"><a href="#自定义快捷键" class="headerlink" title="自定义快捷键"></a>自定义快捷键</h4><p>菜单名称+空格+快捷键<br>_g 按下字母g<br>修饰符: % Ctrl; # Shift; &amp; Alt<br>LEFT、RIGHT、UP、DOWN、F1..F12、HOME、END、PGUP、PGDN</p>
+<pre><code class="lang-csharp">
+[MenuItem(&quot;MyMenu/AddKey %j&quot;)] 
+
+static void AddKey()
+
+{ 
+
+Debug.Log(&quot;this is addKey&quot;); 
+
+}
+</code></pre>
+<h4 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a>优先级</h4><p>默认为1000<br>差距为11以上分组</p>
+<h4 id="给组件或脚本添加右键方法（Inspector）"><a href="#给组件或脚本添加右键方法（Inspector）" class="headerlink" title="给组件或脚本添加右键方法（Inspector）"></a>给组件或脚本添加右键方法（Inspector）</h4><p>传入参数 MenuCommand<br>command.context : 被右键点击的脚本对象</p>
+<pre><code class="lang-csharp">
+[MenuItem(&quot;CONTEXT/Transform/DoubleTran&quot;)] 
+
+static void DoubleTran(MenuCommand command)
+
+{ 
+
+Transform body =(Transform)command.context; 
+
+body.position*=2; 
+
+Debug.Log(&quot;doubleTrans is&quot;+body.position); 
+
+}
+</code></pre>
+<h4 id="其他位置"><a href="#其他位置" class="headerlink" title="其他位置"></a>其他位置</h4><pre><code class="lang-csharp">
+//Hierarchy窗口下
+
+[MenuItem(&quot;GameObject/Test2&quot;, false, 11)] 
+
+public static void PasteTRValue()
+
+{ 
+
+Debug.Log(&quot;Test2&quot;); 
+
+} 
+
+//Project窗口下
+
+[MenuItem(&quot;Assets/Test3&quot;, false)] 
+
+public static void Test3()
+
+{ 
+
+Debug.Log(&quot;Test3&quot;); 
+
+}
+</code></pre>
+<h3 id="ContextMenu-amp-ContextMenuItem"><a href="#ContextMenu-amp-ContextMenuItem" class="headerlink" title="ContextMenu &amp; ContextMenuItem"></a>ContextMenu &amp; ContextMenuItem</h3><ul>
+<li><p>写在本身Component脚本中，隶属于UnityEngine命名空间，会被打包。</p>
+</li>
+<li><p>功能和参数与MenuItem完全一致</p>
+</li>
+<li><p>非静态</p>
+</li>
+</ul>
+<p>ContextMenuItem: 给你在右键变量名称时添加菜单<br>参数:1.菜单的名称；2.菜单执行的方法，要求脚本中必须有；3.按钮的先后顺序。</p>
+<pre><code class="lang-csharp">
+using UnityEngine; 
+
+public class Clock : MonoBehaviour
+
+{ 
+
+[ContextMenuItem(&quot;Add Hour&quot;, &quot;AddHour&quot;, order = 1)] 
+
+public int Hour = 10; 
+
+public void AddHour()
+
+{ 
+
+Hour += 1; 
+
+} 
+
+[ContextMenu(&quot;Sub Hour&quot;, false, 10)] 
+
+public void SubHour()
+
+{ 
+
+Hour -= 1; 
+
+} 
+
+}
+</code></pre>
+<h3 id="注册撤销操作"><a href="#注册撤销操作" class="headerlink" title="注册撤销操作"></a>注册撤销操作</h3><p>Undo.RegisterCreatedObjectUndo方法注册撤销操作</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-Unity3D-获取场景点数和面数"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/07/25/Unity3D-%E8%8E%B7%E5%8F%96%E5%9C%BA%E6%99%AF%E7%82%B9%E6%95%B0%E5%92%8C%E9%9D%A2%E6%95%B0/"
+    >获取场景点数和面数</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/25/Unity3D-%E8%8E%B7%E5%8F%96%E5%9C%BA%E6%99%AF%E7%82%B9%E6%95%B0%E5%92%8C%E9%9D%A2%E6%95%B0/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.369Z" itemprop="datePublished">2023-07-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h2><pre><code class="lang-csharp">
+int tris = 0, verts = 0; 
+
+//GameObject[] gameObjects = Resources.FindObjectsOfTypeAll&lt;GameObject&gt;();
+
+GameObject[] gameObjects = GameObject.FindObjectsOfType&lt;GameObject&gt;() as GameObject[]; 
+
+foreach (GameObject go in gameObjects) 
+
+{ 
+
+//Component[] filters;
+
+//filters = go.GetComponentsInChildren&lt;MeshFilter&gt;();
+
+//Debug.Log(filters.Length);
+
+//foreach (MeshFilter f in filters)
+
+//{
+
+// tris += f.sharedMesh.triangles.Length / 3;
+
+// verts += f.sharedMesh.vertexCount;
+
+//}
+
+MeshFilter filter; 
+
+filter = go.GetComponent&lt;MeshFilter&gt;(); 
+
+if(filter != null) 
+
+{ 
+
+Debug.Log(go.name); 
+
+tris += filter.sharedMesh.triangles.Length / 3; 
+
+verts += filter.sharedMesh.vertexCount; 
+
+} 
+
+} 
+
+Debug.Log(&quot;verts number: &quot; \+ verts); 
+
+Debug.Log(&quot;trises number: &quot; \+ tris); 
+
+Debug.Log(gameObjects.Length); 
+
+Debug.Log(&quot;Code Test---&quot;);
+</code></pre>
+<h4 id="z"><a href="#z" class="headerlink" title="z"></a>z</h4> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Unity3D-资源与内存-加载、卸载、Destroy"
   class="article article-type-post"
   itemscope
@@ -846,7 +1253,7 @@ return xml;
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E8%B5%84%E6%BA%90%E4%B8%8E%E5%86%85%E5%AD%98-%E5%8A%A0%E8%BD%BD%E3%80%81%E5%8D%B8%E8%BD%BD%E3%80%81Destroy/"
+  <a class="article-title" href="/2023/07/25/Unity3D-%E8%B5%84%E6%BA%90%E4%B8%8E%E5%86%85%E5%AD%98-%E5%8A%A0%E8%BD%BD%E3%80%81%E5%8D%B8%E8%BD%BD%E3%80%81Destroy/"
     >资源与内存(加载、卸载、Destroy)</a> 
 </h2>
  
@@ -855,8 +1262,8 @@ return xml;
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E8%B5%84%E6%BA%90%E4%B8%8E%E5%86%85%E5%AD%98-%E5%8A%A0%E8%BD%BD%E3%80%81%E5%8D%B8%E8%BD%BD%E3%80%81Destroy/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.964Z" itemprop="datePublished">2023-07-20</time>
+      <a href="/2023/07/25/Unity3D-%E8%B5%84%E6%BA%90%E4%B8%8E%E5%86%85%E5%AD%98-%E5%8A%A0%E8%BD%BD%E3%80%81%E5%8D%B8%E8%BD%BD%E3%80%81Destroy/" class="article-date">
+  <time datetime="2023-07-25T12:56:23.369Z" itemprop="datePublished">2023-07-25</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
@@ -1297,347 +1704,6 @@ timer += Time.deltaTime;
 </li>
 </ol>
 <h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a href="https://www.cnblogs.com/CodeGize/p/8697227.html" target="_blank" rel="noopener">https://www.cnblogs.com/CodeGize/p/8697227.html</a><br><a href="https://www.cnblogs.com/timeObjserver/p/7575035.html" target="_blank" rel="noopener">https://www.cnblogs.com/timeObjserver/p/7575035.html</a><br><a href="https://docs.unity3d.com/2017.2/Documentation/Manual/BehindtheScenes.html" target="_blank" rel="noopener">https://docs.unity3d.com/2017.2/Documentation/Manual/BehindtheScenes.html</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-获取场景点数和面数"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E8%8E%B7%E5%8F%96%E5%9C%BA%E6%99%AF%E7%82%B9%E6%95%B0%E5%92%8C%E9%9D%A2%E6%95%B0/"
-    >获取场景点数和面数</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E8%8E%B7%E5%8F%96%E5%9C%BA%E6%99%AF%E7%82%B9%E6%95%B0%E5%92%8C%E9%9D%A2%E6%95%B0/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.953Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h2><pre><code class="lang-csharp">
-int tris = 0, verts = 0; 
-
-//GameObject[] gameObjects = Resources.FindObjectsOfTypeAll&lt;GameObject&gt;();
-
-GameObject[] gameObjects = GameObject.FindObjectsOfType&lt;GameObject&gt;() as GameObject[]; 
-
-foreach (GameObject go in gameObjects) 
-
-{ 
-
-//Component[] filters;
-
-//filters = go.GetComponentsInChildren&lt;MeshFilter&gt;();
-
-//Debug.Log(filters.Length);
-
-//foreach (MeshFilter f in filters)
-
-//{
-
-// tris += f.sharedMesh.triangles.Length / 3;
-
-// verts += f.sharedMesh.vertexCount;
-
-//}
-
-MeshFilter filter; 
-
-filter = go.GetComponent&lt;MeshFilter&gt;(); 
-
-if(filter != null) 
-
-{ 
-
-Debug.Log(go.name); 
-
-tris += filter.sharedMesh.triangles.Length / 3; 
-
-verts += filter.sharedMesh.vertexCount; 
-
-} 
-
-} 
-
-Debug.Log(&quot;verts number: &quot; \+ verts); 
-
-Debug.Log(&quot;trises number: &quot; \+ tris); 
-
-Debug.Log(gameObjects.Length); 
-
-Debug.Log(&quot;Code Test---&quot;);
-</code></pre>
-<h4 id="z"><a href="#z" class="headerlink" title="z"></a>z</h4> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-编辑器扩展"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E7%BC%96%E8%BE%91%E5%99%A8%E6%89%A9%E5%B1%95/"
-    >编辑器扩展</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E7%BC%96%E8%BE%91%E5%99%A8%E6%89%A9%E5%B1%95/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.951Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="菜单项"><a href="#菜单项" class="headerlink" title="菜单项"></a>菜单项</h2><h3 id="MenuItem"><a href="#MenuItem" class="headerlink" title="MenuItem"></a>MenuItem</h3><h4 id="常用的菜单那位置"><a href="#常用的菜单那位置" class="headerlink" title="常用的菜单那位置"></a>常用的菜单那位置</h4><ol>
-<li><p>整个Unity编辑器顶头的菜单栏；</p>
-</li>
-<li><p>Inspector挂Component的；</p>
-</li>
-<li><p>Hierarchy游戏物体节点树的；</p>
-</li>
-<li><p>Project游戏资源文件的。</p>
-</li>
-</ol>
-<h4 id="验证菜单栏"><a href="#验证菜单栏" class="headerlink" title="验证菜单栏"></a>验证菜单栏</h4><p>为某个菜单项写一个bool方法。<br>第二个参数表示，是否为验证函数</p>
-<pre><code class="lang-csharp">
-[MenuItem(&quot;MyMenu/LogTransFormname&quot;)] 
-
-static void LogTransformName()
-
-{ 
-
-Debug.Log(&quot;TransformName is &quot;+Selection.activeTransform.name); 
-
-} 
-
-[MenuItem(&quot;MyMenu/LogTransFormname&quot;,true)] 
-
-static bool ValidatedLogTransformName()
-
-{ 
-
-return Selection.activeTransform!=null; 
-
-}
-</code></pre>
-<h4 id="自定义快捷键"><a href="#自定义快捷键" class="headerlink" title="自定义快捷键"></a>自定义快捷键</h4><p>菜单名称+空格+快捷键<br>_g 按下字母g<br>修饰符: % Ctrl; # Shift; &amp; Alt<br>LEFT、RIGHT、UP、DOWN、F1..F12、HOME、END、PGUP、PGDN</p>
-<pre><code class="lang-csharp">
-[MenuItem(&quot;MyMenu/AddKey %j&quot;)] 
-
-static void AddKey()
-
-{ 
-
-Debug.Log(&quot;this is addKey&quot;); 
-
-}
-</code></pre>
-<h4 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a>优先级</h4><p>默认为1000<br>差距为11以上分组</p>
-<h4 id="给组件或脚本添加右键方法（Inspector）"><a href="#给组件或脚本添加右键方法（Inspector）" class="headerlink" title="给组件或脚本添加右键方法（Inspector）"></a>给组件或脚本添加右键方法（Inspector）</h4><p>传入参数 MenuCommand<br>command.context : 被右键点击的脚本对象</p>
-<pre><code class="lang-csharp">
-[MenuItem(&quot;CONTEXT/Transform/DoubleTran&quot;)] 
-
-static void DoubleTran(MenuCommand command)
-
-{ 
-
-Transform body =(Transform)command.context; 
-
-body.position*=2; 
-
-Debug.Log(&quot;doubleTrans is&quot;+body.position); 
-
-}
-</code></pre>
-<h4 id="其他位置"><a href="#其他位置" class="headerlink" title="其他位置"></a>其他位置</h4><pre><code class="lang-csharp">
-//Hierarchy窗口下
-
-[MenuItem(&quot;GameObject/Test2&quot;, false, 11)] 
-
-public static void PasteTRValue()
-
-{ 
-
-Debug.Log(&quot;Test2&quot;); 
-
-} 
-
-//Project窗口下
-
-[MenuItem(&quot;Assets/Test3&quot;, false)] 
-
-public static void Test3()
-
-{ 
-
-Debug.Log(&quot;Test3&quot;); 
-
-}
-</code></pre>
-<h3 id="ContextMenu-amp-ContextMenuItem"><a href="#ContextMenu-amp-ContextMenuItem" class="headerlink" title="ContextMenu &amp; ContextMenuItem"></a>ContextMenu &amp; ContextMenuItem</h3><ul>
-<li><p>写在本身Component脚本中，隶属于UnityEngine命名空间，会被打包。</p>
-</li>
-<li><p>功能和参数与MenuItem完全一致</p>
-</li>
-<li><p>非静态</p>
-</li>
-</ul>
-<p>ContextMenuItem: 给你在右键变量名称时添加菜单<br>参数:1.菜单的名称；2.菜单执行的方法，要求脚本中必须有；3.按钮的先后顺序。</p>
-<pre><code class="lang-csharp">
-using UnityEngine; 
-
-public class Clock : MonoBehaviour
-
-{ 
-
-[ContextMenuItem(&quot;Add Hour&quot;, &quot;AddHour&quot;, order = 1)] 
-
-public int Hour = 10; 
-
-public void AddHour()
-
-{ 
-
-Hour += 1; 
-
-} 
-
-[ContextMenu(&quot;Sub Hour&quot;, false, 10)] 
-
-public void SubHour()
-
-{ 
-
-Hour -= 1; 
-
-} 
-
-}
-</code></pre>
-<h3 id="注册撤销操作"><a href="#注册撤销操作" class="headerlink" title="注册撤销操作"></a>注册撤销操作</h3><p>Undo.RegisterCreatedObjectUndo方法注册撤销操作</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unity3D/" rel="tag">Unity3D</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-Unity3D-研究Unity引擎的技巧"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/07/20/Unity3D-%E7%A0%94%E7%A9%B6Unity%E5%BC%95%E6%93%8E%E7%9A%84%E6%8A%80%E5%B7%A7/"
-    >研究Unity引擎的技巧</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/07/20/Unity3D-%E7%A0%94%E7%A9%B6Unity%E5%BC%95%E6%93%8E%E7%9A%84%E6%8A%80%E5%B7%A7/" class="article-date">
-  <time datetime="2023-07-20T15:00:27.949Z" itemprop="datePublished">2023-07-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Unity3D/">Unity3D</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="调用Editor内部的函数"><a href="#调用Editor内部的函数" class="headerlink" title="调用Editor内部的函数"></a>调用Editor内部的函数</h1><p>参考:<br><a href="https://www.xuanyusong.com/archives/4263（获取资源内存和硬盘大小" target="_blank" rel="noopener">https://www.xuanyusong.com/archives/4263（获取资源内存和硬盘大小</a>)</p>
-<p>Unity Editor实现的一些功能，调用了Editor本身的一些函数。这些函数可能没有作为API提供出来。如果想要调用，可以看Editor的源码：用dnSpy反编译一下，找到相关的代码与函数。<br>然后利用反射，根据函数名调用相应函数。</p>
-<p>此外，该方法提供了一个思路：想要深入理解UnityEditor的实现，就多看看Editor的包文件，反编译看看源码。一个是顺藤摸瓜，看相应功能的实现。一个是看包的整体结构组织，了解各个模块的功能以及实现，理解模块之间的关系。<br>d<br>一个小工具（用来调用内部函数）：</p>
-<p><code>csharp private static object InvokeInternalAPI(string type, string method, params object[] parameters) { var assembly = typeof(AssetDatabase).Assembly; var custom = assembly.GetType(type); var methodInfo = custom.GetMethod(method, BindingFlags.Public | BindingFlags.Static); return methodInfo != null ? methodInfo.Invoke(null, parameters) : 0; }</code> <code>csharp [MenuItem(&quot;ProfilingTools/GetTextureMem&quot;)] public static void GetTextureMem() { Texture target = Selection.activeObject as Texture; Assembly editorAssembly = Assembly.Load(&quot;UnityEditor&quot;); var type = editorAssembly.GetType(&quot;UnityEditor.TextureUtil&quot;); MethodInfo methodInfo = type.GetMethod(&quot;GetStorageMemorySize&quot;, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public); Debug.Log(&quot;内存占用：&quot; \+ EditorUtility.FormatBytes(UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(Selection.activeObject))); Debug.Log(&quot;硬盘占用：&quot; \+ EditorUtility.FormatBytes((int)methodInfo.Invoke(null, new object[] { target }))); }</code> </p>
-<h1 id="监听Unity编辑器关闭的事件"><a href="#监听Unity编辑器关闭的事件" class="headerlink" title="监听Unity编辑器关闭的事件"></a>监听Unity编辑器关闭的事件</h1><p><code>csharp using UnityEditor; public class Test { [InitializeOnLoadMethod] static void InitializeOnLoadMethod() { EditorApplication.wantsToQuit -= Quit; EditorApplication.wantsToQuit += Quit; } static bool Quit() { EditorUtility.DisplayDialog(&quot;我就是不让你关闭unity&quot;, &quot;我就是不让你关闭unity&quot;, &quot;呵呵&quot;); return false; //return true表示可以关闭unity编辑器 } }</code> </p>
  
       <!-- reward -->
       
